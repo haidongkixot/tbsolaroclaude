@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import {
   LayoutDashboard, Package, FolderOpen, FileText, HelpCircle,
-  MapPin, Download, MessageSquare, Settings, LogOut, Sun, ChevronRight, Users
+  MapPin, Download, MessageSquare, Settings, LogOut, Sun, ChevronRight, Users,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -30,12 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-brand-dark text-white flex flex-col shrink-0 fixed top-0 left-0 h-screen overflow-y-auto">
         {/* Brand */}
         <div className="p-6 border-b border-white/10">
-          <div className="flex items-center gap-2 mb-1">
-            <div className="w-8 h-8 bg-brand-accent rounded-full flex items-center justify-center">
-              <Sun size={16} className="text-white" />
-            </div>
-            <span className="text-lg font-bold">TBSolaro</span>
-          </div>
+          <img src="/logo.png" alt="TBSolaro" className="h-9 w-auto brightness-0 invert mb-1" />
           <span className="text-white/50 text-xs">Admin CMS</span>
         </div>
 

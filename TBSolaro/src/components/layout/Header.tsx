@@ -18,16 +18,8 @@ export default function Header() {
       <div className="container-site">
         <div className="flex items-center justify-between h-16 md:h-20">
           {/* Logo */}
-          <Link href="/" className="flex items-center gap-2 shrink-0">
-            <span className="flex items-center gap-1">
-              <span className="w-8 h-8 bg-brand rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" className="w-5 h-5 text-white" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>
-                  <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" strokeLinecap="round"/>
-                </svg>
-              </span>
-              <span className="text-xl font-bold text-brand">TB<span className="text-gray-800">Solaro</span></span>
-            </span>
+          <Link href="/" className="flex items-center shrink-0">
+            <img src="/logo.png" alt="TBSolaro" className="h-10 md:h-12 w-auto" />
           </Link>
 
           {/* Desktop Nav */}

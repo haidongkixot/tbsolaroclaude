@@ -9,17 +9,8 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
           {/* Brand Column */}
           <div className="lg:col-span-1">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <span className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                <svg viewBox="0 0 24 24" fill="none" className="w-6 h-6 text-white" stroke="currentColor" strokeWidth="2">
-                  <circle cx="12" cy="12" r="4" fill="currentColor" stroke="none"/>
-                  <path d="M12 2v3M12 19v3M4.22 4.22l2.12 2.12M17.66 17.66l2.12 2.12M2 12h3M19 12h3M4.22 19.78l2.12-2.12M17.66 6.34l2.12-2.12" strokeLinecap="round"/>
-                </svg>
-              </span>
-              <span>
-                <span className="block text-lg font-bold leading-tight">TBSolaro</span>
-                <span className="block text-[10px] text-white/60 uppercase tracking-wider leading-tight">TBGP</span>
-              </span>
+            <Link href="/" className="inline-flex mb-4">
+              <img src="/logo.png" alt="TBSolaro" className="h-12 w-auto brightness-0 invert" />
             </Link>
             <p className="text-white/70 text-xs uppercase tracking-wide font-semibold mb-2 leading-snug">
               THAI BINH GREEN POWER<br />INVESTMENT CORPORATION
