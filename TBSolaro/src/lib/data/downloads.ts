@@ -1,0 +1,96 @@
+import type { DownloadDocument } from '@/types';
+
+export const downloadDocuments: DownloadDocument[] = [
+  {
+    id: '1',
+    title: 'Tài liệu kỹ thuật INV-BAT5 Básico',
+    description: 'Thông số kỹ thuật đầy đủ cho combo INV-BAT5 Básico 5kWh, bao gồm sơ đồ lắp đặt và hướng dẫn vận hành.',
+    fileUrl: '/downloads/inv-bat5-basico-spec.pdf',
+    fileType: 'PDF',
+    category: 'Thông số kỹ thuật',
+    version: 'v2.1',
+    featuredImage: 'https://placehold.co/400x300/1B5E30/FFFFFF?text=INV-BAT5+Doc',
+    status: 'published',
+    sortOrder: 1,
+    createdAt: '2024-01-15T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+  {
+    id: '2',
+    title: 'Hướng dẫn lắp đặt hệ thống Solar',
+    description: 'Tài liệu hướng dẫn chi tiết quy trình lắp đặt hệ thống điện mặt trời, từ khảo sát đến nghiệm thu.',
+    fileUrl: '/downloads/installation-guide.pdf',
+    fileType: 'PDF',
+    category: 'Hướng dẫn',
+    version: 'v3.0',
+    featuredImage: 'https://placehold.co/400x300/236B3A/FFFFFF?text=Install+Guide',
+    status: 'published',
+    sortOrder: 2,
+    createdAt: '2024-02-01T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+  {
+    id: '3',
+    title: 'Brochure Sản phẩm TBSolaro 2024',
+    description: 'Catalog tổng hợp toàn bộ dòng sản phẩm TBSolaro năm 2024, bao gồm thông số và giá tham khảo.',
+    fileUrl: '/downloads/tbsolaro-catalog-2024.pdf',
+    fileType: 'PDF',
+    category: 'Catalog',
+    version: '2024',
+    featuredImage: 'https://placehold.co/400x300/3D9B5C/FFFFFF?text=Catalog+2024',
+    status: 'published',
+    sortOrder: 3,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+  {
+    id: '4',
+    title: 'Chứng chỉ & Giấy phép',
+    description: 'Các chứng chỉ tiêu chuẩn quốc tế và giấy phép hoạt động của TBSolaro và sản phẩm.',
+    fileUrl: '/downloads/certificates.pdf',
+    fileType: 'PDF',
+    category: 'Chứng chỉ',
+    version: '2024',
+    featuredImage: 'https://placehold.co/400x300/52B788/FFFFFF?text=Certificates',
+    status: 'published',
+    sortOrder: 4,
+    createdAt: '2024-01-01T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+  {
+    id: '5',
+    title: 'Tài liệu kỹ thuật Pin Lithium LFP',
+    description: 'Thông số đầy đủ và hướng dẫn sử dụng cho dòng pin lưu trữ Lithium LFP của TBSolaro.',
+    fileUrl: '/downloads/lfp-battery-spec.pdf',
+    fileType: 'PDF',
+    category: 'Thông số kỹ thuật',
+    version: 'v1.5',
+    featuredImage: 'https://placehold.co/400x300/1B5E30/FFFFFF?text=LFP+Battery+Doc',
+    status: 'published',
+    sortOrder: 5,
+    createdAt: '2024-03-01T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+  {
+    id: '6',
+    title: 'Báo cáo Bền vững TBSolaro 2023',
+    description: 'Báo cáo ESG và bền vững năm 2023, tổng kết các hoạt động CSR và tác động môi trường.',
+    fileUrl: '/downloads/sustainability-report-2023.pdf',
+    fileType: 'PDF',
+    category: 'Báo cáo',
+    version: '2023',
+    featuredImage: 'https://placehold.co/400x300/52B788/FFFFFF?text=Sustainability+Report',
+    status: 'published',
+    sortOrder: 6,
+    createdAt: '2024-02-15T00:00:00Z',
+    updatedAt: '2024-06-01T00:00:00Z',
+  },
+];
+
+export function getPublishedDocuments(): DownloadDocument[] {
+  return downloadDocuments.filter((d) => d.status === 'published').sort((a, b) => a.sortOrder - b.sortOrder);
+}
+
+export function getDocumentsByCategory(category: string): DownloadDocument[] {
+  return downloadDocuments.filter((d) => d.status === 'published' && d.category === category);
+}

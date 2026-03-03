@@ -1,0 +1,159 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    font-family: 'Inter', ui-sans-serif, system-ui, sans-serif;
+    color: #1a1a2e;
+    background: #fff;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  a {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  /* Rich text content styles */
+  .prose h2 {
+    @apply text-2xl font-bold text-gray-900 mt-8 mb-4;
+  }
+  .prose h3 {
+    @apply text-xl font-semibold text-gray-900 mt-6 mb-3;
+  }
+  .prose p {
+    @apply text-gray-700 leading-relaxed mb-4;
+  }
+  .prose ul {
+    @apply list-disc list-inside mb-4 space-y-2 text-gray-700;
+  }
+  .prose ol {
+    @apply list-decimal list-inside mb-4 space-y-2 text-gray-700;
+  }
+  .prose blockquote {
+    @apply border-l-4 border-brand pl-6 py-2 my-6 text-gray-600 italic bg-brand-surface rounded-r-lg;
+  }
+  .prose strong {
+    @apply font-semibold text-gray-900;
+  }
+}
+
+@layer components {
+  .container-site {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold text-gray-900 mb-4;
+  }
+
+  .section-subtitle {
+    @apply text-gray-500 text-base md:text-lg max-w-2xl mx-auto;
+  }
+
+  .btn-primary {
+    @apply inline-flex items-center gap-2 bg-brand text-white font-semibold px-6 py-3 rounded-full
+           hover:bg-brand-dark transition-all duration-200 shadow-sm hover:shadow-md
+           focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2;
+  }
+
+  .btn-outline {
+    @apply inline-flex items-center gap-2 border-2 border-brand text-brand font-semibold px-6 py-3 rounded-full
+           hover:bg-brand hover:text-white transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-brand focus:ring-offset-2;
+  }
+
+  .btn-white {
+    @apply inline-flex items-center gap-2 bg-white text-brand font-semibold px-6 py-3 rounded-full
+           hover:bg-brand-surface transition-all duration-200 shadow-sm
+           focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2;
+  }
+
+  .btn-outline-white {
+    @apply inline-flex items-center gap-2 border-2 border-white text-white font-semibold px-6 py-3 rounded-full
+           hover:bg-white hover:text-brand transition-all duration-200
+           focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2;
+  }
+
+  .card {
+    @apply bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden
+           hover:shadow-md transition-shadow duration-200;
+  }
+
+  .input-field {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent
+           transition-all duration-200;
+  }
+
+  .textarea-field {
+    @apply w-full px-4 py-3 rounded-lg border border-gray-300 text-gray-900 placeholder-gray-400
+           focus:outline-none focus:ring-2 focus:ring-brand focus:border-transparent
+           transition-all duration-200 resize-none;
+  }
+
+  .page-hero {
+    @apply relative bg-brand-dark overflow-hidden;
+    min-height: 280px;
+  }
+
+  .hero-overlay {
+    @apply absolute inset-0 bg-gradient-to-b from-black/50 to-black/20;
+  }
+
+  .tag-badge {
+    @apply inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-brand-surface text-brand border border-brand/20;
+  }
+
+  .accordion-item {
+    @apply border border-gray-200 rounded-xl overflow-hidden;
+  }
+
+  .nav-link {
+    @apply text-sm font-medium text-gray-700 hover:text-brand transition-colors duration-200 relative
+           after:absolute after:bottom-0 after:left-0 after:w-0 after:h-0.5 after:bg-brand
+           hover:after:w-full after:transition-all after:duration-200;
+  }
+
+  .nav-link-active {
+    @apply text-brand after:w-full;
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+::-webkit-scrollbar-thumb {
+  background: #1B5E30;
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #13431F;
+}
