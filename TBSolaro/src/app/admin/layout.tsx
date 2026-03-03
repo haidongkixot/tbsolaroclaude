@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Package, FolderOpen, FileText, HelpCircle,
   MapPin, Download, MessageSquare, Settings, LogOut, Sun, ChevronRight, Users,
@@ -23,6 +23,18 @@ const nav = [
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
+  const router = useRouter();
+
+  // Login page renders without the sidebar shell
+  if (pathname === '/admin/login') {
+    return <>{children}</>;
+  }
+
+  async function handleLogout() {
+    await fetch('/api/auth/logout', { method: 'POST' });
+    router.push('/admin/login');
+    router.refresh();
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex">
@@ -66,7 +78,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           >
             <Sun size={17} /> Xem website
           </Link>
-          <button className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/65 hover:text-white hover:bg-white/10 transition-all mt-1">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm text-white/65 hover:text-white hover:bg-red-500/20 transition-all mt-1"
+          >
             <LogOut size={17} /> Đăng xuất
           </button>
         </div>
