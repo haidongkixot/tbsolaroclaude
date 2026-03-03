@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { Send, CheckCircle } from 'lucide-react';
 
 interface ContactFormSectionProps {
@@ -11,15 +12,20 @@ interface ContactFormSectionProps {
 }
 
 export default function ContactFormSection({
-  title = 'Liên hệ với chúng tôi',
-  subtitle = 'Chúng tôi sẵn sàng lắng nghe và hỗ trợ bạn về mọi vấn đề liên quan đến năng lượng mặt trời',
+  title,
+  subtitle,
   compact = false,
   source = 'contact_form',
 }: ContactFormSectionProps) {
+  const t = useTranslations('contactForm');
+  const tc = useTranslations('common');
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+
+  const displayTitle = title ?? t('title');
+  const displaySubtitle = subtitle ?? t('subtitle');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -31,11 +37,11 @@ export default function ContactFormSection({
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ ...form, source }),
       });
-      if (!res.ok) throw new Error('Gửi thất bại');
+      if (!res.ok) throw new Error('failed');
       setSubmitted(true);
       setForm({ name: '', email: '', phone: '', company: '', message: '' });
     } catch {
-      setError('Có lỗi xảy ra. Vui lòng thử lại sau.');
+      setError(t('errorMsg'));
     } finally {
       setSubmitting(false);
     }
@@ -49,13 +55,10 @@ export default function ContactFormSection({
             <div className="flex justify-center mb-4">
               <CheckCircle size={64} className="text-brand" />
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-2">Cảm ơn bạn!</h3>
-            <p className="text-gray-600">Chúng tôi đã nhận được thông tin và sẽ liên hệ lại trong thời gian sớm nhất.</p>
-            <button
-              onClick={() => setSubmitted(false)}
-              className="mt-6 btn-primary"
-            >
-              Gửi thêm câu hỏi
+            <h3 className="text-2xl font-bold text-gray-900 mb-2">{t('successTitle')}</h3>
+            <p className="text-gray-600">{t('successMsg')}</p>
+            <button onClick={() => setSubmitted(false)} className="mt-6 btn-primary">
+              {t('submitAnother')}
             </button>
           </div>
         </div>
@@ -68,12 +71,12 @@ export default function ContactFormSection({
       <div className="container-site">
         {!compact && (
           <div className="text-center mb-10">
-            <h2 className="section-title">{title}</h2>
-            <p className="section-subtitle">{subtitle}</p>
+            <h2 className="section-title">{displayTitle}</h2>
+            <p className="section-subtitle">{displaySubtitle}</p>
           </div>
         )}
         {compact && (
-          <h3 className="text-xl font-bold text-gray-900 mb-6">{title}</h3>
+          <h3 className="text-xl font-bold text-gray-900 mb-6">{displayTitle}</h3>
         )}
 
         <form
@@ -83,7 +86,7 @@ export default function ContactFormSection({
           <div className={compact ? 'grid gap-4' : 'grid sm:grid-cols-2 gap-4'}>
             <div>
               <label htmlFor={`name-${source}`} className="block text-sm font-medium text-gray-700 mb-1">
-                Name <span className="text-red-500">*</span>
+                {t('labelName')} <span className="text-red-500">*</span>
               </label>
               <input
                 id={`name-${source}`}
@@ -91,13 +94,13 @@ export default function ContactFormSection({
                 required
                 value={form.name}
                 onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-                placeholder="Nguyễn Văn A"
+                placeholder={t('placeholderName')}
                 className="input-field"
               />
             </div>
             <div>
               <label htmlFor={`email-${source}`} className="block text-sm font-medium text-gray-700 mb-1">
-                Email <span className="text-red-500">*</span>
+                {t('labelEmail')} <span className="text-red-500">*</span>
               </label>
               <input
                 id={`email-${source}`}
@@ -105,40 +108,40 @@ export default function ContactFormSection({
                 required
                 value={form.email}
                 onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))}
-                placeholder="email@example.com"
+                placeholder={t('placeholderEmail')}
                 className="input-field"
               />
             </div>
             <div>
               <label htmlFor={`phone-${source}`} className="block text-sm font-medium text-gray-700 mb-1">
-                Phone
+                {t('labelPhone')}
               </label>
               <input
                 id={`phone-${source}`}
                 type="tel"
                 value={form.phone}
                 onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))}
-                placeholder="+84 --- --- ---"
+                placeholder={t('placeholderPhone')}
                 className="input-field"
               />
             </div>
             <div>
               <label htmlFor={`company-${source}`} className="block text-sm font-medium text-gray-700 mb-1">
-                Company
+                {t('labelCompany')}
               </label>
               <input
                 id={`company-${source}`}
                 type="text"
                 value={form.company}
                 onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))}
-                placeholder="Tên công ty (nếu có)"
+                placeholder={t('placeholderCompany')}
                 className="input-field"
               />
             </div>
           </div>
           <div>
             <label htmlFor={`message-${source}`} className="block text-sm font-medium text-gray-700 mb-1">
-              Message <span className="text-red-500">*</span>
+              {t('labelMessage')} <span className="text-red-500">*</span>
             </label>
             <textarea
               id={`message-${source}`}
@@ -146,7 +149,7 @@ export default function ContactFormSection({
               rows={compact ? 4 : 5}
               value={form.message}
               onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-              placeholder="Nội dung câu hỏi hoặc yêu cầu của bạn..."
+              placeholder={t('placeholderMessage')}
               className="textarea-field"
             />
           </div>
@@ -166,12 +169,12 @@ export default function ContactFormSection({
                   <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                 </svg>
-                Đang gửi...
+                {tc('sending')}
               </span>
             ) : (
               <span className="flex items-center gap-2">
                 <Send size={16} />
-                Gửi tin nhắn ngay
+                {t('submitBtn')}
               </span>
             )}
           </button>

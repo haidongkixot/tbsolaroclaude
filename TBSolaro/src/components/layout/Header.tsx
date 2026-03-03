@@ -1,17 +1,54 @@
 'use client';
 
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { useTranslations, useLocale } from 'next-intl';
+import { Link, usePathname, useRouter } from '@/i18n/navigation';
 import { Search, Globe, Menu, X, ChevronDown } from 'lucide-react';
-import { mainNav } from '@/lib/data/settings';
 import { cn } from '@/lib/utils';
+
+const navItems = [
+  { key: 'home', href: '/' },
+  { key: 'about', href: '/about' },
+  { key: 'products', href: '/products' },
+  { key: 'showroom', href: '/showroom' },
+  { key: 'community', href: '/community' },
+  { key: 'projects', href: '/projects' },
+  { key: 'faq', href: '/faq' },
+  { key: 'contact', href: '/contact' },
+] as const;
+
+const localeOptions = [
+  { code: 'vi', label: 'VI – Tiếng Việt' },
+  { code: 'en', label: 'EN – English' },
+  { code: 'es', label: 'ES – Español' },
+];
 
 export default function Header() {
   const pathname = usePathname();
+  const locale = useLocale();
+  const router = useRouter();
+  const t = useTranslations('nav');
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [langOpen, setLangOpen] = useState(false);
+  const langRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (langRef.current && !langRef.current.contains(event.target as Node)) {
+        setLangOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  function switchLocale(newLocale: string) {
+    router.replace(pathname, { locale: newLocale });
+    setLangOpen(false);
+    setMobileOpen(false);
+  }
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-gray-100 shadow-sm">
@@ -24,7 +61,7 @@ export default function Header() {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-            {mainNav.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -33,50 +70,85 @@ export default function Header() {
                   pathname === item.href && 'nav-link-active text-brand'
                 )}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
           </nav>
 
           {/* Right Icons */}
           <div className="hidden lg:flex items-center gap-3">
+            {/* Search */}
             {searchOpen ? (
-              <form onSubmit={(e) => { e.preventDefault(); setSearchOpen(false); }} className="flex items-center gap-2">
+              <form
+                onSubmit={(e) => { e.preventDefault(); setSearchOpen(false); }}
+                className="flex items-center gap-2"
+              >
                 <input
                   autoFocus
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Tìm kiếm..."
+                  placeholder={t('searchPlaceholder')}
                   className="text-sm border border-gray-300 rounded-full px-4 py-1.5 w-48 focus:outline-none focus:ring-2 focus:ring-brand/50"
                 />
-                <button type="button" onClick={() => setSearchOpen(false)} className="p-1 text-gray-400 hover:text-brand">
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(false)}
+                  className="p-1 text-gray-400 hover:text-brand"
+                >
                   <X size={16} />
                 </button>
               </form>
             ) : (
               <button
                 onClick={() => setSearchOpen(true)}
-                aria-label="Tìm kiếm"
+                aria-label={t('search')}
                 className="p-2 text-gray-500 hover:text-brand rounded-full hover:bg-brand-surface transition-colors"
               >
                 <Search size={18} />
               </button>
             )}
-            <button
-              aria-label="Đổi ngôn ngữ"
-              className="p-2 text-gray-500 hover:text-brand rounded-full hover:bg-brand-surface transition-colors flex items-center gap-1"
-            >
-              <Globe size={18} />
-              <span className="text-sm font-medium text-gray-600">VI</span>
-            </button>
+
+            {/* Language Switcher */}
+            <div className="relative" ref={langRef}>
+              <button
+                onClick={() => setLangOpen(!langOpen)}
+                className="p-2 text-gray-500 hover:text-brand rounded-full hover:bg-brand-surface transition-colors flex items-center gap-1"
+              >
+                <Globe size={18} />
+                <span className="text-sm font-medium text-gray-600">{locale.toUpperCase()}</span>
+                <ChevronDown
+                  size={14}
+                  className={cn('transition-transform duration-200', langOpen && 'rotate-180')}
+                />
+              </button>
+
+              {langOpen && (
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white rounded-xl shadow-lg border border-gray-100 py-1 z-50">
+                  {localeOptions.map((opt) => (
+                    <button
+                      key={opt.code}
+                      onClick={() => switchLocale(opt.code)}
+                      className={cn(
+                        'w-full text-left px-4 py-2.5 text-sm transition-colors',
+                        locale === opt.code
+                          ? 'text-brand font-semibold bg-brand-surface'
+                          : 'text-gray-700 hover:bg-gray-50 hover:text-brand'
+                      )}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Mobile menu button */}
           <button
             onClick={() => setMobileOpen(!mobileOpen)}
             className="lg:hidden p-2 text-gray-600 hover:text-brand rounded-lg"
-            aria-label={mobileOpen ? 'Đóng menu' : 'Mở menu'}
+            aria-label={mobileOpen ? t('closeMenu') : t('openMenu')}
           >
             {mobileOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
@@ -87,7 +159,7 @@ export default function Header() {
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg animate-fade-in">
           <nav className="container-site py-4 flex flex-col gap-1">
-            {mainNav.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -99,16 +171,26 @@ export default function Header() {
                     : 'text-gray-700 hover:bg-gray-50 hover:text-brand'
                 )}
               >
-                {item.label}
+                {t(item.key)}
               </Link>
             ))}
-            <div className="flex items-center gap-3 px-4 pt-3 border-t border-gray-100 mt-2">
-              <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand">
-                <Search size={16} /> Tìm kiếm
-              </button>
-              <button className="flex items-center gap-2 text-sm text-gray-600 hover:text-brand ml-auto">
-                <Globe size={16} /> VI/ES
-              </button>
+
+            {/* Mobile Language Switcher */}
+            <div className="flex items-center gap-2 px-4 pt-3 border-t border-gray-100 mt-2">
+              {localeOptions.map((opt) => (
+                <button
+                  key={opt.code}
+                  onClick={() => switchLocale(opt.code)}
+                  className={cn(
+                    'px-3 py-1.5 rounded-full text-xs font-semibold border transition-colors',
+                    locale === opt.code
+                      ? 'bg-brand text-white border-brand'
+                      : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand'
+                  )}
+                >
+                  {opt.code.toUpperCase()}
+                </button>
+              ))}
             </div>
           </nav>
         </div>

@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { MapPin, Zap, Calendar, Clock, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
 import ProjectCard from '@/components/sections/ProjectCard';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
@@ -14,6 +15,8 @@ interface Props {
 }
 
 export default function ProjectDetailPage({ params }: Props) {
+  const t = useTranslations('projects');
+  const tc = useTranslations('common');
   const project = getProjectBySlug(params.slug);
   if (!project) notFound();
 
@@ -74,9 +77,9 @@ export default function ProjectDetailPage({ params }: Props) {
           {/* Article */}
           <div className="lg:col-span-2">
             <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-              <Link href="/" className="hover:text-brand">Trang chủ</Link>
+              <Link href="/" className="hover:text-brand">{tc('home')}</Link>
               <ChevronRightIcon size={14} />
-              <Link href="/projects" className="hover:text-brand">Dự án</Link>
+              <Link href="/projects" className="hover:text-brand">{t('breadcrumb')}</Link>
               <ChevronRightIcon size={14} />
               <span className="text-gray-900">{project.title}</span>
             </nav>
@@ -92,7 +95,7 @@ export default function ProjectDetailPage({ params }: Props) {
             <div className="sticky top-24 space-y-4">
               {/* Project Info */}
               <div className="bg-brand-surface rounded-2xl p-6 border border-brand/10">
-                <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">Thông tin dự án</h3>
+                <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">{t('projectInfo')}</h3>
                 <ul className="space-y-4">
                   {project.power && (
                     <li className="flex items-start gap-3">
@@ -100,7 +103,7 @@ export default function ProjectDetailPage({ params }: Props) {
                         <Zap size={16} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Công suất lắp đặt</p>
+                        <p className="text-xs text-gray-500">{t('powerLabel')}</p>
                         <p className="font-bold text-gray-900">{project.power}</p>
                       </div>
                     </li>
@@ -111,7 +114,7 @@ export default function ProjectDetailPage({ params }: Props) {
                         <Calendar size={16} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Ngày lắp đặt</p>
+                        <p className="text-xs text-gray-500">{t('dateLabel')}</p>
                         <p className="font-bold text-gray-900">{project.installationDate}</p>
                       </div>
                     </li>
@@ -122,7 +125,7 @@ export default function ProjectDetailPage({ params }: Props) {
                         <Clock size={16} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Năm thực hiện</p>
+                        <p className="text-xs text-gray-500">{t('yearLabel')}</p>
                         <p className="font-bold text-gray-900">{project.year}</p>
                       </div>
                     </li>
@@ -133,7 +136,7 @@ export default function ProjectDetailPage({ params }: Props) {
                         <MapPin size={16} className="text-white" />
                       </div>
                       <div>
-                        <p className="text-xs text-gray-500">Địa chỉ</p>
+                        <p className="text-xs text-gray-500">{t('locationLabel')}</p>
                         <p className="font-bold text-gray-900 text-sm">{project.location}</p>
                       </div>
                     </li>
@@ -143,10 +146,10 @@ export default function ProjectDetailPage({ params }: Props) {
 
               {/* CTA */}
               <div className="bg-brand rounded-2xl p-6 text-white">
-                <h3 className="font-bold mb-2">Quan tâm đến dự án?</h3>
-                <p className="text-white/75 text-sm mb-4">Liên hệ để được tư vấn giải pháp phù hợp cho bạn.</p>
+                <h3 className="font-bold mb-2">{t('ctaTitle')}</h3>
+                <p className="text-white/75 text-sm mb-4">{t('ctaDesc')}</p>
                 <Link href="/contact" className="btn-white text-sm">
-                  Liên hệ ngay
+                  {t('ctaBtn')}
                 </Link>
               </div>
             </div>
@@ -159,7 +162,7 @@ export default function ProjectDetailPage({ params }: Props) {
         <section className="py-16 bg-gray-50">
           <div className="container-site">
             <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-              <h2 className="text-2xl font-bold text-gray-900">Dự án liên quan</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('relatedTitle')}</h2>
               <div className="flex gap-2">
                 {['Tất cả', 'Category', 'Category', 'Category'].map((c, i) => (
                   <button

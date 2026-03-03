@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { Download, FileText } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import ContactFormSection from '@/components/sections/ContactFormSection';
@@ -9,23 +10,24 @@ export const metadata: Metadata = {
   description: 'Kết nối cùng TBSolaro – Đối tác năng lượng xanh của bạn. Tải tài liệu kỹ thuật và liên hệ tư vấn.',
 };
 
-export default function ContactPage() {
+export default async function ContactPage() {
+  const t = await getTranslations('contact');
   const documents = getPublishedDocuments().slice(0, 3);
 
   return (
     <>
       <PageHero
-        title="Contact"
-        subtitle="Kết nối cùng TBSolaro – Đối tác năng lượng xanh của bạn"
-        description="Chúng tôi sẵn sàng đồng hành cùng doanh nghiệp và cá nhân trong hành trình chuyển đổi sang năng lượng sạch và bền vững."
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
+        description={t('heroDesc')}
         backgroundImage="https://placehold.co/1600x600/1B5E30/FFFFFF?text=Solar+House"
         size="lg"
       />
 
       {/* Contact Form Section */}
       <ContactFormSection
-        title="Liên hệ với chúng tôi"
-        subtitle="Điền thông tin bên dưới – đội ngũ tư vấn TBSolaro sẽ phản hồi trong vòng 24 giờ làm việc"
+        title={t('formTitle')}
+        subtitle={t('formSubtitle')}
         source="contact_page"
       />
 
@@ -33,8 +35,8 @@ export default function ContactPage() {
       <section className="py-16 bg-gray-50">
         <div className="container-site">
           <div className="text-center mb-10">
-            <h2 className="section-title">Tài liệu hỗ trợ kỹ thuật</h2>
-            <p className="section-subtitle">Tải xuống các tài liệu kỹ thuật, catalog và brochure từ TBSolaro</p>
+            <h2 className="section-title">{t('downloadsTitle')}</h2>
+            <p className="section-subtitle">{t('downloadsSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {documents.map((doc) => (
@@ -59,13 +61,13 @@ export default function ContactPage() {
                   className="flex items-center gap-2 text-sm font-semibold text-brand hover:text-brand-dark transition-colors border-t border-gray-100 pt-4"
                   download
                 >
-                  <Download size={15} /> Download
+                  <Download size={15} /> {t('downloadBtn')}
                 </a>
               </div>
             ))}
           </div>
           <div className="text-center mt-8">
-            <a href="/contact?section=downloads" className="btn-outline">Xem tất cả tài liệu</a>
+            <a href="/contact?section=downloads" className="btn-outline">{t('viewAllDocs')}</a>
           </div>
         </div>
       </section>

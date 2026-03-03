@@ -1,8 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { Download, MessageCircle, ChevronDown, ChevronRight, ArrowLeft } from 'lucide-react';
 import ProductCard from '@/components/sections/ProductCard';
 import { getProductBySlug, getRelatedProducts, getPublishedProducts } from '@/lib/data/products';
@@ -10,7 +11,8 @@ import { getProductBySlug, getRelatedProducts, getPublishedProducts } from '@/li
 // Static params for Next.js
 // In a real app this would come from a db, but for now we generate statically from mock data
 
-const tabs = ['Chi tiết sản phẩm', 'Đóng gói', 'Vận chuyển'] as const;
+// Tab keys for translation lookup
+const tabKeys = ['tabDetails', 'tabPackaging', 'tabShipping'] as const;
 
 const accordionSections = [
   { key: 'features', title: 'KEY FEATURES' },
@@ -24,6 +26,8 @@ interface Props {
 }
 
 export default function ProductDetailPage({ params }: Props) {
+  const t = useTranslations('products');
+  const tc = useTranslations('common');
   const product = getProductBySlug(params.slug);
   if (!product) notFound();
 
@@ -41,9 +45,9 @@ export default function ProductDetailPage({ params }: Props) {
       {/* Breadcrumb */}
       <div className="container-site py-4">
         <nav className="flex items-center gap-2 text-sm text-gray-500">
-          <Link href="/" className="hover:text-brand transition-colors">Trang chủ</Link>
+          <Link href="/" className="hover:text-brand transition-colors">{tc('home')}</Link>
           <ChevronRight size={14} />
-          <Link href="/products" className="hover:text-brand transition-colors">Sản phẩm</Link>
+          <Link href="/products" className="hover:text-brand transition-colors">{t('breadcrumb')}</Link>
           <ChevronRight size={14} />
           <span className="text-gray-900 font-medium">{product.title}</span>
         </nav>
@@ -82,7 +86,7 @@ export default function ProductDetailPage({ params }: Props) {
           <div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-1">{product.title}</h1>
             {product.subtitle && <p className="text-brand font-semibold mb-3">{product.subtitle}</p>}
-            <p className="text-gray-500 text-sm font-medium mb-5 italic">Giá tham khảo</p>
+            <p className="text-gray-500 text-sm font-medium mb-5 italic">{t('priceLabel')}</p>
 
             <ul className="space-y-2 mb-6">
               {product.features.map((f, i) => (
@@ -131,14 +135,14 @@ export default function ProductDetailPage({ params }: Props) {
                   href={product.downloadUrl}
                   className="flex items-center justify-center gap-2 text-sm text-brand font-medium py-2 border-b border-brand/30 hover:border-brand transition-colors"
                 >
-                  <Download size={15} /> Download tài liệu
+                  <Download size={15} /> {t('downloadBtn')}
                 </a>
               )}
             </div>
 
             <div className="flex gap-3">
               <Link href="/contact" className="btn-primary flex-1 justify-center">
-                <MessageCircle size={16} /> Liên hệ
+                <MessageCircle size={16} /> {t('contactBtn')}
               </Link>
             </div>
           </div>
@@ -149,9 +153,9 @@ export default function ProductDetailPage({ params }: Props) {
       <section className="border-t border-gray-100">
         <div className="container-site">
           <div className="flex gap-0 border-b border-gray-200">
-            {tabs.map((tab, i) => (
+            {tabKeys.map((tabKey, i) => (
               <button
-                key={tab}
+                key={tabKey}
                 onClick={() => setActiveTab(i)}
                 className={`px-6 py-4 text-sm font-semibold border-b-2 transition-colors ${
                   activeTab === i
@@ -159,7 +163,7 @@ export default function ProductDetailPage({ params }: Props) {
                     : 'border-transparent text-gray-500 hover:text-gray-700'
                 }`}
               >
-                {tab}
+                {t(tabKey)}
               </button>
             ))}
           </div>
@@ -227,7 +231,7 @@ export default function ProductDetailPage({ params }: Props) {
       {toShow.length > 0 && (
         <section className="py-16 bg-gray-50">
           <div className="container-site">
-            <h2 className="text-2xl font-bold text-gray-900 mb-8">Combo sản phẩm khác</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">{t('relatedTitle')}</h2>
             <div className="grid sm:grid-cols-3 gap-6 mb-8">
               {toShow.map((p) => (
                 <ProductCard key={p.id} product={p} variant="compact" />

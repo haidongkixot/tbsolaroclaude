@@ -1,7 +1,8 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
 import { notFound } from 'next/navigation';
+import { Link } from '@/i18n/navigation';
 import { Calendar, User, Tag, ArrowRight, ChevronRight } from 'lucide-react';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import ContactFormSection from '@/components/sections/ContactFormSection';
@@ -13,6 +14,8 @@ interface Props {
 }
 
 export default function BlogPostPage({ params }: Props) {
+  const t = useTranslations('blog');
+  const tc = useTranslations('common');
   const post = getBlogPostBySlug(params.slug);
   if (!post) notFound();
 
@@ -33,9 +36,9 @@ export default function BlogPostPage({ params }: Props) {
       >
         <div className="container-site relative z-10">
           <nav className="flex items-center gap-2 text-sm text-white/70 mb-5">
-            <Link href="/" className="hover:text-white">Trang chủ</Link>
+            <Link href="/" className="hover:text-white">{tc('home')}</Link>
             <ChevronRight size={14} />
-            <Link href="/blog" className="hover:text-white">Blog</Link>
+            <Link href="/blog" className="hover:text-white">{t('breadcrumb')}</Link>
             <ChevronRight size={14} />
             <span className="text-white/90 line-clamp-1">{post.title}</span>
           </nav>
@@ -89,7 +92,7 @@ export default function BlogPostPage({ params }: Props) {
               </div>
               <div>
                 <p className="font-semibold text-gray-900 text-sm">{post.author}</p>
-                <p className="text-gray-500 text-xs">Đăng ngày {post.publishedAt}</p>
+                <p className="text-gray-500 text-xs">{t('publishedAt')} {post.publishedAt}</p>
               </div>
             </div>
           </div>
@@ -101,9 +104,9 @@ export default function BlogPostPage({ params }: Props) {
         <section className="py-12 bg-gray-50">
           <div className="container-site">
             <div className="flex items-center justify-between mb-8">
-              <h2 className="text-2xl font-bold text-gray-900">Bài viết liên quan</h2>
+              <h2 className="text-2xl font-bold text-gray-900">{t('relatedTitle')}</h2>
               <div className="flex gap-2">
-                {['Mới nhất', 'Phổ biến', 'Liên quan'].map((f, i) => (
+                {[t('latest'), t('popular'), t('related')].map((f, i) => (
                   <button key={f} className={`px-3 py-1 rounded-full text-xs font-medium border transition-colors ${i === 0 ? 'bg-brand text-white border-brand' : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand'}`}>
                     {f}
                   </button>
@@ -123,7 +126,7 @@ export default function BlogPostPage({ params }: Props) {
                     </div>
                     <h3 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-brand transition-colors line-clamp-2">{p.title}</h3>
                     <p className="text-xs text-gray-600 line-clamp-2 flex-1">{p.excerpt}</p>
-                    <div className="mt-3 text-brand text-xs font-semibold flex items-center gap-1">Đọc thêm <ArrowRight size={11} /></div>
+                    <div className="mt-3 text-brand text-xs font-semibold flex items-center gap-1">{tc('readMore')} <ArrowRight size={11} /></div>
                   </div>
                 </Link>
               ))}

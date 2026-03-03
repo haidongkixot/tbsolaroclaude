@@ -1,6 +1,7 @@
 'use client';
 
-import Link from 'next/link';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { Download, ArrowRight } from 'lucide-react';
 import type { Product } from '@/types';
 
@@ -10,6 +11,8 @@ interface ProductCardProps {
 }
 
 export default function ProductCard({ product, variant = 'default' }: ProductCardProps) {
+  const t = useTranslations('common');
+
   if (variant === 'compact') {
     return (
       <article className="card group flex flex-col relative cursor-pointer">
@@ -27,7 +30,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
           {product.subtitle && <p className="text-xs text-gray-500 mb-2">{product.subtitle}</p>}
           <p className="text-xs text-gray-600 line-clamp-2 mb-3 flex-1">{product.excerpt}</p>
           <div className="flex items-center gap-1 text-brand text-xs font-semibold">
-            Xem chi tiết <ArrowRight size={12} />
+            {t('viewDetails')} <ArrowRight size={12} />
           </div>
         </div>
       </article>
@@ -60,11 +63,11 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
           </ul>
           <div className="flex items-center gap-3">
             <Link href={`/products/${product.slug}`} className="btn-primary text-sm px-5 py-2.5">
-              Xem chi tiết
+              {t('viewDetails')}
             </Link>
             {product.downloadUrl && (
               <a href={product.downloadUrl} className="btn-outline text-sm px-5 py-2.5 flex items-center gap-1.5">
-                <Download size={14} /> Tải tài liệu
+                <Download size={14} /> {t('downloadDoc')}
               </a>
             )}
           </div>
@@ -100,14 +103,14 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
         </ul>
         <div className="flex items-center justify-between pt-3 border-t border-gray-100">
           <span className="text-brand text-sm font-semibold flex items-center gap-1">
-            Xem chi tiết <ArrowRight size={14} />
+            {t('viewDetails')} <ArrowRight size={14} />
           </span>
           {product.downloadUrl && (
             <a
               href={product.downloadUrl}
               onClick={(e) => e.stopPropagation()}
               className="text-gray-400 hover:text-brand transition-colors"
-              aria-label="Tải tài liệu"
+              aria-label={t('downloadDoc')}
             >
               <Download size={16} />
             </a>

@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { ChevronDown, Send, CheckCircle } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import { getPublishedFAQs } from '@/lib/data/faq';
 
 export default function FAQPage() {
+  const t = useTranslations('faq');
   const faqs = getPublishedFAQs();
   const [openId, setOpenId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
@@ -33,8 +35,8 @@ export default function FAQPage() {
   return (
     <>
       <PageHero
-        title="FAQs"
-        subtitle="Câu hỏi thường gặp về sản phẩm và dịch vụ TBSolaro"
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
         backgroundImage="https://placehold.co/1600x400/1B5E30/FFFFFF?text=FAQ+Hero"
         size="md"
       />
@@ -44,7 +46,7 @@ export default function FAQPage() {
           <div className="grid lg:grid-cols-3 gap-10 lg:gap-14">
             {/* FAQ Accordion */}
             <div className="lg:col-span-2">
-              <h2 className="text-2xl font-bold text-gray-900 mb-8">Câu hỏi phổ biến</h2>
+              <h2 className="text-2xl font-bold text-gray-900 mb-8">{t('popularTitle')}</h2>
               <div className="space-y-3">
                 {faqs.map((faq) => (
                   <div key={faq.id} className="accordion-item">
@@ -74,52 +76,52 @@ export default function FAQPage() {
             {/* Contact Form Sidebar */}
             <div className="lg:col-span-1">
               <div className="sticky top-24 bg-brand-surface rounded-2xl p-6 border border-brand/10">
-                <h3 className="text-lg font-bold text-gray-900 mb-1">Gửi câu hỏi</h3>
+                <h3 className="text-lg font-bold text-gray-900 mb-1">{t('askTitle')}</h3>
                 <p className="text-gray-500 text-sm mb-6">
-                  Không tìm thấy câu trả lời? Hãy gửi câu hỏi trực tiếp đến đội ngũ TBSolaro.
+                  {t('askDesc')}
                 </p>
 
                 {submitted ? (
                   <div className="text-center py-6">
                     <CheckCircle size={40} className="text-brand mx-auto mb-3" />
-                    <p className="font-semibold text-gray-900">Cảm ơn bạn!</p>
-                    <p className="text-gray-500 text-sm mt-1">Chúng tôi sẽ phản hồi sớm nhất có thể.</p>
+                    <p className="font-semibold text-gray-900">{t('successTitle')}</p>
+                    <p className="text-gray-500 text-sm mt-1">{t('successMsg')}</p>
                     <button onClick={() => setSubmitted(false)} className="mt-4 btn-primary text-sm px-4 py-2">
-                      Gửi câu hỏi khác
+                      {t('askAgain')}
                     </button>
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Name *</label>
-                      <input required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder="Họ và tên" className="input-field text-sm py-2.5" />
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t('formName')} *</label>
+                      <input required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder={t('formNamePlaceholder')} className="input-field text-sm py-2.5" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Email *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t('formEmail')} *</label>
                       <input required type="email" value={form.email} onChange={(e) => setForm((f) => ({ ...f, email: e.target.value }))} placeholder="email@example.com" className="input-field text-sm py-2.5" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Phone</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t('formPhone')}</label>
                       <input value={form.phone} onChange={(e) => setForm((f) => ({ ...f, phone: e.target.value }))} placeholder="+84 --- ---" className="input-field text-sm py-2.5" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Company</label>
-                      <input value={form.company} onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))} placeholder="Tên công ty" className="input-field text-sm py-2.5" />
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t('formCompany')}</label>
+                      <input value={form.company} onChange={(e) => setForm((f) => ({ ...f, company: e.target.value }))} placeholder={t('formCompanyPlaceholder')} className="input-field text-sm py-2.5" />
                     </div>
                     <div>
-                      <label className="block text-xs font-medium text-gray-700 mb-1">Your Message *</label>
+                      <label className="block text-xs font-medium text-gray-700 mb-1">{t('formMessage')} *</label>
                       <textarea
                         required
                         rows={4}
                         value={form.message}
                         onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))}
-                        placeholder="Câu hỏi của bạn..."
+                        placeholder={t('formMessagePlaceholder')}
                         className="textarea-field text-sm py-2.5"
                       />
                     </div>
                     <button type="submit" disabled={submitting} className="btn-primary w-full justify-center text-sm py-2.5">
                       <Send size={14} />
-                      {submitting ? 'Đang gửi...' : 'Send message'}
+                      {submitting ? t('formMessage') : t('submitBtn')}
                     </button>
                   </form>
                 )}

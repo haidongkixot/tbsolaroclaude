@@ -1,8 +1,14 @@
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 import { Facebook, Youtube, MapPin, Phone, Mail } from 'lucide-react';
 import { footerQuickLinks, footerPolicyLinks } from '@/lib/data/settings';
 
-export default function Footer() {
+export default async function Footer() {
+  const t = await getTranslations('footer');
+
+  const quickLinkKeys = ['quickLink1', 'quickLink2', 'quickLink3', 'quickLink4', 'quickLink5'] as const;
+  const policyLinkKeys = ['policyLink1', 'policyLink2', 'policyLink3', 'policyLink4', 'policyLink5', 'policyLink6'] as const;
+
   return (
     <footer className="bg-brand-dark text-white">
       <div className="container-site py-12 md:py-16">
@@ -13,10 +19,10 @@ export default function Footer() {
               <img src="/logo.png" alt="TBSolaro" className="h-12 w-auto rounded-lg" />
             </Link>
             <p className="text-white/70 text-xs uppercase tracking-wide font-semibold mb-2 leading-snug">
-              THAI BINH GREEN POWER<br />INVESTMENT CORPORATION
+              {t('company')}
             </p>
             <p className="text-white/60 text-sm mt-4 leading-relaxed">
-              Thành viên của Tập đoàn Thái Bình – Pioneering Solar Energy
+              {t('tagline')}
             </p>
             <div className="flex items-center gap-3 mt-6">
               <a
@@ -42,7 +48,7 @@ export default function Footer() {
 
           {/* Contact Column */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">Liên hệ</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">{t('contactTitle')}</h3>
             <ul className="space-y-4 text-sm text-white/75">
               <li className="flex gap-3">
                 <MapPin size={16} className="shrink-0 mt-0.5 text-brand-accent" />
@@ -63,16 +69,16 @@ export default function Footer() {
 
           {/* Quick Nav Column */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">Điều hướng nhanh</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">{t('navTitle')}</h3>
             <ul className="space-y-3">
-              {footerQuickLinks.map((link) => (
+              {footerQuickLinks.map((link, i) => (
                 <li key={link.href}>
                   <Link
                     href={link.href}
                     className="text-sm text-white/75 hover:text-white transition-colors flex items-center gap-1.5 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-brand-accent group-hover:w-2 transition-all duration-200" />
-                    {link.label}
+                    {t(quickLinkKeys[i])}
                   </Link>
                 </li>
               ))}
@@ -81,16 +87,16 @@ export default function Footer() {
 
           {/* Policy Column */}
           <div>
-            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">Hỗ trợ & Chính sách</h3>
+            <h3 className="text-sm font-bold uppercase tracking-widest text-white/50 mb-5">{t('policyTitle')}</h3>
             <ul className="space-y-3">
-              {footerPolicyLinks.map((link) => (
-                <li key={link.href + link.label}>
+              {footerPolicyLinks.map((link, i) => (
+                <li key={link.href + i}>
                   <Link
                     href={link.href}
                     className="text-sm text-white/75 hover:text-white transition-colors flex items-center gap-1.5 group"
                   >
                     <span className="w-1 h-1 rounded-full bg-brand-accent group-hover:w-2 transition-all duration-200" />
-                    {link.label}
+                    {t(policyLinkKeys[i])}
                   </Link>
                 </li>
               ))}
@@ -102,8 +108,8 @@ export default function Footer() {
       {/* Bottom bar */}
       <div className="border-t border-white/10">
         <div className="container-site py-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-white/50">
-          <p>© 2025 TBSolaro – A member of Thai Binh corporation | All Rights Reserved</p>
-          <p>Powered by <span className="text-brand-accent">TBSolaro CMS</span></p>
+          <p>{t('copyright')}</p>
+          <p>{t('poweredBy')} <span className="text-brand-accent">{t('cms')}</span></p>
         </div>
       </div>
     </footer>

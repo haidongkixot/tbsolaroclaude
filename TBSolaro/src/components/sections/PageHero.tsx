@@ -1,4 +1,4 @@
-import Image from 'next/image';
+import { Link } from '@/i18n/navigation';
 import { cn } from '@/lib/utils';
 
 interface PageHeroProps {
@@ -62,14 +62,14 @@ export default function PageHero({
           {(ctaPrimary || ctaSecondary) && (
             <div className={cn('flex flex-wrap gap-4', align === 'center' && 'justify-center')}>
               {ctaPrimary && (
-                <a href={ctaPrimary.href} className="btn-white">
+                <Link href={ctaPrimary.href} className="btn-white">
                   {ctaPrimary.label}
-                </a>
+                </Link>
               )}
               {ctaSecondary && (
-                <a href={ctaSecondary.href} className="btn-outline-white">
+                <Link href={ctaSecondary.href} className="btn-outline-white">
                   {ctaSecondary.label}
-                </a>
+                </Link>
               )}
             </div>
           )}

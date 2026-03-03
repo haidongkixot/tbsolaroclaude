@@ -1,14 +1,10 @@
-import Link from 'next/link';
+'use client';
+
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { MapPin, Zap, ArrowRight, Calendar } from 'lucide-react';
 import type { Project } from '@/types';
 import { cn } from '@/lib/utils';
-
-const categoryLabels: Record<string, string> = {
-  enterprise: 'Doanh nghiệp',
-  household: 'Hộ gia đình',
-  community: 'Cộng đồng',
-  csr: 'CSR',
-};
 
 const categoryColors: Record<string, string> = {
   enterprise: 'bg-blue-50 text-blue-700 border-blue-200',
@@ -23,6 +19,8 @@ interface ProjectCardProps {
 }
 
 export default function ProjectCard({ project, variant = 'default' }: ProjectCardProps) {
+  const t = useTranslations('projectCard');
+
   if (variant === 'horizontal') {
     return (
       <article className="card group flex gap-0 overflow-hidden relative cursor-pointer">
@@ -37,7 +35,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
         <div className="p-5 flex flex-col justify-between relative z-10">
           <div>
             <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border mb-3', categoryColors[project.category])}>
-              {categoryLabels[project.category]}
+              {t(project.category as 'enterprise' | 'household' | 'community' | 'csr')}
             </span>
             <h3 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-brand transition-colors line-clamp-2">{project.title}</h3>
             <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed">{project.excerpt}</p>
@@ -81,7 +79,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
             )}
           </div>
           <div className="mt-3 text-brand text-xs font-semibold flex items-center gap-1">
-            Learn more <ArrowRight size={11} />
+            {t('learnMore')} <ArrowRight size={11} />
           </div>
         </div>
       </article>
@@ -99,7 +97,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
         />
         <div className="absolute top-3 left-3">
           <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border', categoryColors[project.category])}>
-            {categoryLabels[project.category]}
+            {t(project.category as 'enterprise' | 'household' | 'community' | 'csr')}
           </span>
         </div>
       </div>
@@ -124,7 +122,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
           )}
         </div>
         <div className="flex items-center gap-1 text-brand text-xs font-semibold pt-3 border-t border-gray-100">
-          Xem chi tiết <ArrowRight size={12} />
+          {t('viewDetails')} <ArrowRight size={12} />
         </div>
       </div>
     </article>

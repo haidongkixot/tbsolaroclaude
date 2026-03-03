@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
+import { getTranslations } from 'next-intl/server';
 import { ArrowRight, CheckCircle } from 'lucide-react';
+import { Link } from '@/i18n/navigation';
 import PageHero from '@/components/sections/PageHero';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import ContactFormSection from '@/components/sections/ContactFormSection';
@@ -46,14 +47,15 @@ const productionSteps = [
 
 const partners = ['Buffer', 'Attpe', 'Fronier', 'NuLabel', 'Dropbox', 'WebFlow'];
 
-export default function AboutPage() {
+export default async function AboutPage() {
+  const t = await getTranslations('about');
   return (
     <>
       <PageHero
-        title="Kiến tạo năng lượng bền vững, nuôi dưỡng tương lai xanh"
-        subtitle="TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình, mang giải pháp năng lượng sạch cho Cộng đồng Cuba."
+        title={t('heroTitle')}
+        subtitle={t('heroSubtitle')}
         backgroundImage="https://placehold.co/1600x700/1B5E30/FFFFFF?text=House+Solar"
-        ctaPrimary={{ label: 'Xem thêm chi tiết', href: '/projects' }}
+        ctaPrimary={{ label: t('ctaBtn'), href: '/projects' }}
         size="lg"
       />
 
@@ -61,8 +63,8 @@ export default function AboutPage() {
       <section className="py-16 md:py-24">
         <div className="container-site">
           <div className="text-center mb-14">
-            <h2 className="section-title">Lịch sử hình thành</h2>
-            <p className="section-subtitle">Chặng đường phát triển của TBSolaro và Tập đoàn Thái Bình</p>
+            <h2 className="section-title">{t('historyTitle')}</h2>
+            <p className="section-subtitle">{t('historySubtitle')}</p>
           </div>
           <div className="relative">
             {/* Vertical line */}
@@ -92,8 +94,8 @@ export default function AboutPage() {
       <section className="py-16 md:py-20 bg-brand-surface">
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">Why TBSolaro – Lý do ra đời</h2>
-            <p className="section-subtitle">Ba giá trị cốt lõi định hướng mọi hoạt động của TBSolaro</p>
+            <h2 className="section-title">{t('whyTitle')}</h2>
+            <p className="section-subtitle">{t('whySubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {whyUs.map((item) => (
@@ -113,8 +115,8 @@ export default function AboutPage() {
       <section className="py-16 md:py-20">
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">Production Process – Quy trình sản xuất</h2>
-            <p className="section-subtitle">Quy trình sản xuất nghiêm ngặt đảm bảo chất lượng tối đa cho mỗi sản phẩm TBSolaro</p>
+            <h2 className="section-title">{t('processTitle')}</h2>
+            <p className="section-subtitle">{t('processSubtitle')}</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {productionSteps.map((step) => (
@@ -134,7 +136,7 @@ export default function AboutPage() {
       {/* Gallery */}
       <section className="py-10 bg-gray-50">
         <div className="container-site">
-          <h2 className="section-title text-center mb-8">Hình ảnh quy trình</h2>
+          <h2 className="section-title text-center mb-8">{t('galleryTitle')}</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="aspect-square rounded-2xl overflow-hidden bg-gray-200">
@@ -152,7 +154,7 @@ export default function AboutPage() {
       {/* Partners */}
       <section className="py-12 bg-white border-b border-gray-100">
         <div className="container-site">
-          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">Đối tác & Đơn vị chứng nhận</p>
+          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{t('partnersTitle')}</p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
             {partners.map((p) => (
               <div key={p} className="px-5 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors">

@@ -10,15 +10,10 @@ export const metadata: Metadata = {
   keywords: ['năng lượng mặt trời', 'điện mặt trời', 'TBSolaro', 'solar', 'năng lượng tái tạo'],
   openGraph: {
     type: 'website',
-    locale: 'vi_VN',
     siteName: 'TBSolaro',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <html lang="vi">
-      <body>{children}</body>
-    </html>
-  );
+  return children;
 }
