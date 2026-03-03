@@ -30,7 +30,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       <aside className="w-64 bg-brand-dark text-white flex flex-col shrink-0 fixed top-0 left-0 h-screen overflow-y-auto">
         {/* Brand */}
         <div className="p-6 border-b border-white/10">
-          <img src="/logo.png" alt="TBSolaro" className="h-9 w-auto brightness-0 invert mb-1" />
+          <img src="/logo.png" alt="TBSolaro" className="h-9 w-auto rounded mb-1" />
           <span className="text-white/50 text-xs">Admin CMS</span>
         </div>
 

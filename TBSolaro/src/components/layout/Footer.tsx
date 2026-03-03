@@ -10,7 +10,7 @@ export default function Footer() {
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <Link href="/" className="inline-flex mb-4">
-              <img src="/logo.png" alt="TBSolaro" className="h-12 w-auto brightness-0 invert" />
+              <img src="/logo.png" alt="TBSolaro" className="h-12 w-auto rounded-lg" />
             </Link>
             <p className="text-white/70 text-xs uppercase tracking-wide font-semibold mb-2 leading-snug">
               THAI BINH GREEN POWER<br />INVESTMENT CORPORATION
