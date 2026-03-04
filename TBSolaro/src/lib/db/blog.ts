@@ -19,7 +19,7 @@ function localize(row: Record<string, any>, l: Lang) {
     slug: row.slug,
     status: row.status,
     author: row.author,
-    publishedAt: row.publishedAt,
+    publishedAt: row.publishedAt ? new Date(row.publishedAt as string).toISOString() : null,
     featuredImage: row.featuredImage,
     seoOgImage: row.seoOgImage,
     gallery: tryParse(row.gallery, [] as string[]),

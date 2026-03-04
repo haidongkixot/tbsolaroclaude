@@ -233,7 +233,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
                   <div className="p-5 flex flex-col flex-1 relative z-10">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="tag-badge">{post.tags[0] || t('defaultTag')}</span>
-                      <span className="text-xs text-gray-400">{post.publishedAt}</span>
+                      <span className="text-xs text-gray-400">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}</span>
                     </div>
                     <h3 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-brand transition-colors line-clamp-2">{post.title}</h3>
                     <p className="text-xs text-gray-600 line-clamp-2 leading-relaxed flex-1">{post.excerpt}</p>
