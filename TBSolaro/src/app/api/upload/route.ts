@@ -8,18 +8,30 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
+  if (!process.env.BLOB_READ_WRITE_TOKEN) {
+    return NextResponse.json(
+      { error: 'BLOB_READ_WRITE_TOKEN is not configured. Set it in Vercel > Storage > Blob.' },
+      { status: 500 }
+    );
+  }
+
   try {
     const formData = await req.formData();
     const file = formData.get('file') as File | null;
     if (!file) return NextResponse.json({ error: 'No file provided' }, { status: 400 });
 
-    const blob = await put(`tbsolaro/${Date.now()}-${file.name}`, file, {
+    const bytes = await file.arrayBuffer();
+    const buffer = Buffer.from(bytes);
+
+    const blob = await put(`tbsolaro/${Date.now()}-${file.name}`, buffer, {
       access: 'public',
+      contentType: file.type,
     });
 
     return NextResponse.json({ url: blob.url });
   } catch (err) {
-    console.error('Upload error:', err);
-    return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    const message = err instanceof Error ? err.message : String(err);
+    console.error('Upload error:', message);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }

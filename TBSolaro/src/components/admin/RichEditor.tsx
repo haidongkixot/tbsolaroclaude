@@ -10,7 +10,7 @@ import TextAlign from '@tiptap/extension-text-align';
 import { useRef, useState } from 'react';
 import {
   Bold, Italic, UnderlineIcon, Strikethrough, List, ListOrdered,
-  Heading2, Heading3, Link2, Image, AlignLeft, AlignCenter, AlignRight,
+  Heading2, Heading3, Link2, Image, ImagePlus, AlignLeft, AlignCenter, AlignRight,
   Undo, Redo,
 } from 'lucide-react';
 
@@ -21,11 +21,12 @@ interface Props {
 }
 
 function ToolbarBtn({
-  onClick, active, title, children,
+  onClick, active, title, disabled, children,
 }: {
   onClick: () => void;
   active?: boolean;
   title: string;
+  disabled?: boolean;
   children: React.ReactNode;
 }) {
   return (
@@ -33,7 +34,8 @@ function ToolbarBtn({
       type="button"
       title={title}
       onClick={onClick}
-      className={`p-1.5 rounded hover:bg-gray-100 transition-colors ${active ? 'bg-gray-100 text-brand' : 'text-gray-600'}`}
+      disabled={disabled}
+      className={`p-1.5 rounded hover:bg-gray-100 transition-colors disabled:opacity-40 disabled:cursor-not-allowed ${active ? 'bg-gray-100 text-brand' : 'text-gray-600'}`}
     >
       {children}
     </button>
@@ -86,6 +88,13 @@ export default function RichEditor({ value, onChange, placeholder = 'Write conte
     }
   }
 
+  function insertImageByUrl() {
+    const url = window.prompt('Enter image URL:');
+    if (url && editor) {
+      editor.chain().focus().setImage({ src: url }).run();
+    }
+  }
+
   if (!editor) return null;
 
   return (
@@ -132,8 +141,17 @@ export default function RichEditor({ value, onChange, placeholder = 'Write conte
         <ToolbarBtn onClick={addLink} active={editor.isActive('link')} title="Insert link">
           <Link2 size={14} />
         </ToolbarBtn>
-        <ToolbarBtn onClick={() => !uploading && fileRef.current?.click()} title={uploading ? 'Uploading…' : 'Insert image'}>
-          {uploading ? <span className="text-xs px-1">...</span> : <Image size={14} />}
+        {/* Upload image file */}
+        <ToolbarBtn
+          onClick={() => fileRef.current?.click()}
+          disabled={uploading}
+          title={uploading ? 'Uploading…' : 'Upload image from file'}
+        >
+          {uploading ? <span className="text-xs px-1 leading-none">...</span> : <Image size={14} />}
+        </ToolbarBtn>
+        {/* Insert image by URL */}
+        <ToolbarBtn onClick={insertImageByUrl} title="Insert image by URL">
+          <ImagePlus size={14} />
         </ToolbarBtn>
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <ToolbarBtn onClick={() => editor.chain().focus().undo().run()} title="Undo">
