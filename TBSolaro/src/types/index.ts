@@ -21,11 +21,11 @@ export interface Product {
   tags: string[];
   downloadUrl?: string;
   relatedSlugs?: string[];
-  status: Status;
-  sortOrder: number;
-  seo: SEOMeta;
-  createdAt: string;
-  updatedAt: string;
+  status?: Status;
+  sortOrder?: number;
+  seo?: SEOMeta;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface ProductTier {
@@ -50,11 +50,11 @@ export interface Project {
   featuredImage: string;
   videoUrl?: string;
   relatedSlugs?: string[];
-  status: Status;
-  sortOrder: number;
-  seo: SEOMeta;
-  createdAt: string;
-  updatedAt: string;
+  status?: Status;
+  sortOrder?: number;
+  seo?: SEOMeta;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface BlogPost {
@@ -69,10 +69,10 @@ export interface BlogPost {
   gallery?: string[];
   tags: string[];
   relatedSlugs?: string[];
-  status: Status;
-  seo: SEOMeta;
-  createdAt: string;
-  updatedAt: string;
+  status?: Status;
+  seo?: SEOMeta;
+  createdAt?: string | Date;
+  updatedAt?: string | Date;
 }
 
 export interface FAQ {

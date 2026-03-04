@@ -1,185 +1,104 @@
-'use client';
-
-import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
-import { MapPin, Zap, Calendar, Clock, ChevronLeft, ChevronRight as ChevronRightIcon } from 'lucide-react';
+import { MapPin, Zap, Calendar, Clock, ChevronRight } from 'lucide-react';
 import ProjectCard from '@/components/sections/ProjectCard';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
-import { getProjectBySlug, getRelatedProjects, getPublishedProjects } from '@/lib/data/projects';
-import { formatDate } from '@/lib/utils';
+import { getProjectBySlug, getRelatedProjects, getPublishedProjects } from '@/lib/db/projects';
+import GallerySlider from './_components/GallerySlider';
 
 interface Props {
-  params: { slug: string };
+  params: Promise<{ locale: string; slug: string }>;
 }
 
-export default function ProjectDetailPage({ params }: Props) {
-  const t = useTranslations('projects');
-  const tc = useTranslations('common');
-  const project = getProjectBySlug(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params;
+  const project = await getProjectBySlug(slug, locale);
+  if (!project) return {};
+  return { title: project.title, description: project.excerpt };
+}
+
+export default async function ProjectDetailPage({ params }: Props) {
+  const { locale, slug } = await params;
+  const t = await getTranslations('projects');
+  const tc = await getTranslations('common');
+
+  const [project, allProjects] = await Promise.all([
+    getProjectBySlug(slug, locale),
+    getPublishedProjects(locale),
+  ]);
   if (!project) notFound();
 
-  const [activeImage, setActiveImage] = useState(0);
-  const relatedProjects = getRelatedProjects(project.relatedSlugs || []).slice(0, 3);
-  const fallback = getPublishedProjects().filter((p) => p.slug !== project.slug).slice(0, 3);
-  const toShow = relatedProjects.length > 0 ? relatedProjects : fallback;
-
-  const nextImage = () => setActiveImage((i) => (i + 1) % project.gallery.length);
-  const prevImage = () => setActiveImage((i) => (i - 1 + project.gallery.length) % project.gallery.length);
+  const relatedRaw = await getRelatedProjects(project.relatedSlugs || [], locale);
+  const related = relatedRaw.length > 0 ? relatedRaw : allProjects.filter((p) => p.slug !== slug).slice(0, 3);
+  const gallery = project.gallery.length > 0 ? project.gallery : [project.featuredImage].filter(Boolean);
 
   return (
     <div className="bg-white">
-      {/* Image Gallery Slider */}
-      <div className="relative bg-brand-dark overflow-hidden" style={{ minHeight: '400px' }}>
-        <img
-          src={project.gallery[activeImage] || project.featuredImage}
-          alt={project.title}
-          className="w-full object-cover"
-          style={{ maxHeight: '520px', width: '100%' }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+      <GallerySlider images={gallery} alt={project.title} />
 
-        {/* Navigation arrows */}
-        {project.gallery.length > 1 && (
-          <>
-            <button
-              onClick={prevImage}
-              className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors border border-white/30"
-              aria-label="Ảnh trước"
-            >
-              <ChevronLeft size={20} className="text-white" />
-            </button>
-            <button
-              onClick={nextImage}
-              className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center hover:bg-white/40 transition-colors border border-white/30"
-              aria-label="Ảnh tiếp"
-            >
-              <ChevronRightIcon size={20} className="text-white" />
-            </button>
-            {/* Dots */}
-            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-              {project.gallery.map((_, i) => (
-                <button
-                  key={i}
-                  onClick={() => setActiveImage(i)}
-                  className={`w-2 h-2 rounded-full transition-all ${i === activeImage ? 'bg-white w-6' : 'bg-white/50'}`}
-                />
-              ))}
-            </div>
-          </>
-        )}
-      </div>
-
-      {/* Content + Sidebar */}
       <section className="container-site py-12">
         <div className="grid lg:grid-cols-3 gap-10">
-          {/* Article */}
           <div className="lg:col-span-2">
             <nav className="flex items-center gap-2 text-sm text-gray-500 mb-6">
               <Link href="/" className="hover:text-brand">{tc('home')}</Link>
-              <ChevronRightIcon size={14} />
+              <ChevronRight size={14} />
               <Link href="/projects" className="hover:text-brand">{t('breadcrumb')}</Link>
-              <ChevronRightIcon size={14} />
+              <ChevronRight size={14} />
               <span className="text-gray-900">{project.title}</span>
             </nav>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">{project.title}</h1>
-            <div
-              className="prose max-w-none"
-              dangerouslySetInnerHTML={{ __html: project.content }}
-            />
+            <div className="prose max-w-none" dangerouslySetInnerHTML={{ __html: project.content }} />
           </div>
 
-          {/* Sidebar */}
           <div className="lg:col-span-1">
             <div className="sticky top-24 space-y-4">
-              {/* Project Info */}
               <div className="bg-brand-surface rounded-2xl p-6 border border-brand/10">
                 <h3 className="font-bold text-gray-900 mb-4 text-sm uppercase tracking-wider">{t('projectInfo')}</h3>
                 <ul className="space-y-4">
                   {project.power && (
                     <li className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0">
-                        <Zap size={16} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500">{t('powerLabel')}</p>
-                        <p className="font-bold text-gray-900">{project.power}</p>
-                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0"><Zap size={16} className="text-white" /></div>
+                      <div><p className="text-xs text-gray-500">{t('powerLabel')}</p><p className="font-bold text-gray-900">{project.power}</p></div>
                     </li>
                   )}
                   {project.installationDate && (
                     <li className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0">
-                        <Calendar size={16} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500">{t('dateLabel')}</p>
-                        <p className="font-bold text-gray-900">{project.installationDate}</p>
-                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0"><Calendar size={16} className="text-white" /></div>
+                      <div><p className="text-xs text-gray-500">{t('dateLabel')}</p><p className="font-bold text-gray-900">{project.installationDate}</p></div>
                     </li>
                   )}
                   {project.year && (
                     <li className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0">
-                        <Clock size={16} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500">{t('yearLabel')}</p>
-                        <p className="font-bold text-gray-900">{project.year}</p>
-                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0"><Clock size={16} className="text-white" /></div>
+                      <div><p className="text-xs text-gray-500">{t('yearLabel')}</p><p className="font-bold text-gray-900">{project.year}</p></div>
                     </li>
                   )}
                   {project.location && (
                     <li className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0">
-                        <MapPin size={16} className="text-white" />
-                      </div>
-                      <div>
-                        <p className="text-xs text-gray-500">{t('locationLabel')}</p>
-                        <p className="font-bold text-gray-900 text-sm">{project.location}</p>
-                      </div>
+                      <div className="w-9 h-9 rounded-xl bg-brand flex items-center justify-center shrink-0"><MapPin size={16} className="text-white" /></div>
+                      <div><p className="text-xs text-gray-500">{t('locationLabel')}</p><p className="font-bold text-gray-900 text-sm">{project.location}</p></div>
                     </li>
                   )}
                 </ul>
               </div>
-
-              {/* CTA */}
               <div className="bg-brand rounded-2xl p-6 text-white">
                 <h3 className="font-bold mb-2">{t('ctaTitle')}</h3>
                 <p className="text-white/75 text-sm mb-4">{t('ctaDesc')}</p>
-                <Link href="/contact" className="btn-white text-sm">
-                  {t('ctaBtn')}
-                </Link>
+                <Link href="/contact" className="btn-white text-sm">{t('ctaBtn')}</Link>
               </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Related Projects */}
-      {toShow.length > 0 && (
+      {related.length > 0 && (
         <section className="py-16 bg-gray-50">
           <div className="container-site">
-            <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-              <h2 className="text-2xl font-bold text-gray-900">{t('relatedTitle')}</h2>
-              <div className="flex gap-2">
-                {['Tất cả', 'Category', 'Category', 'Category'].map((c, i) => (
-                  <button
-                    key={i}
-                    className={`px-4 py-1.5 rounded-full text-xs font-medium border transition-colors ${
-                      i === 0 ? 'bg-brand text-white border-brand' : 'border-gray-300 text-gray-600 hover:border-brand hover:text-brand'
-                    }`}
-                  >
-                    {c}
-                  </button>
-                ))}
-              </div>
-            </div>
+            <h2 className="text-2xl font-bold text-gray-900 mb-8">{t('relatedTitle')}</h2>
             <div className="grid sm:grid-cols-3 gap-6">
-              {toShow.map((p) => (
-                <ProjectCard key={p.id} project={p} />
-              ))}
+              {related.map((p) => <ProjectCard key={p.id} project={p} />)}
             </div>
           </div>
         </section>

@@ -1,0 +1,115 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+model Product {
+  id            String   @id @default(cuid())
+  slug          String   @unique
+  status        String   @default("draft")
+  category      String   @default("combo")
+  sortOrder     Int      @default(0)
+  downloadUrl   String   @default("")
+  featuredImage String   @default("")
+  gallery       String   @default("[]")
+  tags          String   @default("[]")
+  relatedSlugs  String   @default("[]")
+  seoOgImage    String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  titleVi    String
+  titleEn    String   @default("")
+  titleEs    String   @default("")
+  subtitleVi String   @default("")
+  subtitleEn String   @default("")
+  subtitleEs String   @default("")
+  excerptVi  String   @default("")
+  excerptEn  String   @default("")
+  excerptEs  String   @default("")
+  featuresVi String   @default("[]")
+  featuresEn String   @default("[]")
+  featuresEs String   @default("[]")
+  specsVi    String   @default("{}")
+  specsEn    String   @default("{}")
+  specsEs    String   @default("{}")
+  tiersVi    String   @default("[]")
+  tiersEn    String   @default("[]")
+  tiersEs    String   @default("[]")
+  seoTitleVi String   @default("")
+  seoTitleEn String   @default("")
+  seoTitleEs String   @default("")
+  seoDescVi  String   @default("")
+  seoDescEn  String   @default("")
+  seoDescEs  String   @default("")
+}
+
+model Project {
+  id               String   @id @default(cuid())
+  slug             String   @unique
+  status           String   @default("draft")
+  category         String   @default("enterprise")
+  sortOrder        Int      @default(0)
+  location         String   @default("")
+  power            String   @default("")
+  installationDate String   @default("")
+  year             String   @default("")
+  videoUrl         String   @default("")
+  featuredImage    String   @default("")
+  gallery          String   @default("[]")
+  relatedSlugs     String   @default("[]")
+  seoOgImage       String   @default("")
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  titleVi    String
+  titleEn    String   @default("")
+  titleEs    String   @default("")
+  excerptVi  String   @default("")
+  excerptEn  String   @default("")
+  excerptEs  String   @default("")
+  contentVi  String   @default("")
+  contentEn  String   @default("")
+  contentEs  String   @default("")
+  seoTitleVi String   @default("")
+  seoTitleEn String   @default("")
+  seoTitleEs String   @default("")
+  seoDescVi  String   @default("")
+  seoDescEn  String   @default("")
+  seoDescEs  String   @default("")
+}
+
+model BlogPost {
+  id            String    @id @default(cuid())
+  slug          String    @unique
+  status        String    @default("draft")
+  publishedAt   DateTime?
+  author        String    @default("Admin")
+  featuredImage String    @default("")
+  gallery       String    @default("[]")
+  tags          String    @default("[]")
+  relatedSlugs  String    @default("[]")
+  seoOgImage    String    @default("")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  titleVi    String
+  titleEn    String   @default("")
+  titleEs    String   @default("")
+  excerptVi  String   @default("")
+  excerptEn  String   @default("")
+  excerptEs  String   @default("")
+  contentVi  String   @default("")
+  contentEn  String   @default("")
+  contentEs  String   @default("")
+  seoTitleVi String   @default("")
+  seoTitleEn String   @default("")
+  seoTitleEs String   @default("")
+  seoDescVi  String   @default("")
+  seoDescEn  String   @default("")
+  seoDescEs  String   @default("")
+}

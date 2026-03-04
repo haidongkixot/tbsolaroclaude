@@ -175,7 +175,7 @@ export function getProjectBySlug(slug: string): Project | undefined {
 }
 
 export function getPublishedProjects(): Project[] {
-  return projects.filter((p) => p.status === 'published').sort((a, b) => a.sortOrder - b.sortOrder);
+  return projects.filter((p) => p.status === 'published').sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
 
 export function getProjectsByCategory(category: Project['category']): Project[] {

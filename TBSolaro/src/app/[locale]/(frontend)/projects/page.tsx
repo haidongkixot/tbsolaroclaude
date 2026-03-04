@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
-import { getPublishedProjects, getCSRProjects, getProjectsByCategory } from '@/lib/data/projects';
+import { getCSRProjects, getProjectsByCategory } from '@/lib/db/projects';
 
 export const metadata: Metadata = {
   title: 'Dự Án',
@@ -18,12 +18,15 @@ const scaleKeys = [
   { key: 'community', icon: '🏫', titleKey: 'communityTitle', descKey: 'communityDesc', image: 'https://placehold.co/700x400/52B788/FFFFFF?text=Community+Solar' },
 ];
 
-export default async function ProjectsPage() {
+export default async function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations('projects');
-  const csrProjects = getCSRProjects();
-  const enterpriseProjects = getProjectsByCategory('enterprise');
-  const householdProjects = getProjectsByCategory('household');
-  const communityProjects = getProjectsByCategory('community');
+  const [csrProjects, enterpriseProjects, householdProjects, communityProjects] = await Promise.all([
+    getCSRProjects(locale),
+    getProjectsByCategory('enterprise', locale),
+    getProjectsByCategory('household', locale),
+    getProjectsByCategory('community', locale),
+  ]);
 
   return (
     <>

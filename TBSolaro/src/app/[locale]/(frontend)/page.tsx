@@ -4,8 +4,8 @@ import { Link } from '@/i18n/navigation';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import ProductCard from '@/components/sections/ProductCard';
-import { getFeaturedCombos } from '@/lib/data/products';
-import { getPublishedPosts } from '@/lib/data/blog';
+import { getFeaturedCombos } from '@/lib/db/products';
+import { getPublishedPosts } from '@/lib/db/blog';
 
 const certifications = ['IRES', 'GBC', 'IEC', 'Fronius', 'Huawei', 'Dropbox'];
 
@@ -35,12 +35,16 @@ const testimonials = [
 
 const statIcons = [Sun, Zap, Users, Shield];
 
-export default async function HomePage() {
+export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations('home');
   const tc = await getTranslations('common');
 
-  const featuredCombos = getFeaturedCombos();
-  const latestPosts = getPublishedPosts().slice(0, 3);
+  const [featuredCombos, allPosts] = await Promise.all([
+    getFeaturedCombos(locale),
+    getPublishedPosts(locale),
+  ]);
+  const latestPosts = allPosts.slice(0, 3);
 
   const stats = [
     { value: '500+', labelKey: 'stat1Label' as const, Icon: Sun },

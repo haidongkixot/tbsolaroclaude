@@ -230,7 +230,7 @@ export function getRelatedProducts(slugs: string[]): Product[] {
 }
 
 export function getPublishedProducts(): Product[] {
-  return products.filter((p) => p.status === 'published').sort((a, b) => a.sortOrder - b.sortOrder);
+  return products.filter((p) => p.status === 'published').sort((a, b) => (a.sortOrder ?? 0) - (b.sortOrder ?? 0));
 }
 
 export function getFeaturedCombos(): Product[] {

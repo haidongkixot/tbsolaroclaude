@@ -3,17 +3,20 @@ import { getTranslations } from 'next-intl/server';
 import PageHero from '@/components/sections/PageHero';
 import ProductCard from '@/components/sections/ProductCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
-import { getPublishedProducts, getFeaturedCombos } from '@/lib/data/products';
+import { getPublishedProducts, getFeaturedCombos } from '@/lib/db/products';
 
 export const metadata: Metadata = {
   title: 'Sản Phẩm',
   description: 'Khám phá danh mục sản phẩm và combo năng lượng mặt trời của TBSolaro. Giải pháp phù hợp với mọi nhu cầu.',
 };
 
-export default async function ProductsPage() {
+export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const t = await getTranslations('products');
-  const allProducts = getPublishedProducts();
-  const featuredCombos = getFeaturedCombos();
+  const [allProducts, featuredCombos] = await Promise.all([
+    getPublishedProducts(locale),
+    getFeaturedCombos(locale),
+  ]);
 
   return (
     <>
