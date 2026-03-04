@@ -4,6 +4,7 @@ import PageHero from '@/components/sections/PageHero';
 import ProductCard from '@/components/sections/ProductCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getPublishedProducts, getFeaturedCombos } from '@/lib/db/products';
+import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Sản Phẩm',
@@ -13,9 +14,10 @@ export const metadata: Metadata = {
 export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations('products');
-  const [allProducts, featuredCombos] = await Promise.all([
+  const [allProducts, featuredCombos, settings] = await Promise.all([
     getPublishedProducts(locale),
     getFeaturedCombos(locale),
+    getSiteSettings(),
   ]);
 
   return (
@@ -23,7 +25,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
       <PageHero
         title={t('heroTitle')}
         subtitle={t('heroSubtitle')}
-        backgroundImage="https://placehold.co/1600x500/1B5E30/FFFFFF?text=Solar+Panels"
+        backgroundImage={settings.productsHeroImage || 'https://placehold.co/1600x500/1B5E30/FFFFFF?text=Solar+Panels'}
         size="md"
       />
 

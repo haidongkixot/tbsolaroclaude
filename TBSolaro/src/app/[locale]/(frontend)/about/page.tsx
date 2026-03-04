@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import PageHero from '@/components/sections/PageHero';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import ContactFormSection from '@/components/sections/ContactFormSection';
+import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Về Chúng Tôi',
@@ -48,13 +49,13 @@ const productionSteps = [
 const partners = ['Buffer', 'Attpe', 'Fronier', 'NuLabel', 'Dropbox', 'WebFlow'];
 
 export default async function AboutPage() {
-  const t = await getTranslations('about');
+  const [t, settings] = await Promise.all([getTranslations('about'), getSiteSettings()]);
   return (
     <>
       <PageHero
         title={t('heroTitle')}
         subtitle={t('heroSubtitle')}
-        backgroundImage="https://placehold.co/1600x700/1B5E30/FFFFFF?text=House+Solar"
+        backgroundImage={settings.aboutHeroImage || 'https://placehold.co/1600x700/1B5E30/FFFFFF?text=House+Solar'}
         ctaPrimary={{ label: t('ctaBtn'), href: '/projects' }}
         size="lg"
       />
@@ -169,7 +170,7 @@ export default async function AboutPage() {
       <ContactFormSection source="about_page" />
 
       {/* Sustainability Banner */}
-      <SustainabilityBanner />
+      <SustainabilityBanner backgroundImage={settings.sustainabilityBgImage || undefined} />
     </>
   );
 }

@@ -6,6 +6,7 @@ import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getCSRProjects, getProjectsByCategory } from '@/lib/db/projects';
+import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Dự Án',
@@ -21,11 +22,12 @@ const scaleKeys = [
 export default async function ProjectsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations('projects');
-  const [csrProjects, enterpriseProjects, householdProjects, communityProjects] = await Promise.all([
+  const [csrProjects, enterpriseProjects, householdProjects, communityProjects, settings] = await Promise.all([
     getCSRProjects(locale),
     getProjectsByCategory('enterprise', locale),
     getProjectsByCategory('household', locale),
     getProjectsByCategory('community', locale),
+    getSiteSettings(),
   ]);
 
   return (
@@ -33,7 +35,7 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
       <PageHero
         title={t('heroTitle')}
         subtitle={t('heroSubtitle')}
-        backgroundImage="https://placehold.co/1600x500/1B5E30/FFFFFF?text=Projects+Hero"
+        backgroundImage={settings.projectsHeroImage || 'https://placehold.co/1600x500/1B5E30/FFFFFF?text=Projects+Hero'}
         size="md"
       />
 

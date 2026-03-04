@@ -7,13 +7,18 @@ interface SustainabilityBannerProps {
   title?: string;
   ctaLabel?: string;
   ctaHref?: string;
+  backgroundImage?: string;
 }
+
+const DEFAULT_BG = 'https://placehold.co/1600x500/1B5E30/FFFFFF?text=Wind+Turbines';
 
 export default function SustainabilityBanner({
   title,
   ctaLabel,
   ctaHref = '/community',
+  backgroundImage,
 }: SustainabilityBannerProps) {
+  const bgImage = backgroundImage || DEFAULT_BG;
   const t = useTranslations('sustainabilityBanner');
 
   const displayTitle = title ?? t('title');
@@ -23,7 +28,7 @@ export default function SustainabilityBanner({
     <section
       className="relative bg-brand-dark overflow-hidden py-16 md:py-24"
       style={{
-        backgroundImage: `linear-gradient(to right, rgba(19,67,31,0.92) 0%, rgba(27,94,48,0.85) 50%, rgba(19,67,31,0.7) 100%), url('https://placehold.co/1600x500/1B5E30/FFFFFF?text=Wind+Turbines')`,
+        backgroundImage: `linear-gradient(to right, rgba(19,67,31,0.92) 0%, rgba(27,94,48,0.85) 50%, rgba(19,67,31,0.7) 100%), url('${bgImage}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
       }}

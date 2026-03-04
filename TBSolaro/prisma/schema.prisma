@@ -83,6 +83,42 @@ model Project {
   seoDescEs  String   @default("")
 }
 
+model SiteSetting {
+  id        String   @id @default("global")
+  updatedAt DateTime @updatedAt
+
+  // Branding
+  logoUrl   String @default("")
+
+  // Homepage Hero
+  heroImage      String @default("")
+  heroTitleVi    String @default("")
+  heroTitleEn    String @default("")
+  heroTitleEs    String @default("")
+  heroSubtitleVi String @default("")
+  heroSubtitleEn String @default("")
+  heroSubtitleEs String @default("")
+
+  // Page hero backgrounds
+  productsHeroImage  String @default("")
+  projectsHeroImage  String @default("")
+  aboutHeroImage     String @default("")
+  contactHeroImage   String @default("")
+  communityHeroImage String @default("")
+  faqHeroImage       String @default("")
+  showroomHeroImage  String @default("")
+
+  // Sustainability Banner
+  sustainabilityBgImage String @default("")
+
+  // Footer contact
+  footerPhone    String @default("")
+  footerEmail    String @default("")
+  footerAddress  String @default("")
+  footerFacebook String @default("")
+  footerYoutube  String @default("")
+}
+
 model BlogPost {
   id            String    @id @default(cuid())
   slug          String    @unique

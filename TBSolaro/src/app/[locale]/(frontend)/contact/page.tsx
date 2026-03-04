@@ -4,6 +4,7 @@ import { Download, FileText } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getPublishedDocuments } from '@/lib/data/downloads';
+import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Liên Hệ & Tải Tài Liệu',
@@ -11,7 +12,7 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const t = await getTranslations('contact');
+  const [t, settings] = await Promise.all([getTranslations('contact'), getSiteSettings()]);
   const documents = getPublishedDocuments().slice(0, 3);
 
   return (
@@ -20,7 +21,7 @@ export default async function ContactPage() {
         title={t('heroTitle')}
         subtitle={t('heroSubtitle')}
         description={t('heroDesc')}
-        backgroundImage="https://placehold.co/1600x600/1B5E30/FFFFFF?text=Solar+House"
+        backgroundImage={settings.contactHeroImage || 'https://placehold.co/1600x600/1B5E30/FFFFFF?text=Solar+House'}
         size="lg"
       />
 

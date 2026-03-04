@@ -6,6 +6,7 @@ import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import { getCSRProjects } from '@/lib/data/projects';
+import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Cộng Đồng & CSR',
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function CommunityPage() {
-  const t = await getTranslations('community');
+  const [t, settings] = await Promise.all([getTranslations('community'), getSiteSettings()]);
   const csrProjects = getCSRProjects();
 
   return (
@@ -21,7 +22,7 @@ export default async function CommunityPage() {
       <PageHero
         title={t('heroTitle')}
         subtitle={t('heroSubtitle')}
-        backgroundImage="https://placehold.co/1600x700/1B5E30/FFFFFF?text=Community+Solar"
+        backgroundImage={settings.communityHeroImage || 'https://placehold.co/1600x700/1B5E30/FFFFFF?text=Community+Solar'}
         ctaPrimary={{ label: t('heroBtn1'), href: '/projects' }}
         ctaSecondary={{ label: t('heroBtn2'), href: '/contact' }}
         size="lg"
@@ -111,7 +112,7 @@ export default async function CommunityPage() {
         </div>
       </section>
 
-      <SustainabilityBanner />
+      <SustainabilityBanner backgroundImage={settings.sustainabilityBgImage || undefined} />
     </>
   );
 }

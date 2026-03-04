@@ -6,6 +6,7 @@ import ContactFormSection from '@/components/sections/ContactFormSection';
 import ProductCard from '@/components/sections/ProductCard';
 import { getFeaturedCombos } from '@/lib/db/products';
 import { getPublishedPosts } from '@/lib/db/blog';
+import { getSiteSettings } from '@/lib/db/settings';
 
 const certifications = ['IRES', 'GBC', 'IEC', 'Fronius', 'Huawei', 'Dropbox'];
 
@@ -40,9 +41,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations('home');
   const tc = await getTranslations('common');
 
-  const [featuredCombos, allPosts] = await Promise.all([
+  const [featuredCombos, allPosts, settings] = await Promise.all([
     getFeaturedCombos(locale),
     getPublishedPosts(locale),
+    getSiteSettings(),
   ]);
   const latestPosts = allPosts.slice(0, 3);
 
@@ -59,7 +61,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <section
         className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden"
         style={{
-          backgroundImage: `linear-gradient(135deg, rgba(19,67,31,0.90) 0%, rgba(27,94,48,0.75) 50%, rgba(0,0,0,0.4) 100%), url('https://placehold.co/1600x800/1B5E30/FFFFFF?text=Solar+Workers')`,
+          backgroundImage: `linear-gradient(135deg, rgba(19,67,31,0.90) 0%, rgba(27,94,48,0.75) 50%, rgba(0,0,0,0.4) 100%), url('${settings.heroImage || 'https://placehold.co/1600x800/1B5E30/FFFFFF?text=Solar+Workers'}')`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -252,7 +254,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <ContactFormSection source="homepage" />
 
       {/* Sustainability Banner */}
-      <SustainabilityBanner />
+      <SustainabilityBanner backgroundImage={settings.sustainabilityBgImage || undefined} />
     </>
   );
 }
