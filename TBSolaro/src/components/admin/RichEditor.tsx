@@ -7,7 +7,7 @@ import Link from '@tiptap/extension-link';
 import Placeholder from '@tiptap/extension-placeholder';
 import Underline from '@tiptap/extension-underline';
 import TextAlign from '@tiptap/extension-text-align';
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import {
   Bold, Italic, UnderlineIcon, Strikethrough, List, ListOrdered,
   Heading2, Heading3, Link2, Image, AlignLeft, AlignCenter, AlignRight,
@@ -42,6 +42,7 @@ function ToolbarBtn({
 
 export default function RichEditor({ value, onChange, placeholder = 'Write content here...' }: Props) {
   const fileRef = useRef<HTMLInputElement>(null);
+  const [uploading, setUploading] = useState(false);
 
   const editor = useEditor({
     extensions: [
@@ -60,12 +61,21 @@ export default function RichEditor({ value, onChange, placeholder = 'Write conte
   });
 
   async function handleImageFile(file: File) {
-    const fd = new FormData();
-    fd.append('file', file);
-    const res = await fetch('/api/upload', { method: 'POST', body: fd });
-    const data = await res.json();
-    if (data.url && editor) {
-      editor.chain().focus().setImage({ src: data.url }).run();
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url && editor) {
+        editor.chain().focus().setImage({ src: data.url }).run();
+      } else {
+        alert(`Upload failed: ${data.error || 'Unknown error'}`);
+      }
+    } catch {
+      alert('Upload failed: network error');
+    } finally {
+      setUploading(false);
     }
   }
 
@@ -122,8 +132,8 @@ export default function RichEditor({ value, onChange, placeholder = 'Write conte
         <ToolbarBtn onClick={addLink} active={editor.isActive('link')} title="Insert link">
           <Link2 size={14} />
         </ToolbarBtn>
-        <ToolbarBtn onClick={() => fileRef.current?.click()} title="Insert image">
-          <Image size={14} />
+        <ToolbarBtn onClick={() => !uploading && fileRef.current?.click()} title={uploading ? 'Uploading…' : 'Insert image'}>
+          {uploading ? <span className="text-xs px-1">...</span> : <Image size={14} />}
         </ToolbarBtn>
         <span className="w-px h-4 bg-gray-200 mx-1" />
         <ToolbarBtn onClick={() => editor.chain().focus().undo().run()} title="Undo">
