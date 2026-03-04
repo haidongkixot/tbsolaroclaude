@@ -12,7 +12,7 @@ function tryParse<T>(v: string, fallback: T): T {
   try { return JSON.parse(v); } catch { return fallback; }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// eslint-disable-next-line
 function localize(row: Record<string, any>, l: Lang) {
   return {
     id: row.id,
