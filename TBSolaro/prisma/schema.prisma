@@ -90,7 +90,9 @@ model SiteSetting {
   // Branding
   logoUrl   String @default("")
 
-  // Homepage Hero
+  // Homepage Hero Slider (JSON array of HeroSlide objects)
+  heroSlides     String @default("[]")
+  // Legacy single-slide fields kept for backwards compat
   heroImage      String @default("")
   heroTitleVi    String @default("")
   heroTitleEn    String @default("")

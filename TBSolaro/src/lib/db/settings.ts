@@ -1,8 +1,20 @@
 import { cache } from 'react';
 import { prisma } from '@/lib/prisma';
 
+export type HeroSlide = {
+  image: string;
+  titleVi: string;
+  titleEn: string;
+  titleEs: string;
+  subtitleVi: string;
+  subtitleEn: string;
+  subtitleEs: string;
+};
+
 export type SiteSettings = {
   logoUrl: string;
+  heroSlides: HeroSlide[];
+  // legacy single-slide fields
   heroImage: string;
   heroTitleVi: string;
   heroTitleEn: string;
@@ -27,6 +39,7 @@ export type SiteSettings = {
 
 const defaults: SiteSettings = {
   logoUrl: '',
+  heroSlides: [],
   heroImage: '',
   heroTitleVi: '',
   heroTitleEn: '',
@@ -49,6 +62,10 @@ const defaults: SiteSettings = {
   footerYoutube: '',
 };
 
+function tryParse<T>(v: string, fallback: T): T {
+  try { return JSON.parse(v); } catch { return fallback; }
+}
+
 // Cached per request (Next.js React cache)
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   try {
@@ -56,6 +73,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     if (!row) return defaults;
     return {
       logoUrl: row.logoUrl,
+      heroSlides: tryParse(row.heroSlides, [] as HeroSlide[]),
       heroImage: row.heroImage,
       heroTitleVi: row.heroTitleVi,
       heroTitleEn: row.heroTitleEn,

@@ -1,7 +1,8 @@
 import { getTranslations } from 'next-intl/server';
-import { ArrowRight, Zap, Shield, Star, Users, Sun } from 'lucide-react';
+import { Zap, Shield, Star, Users, Sun } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
+import HeroSlider from '@/components/sections/HeroSlider';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import ProductCard from '@/components/sections/ProductCard';
 import { getFeaturedCombos } from '@/lib/db/products';
@@ -57,42 +58,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
   return (
     <>
-      {/* Hero Section */}
-      <section
-        className="relative min-h-[600px] md:min-h-[700px] flex items-center overflow-hidden"
-        style={{
-          backgroundImage: `linear-gradient(135deg, rgba(19,67,31,0.90) 0%, rgba(27,94,48,0.75) 50%, rgba(0,0,0,0.4) 100%), url('${settings.heroImage || 'https://placehold.co/1600x800/1B5E30/FFFFFF?text=Solar+Workers'}')`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-        }}
-      >
-        {/* Decorative green grid overlay */}
-        <div className="absolute inset-0 opacity-10" aria-hidden="true"
-          style={{ backgroundImage: 'radial-gradient(circle, rgba(255,255,255,0.3) 1px, transparent 1px)', backgroundSize: '40px 40px' }}
-        />
-        <div className="container-site relative z-10 py-16">
-          <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 bg-white/15 text-white text-xs font-semibold px-4 py-2 rounded-full mb-6 backdrop-blur-sm border border-white/20">
-              <span className="w-2 h-2 rounded-full bg-green-400 animate-pulse" />
-              {t('heroBadge')}
-            </div>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white leading-tight mb-6">
-              {t('heroTitle')}
-            </h1>
-            <p className="text-white/80 text-lg mb-8 leading-relaxed">
-              {t('heroSubtitle')}
-            </p>
-            <div className="flex flex-wrap gap-4">
-              <Link href="/projects" className="btn-white">
-                {t('heroBtn1')} <ArrowRight size={16} />
-              </Link>
-              <Link href="/products" className="btn-outline-white">
-                {t('heroBtn2')}
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
+      {/* Hero Slider */}
+      <HeroSlider
+        slides={settings.heroSlides}
+        locale={locale}
+        badge={t('heroBadge')}
+        btn1={t('heroBtn1')}
+        btn2={t('heroBtn2')}
+      />
 
       {/* Certifications */}
       <section className="py-10 bg-white border-b border-gray-100">
