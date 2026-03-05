@@ -87,7 +87,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="rounded-3xl overflow-hidden bg-brand grid md:grid-cols-2 gap-0">
             <div className="relative overflow-hidden">
               <img
-                src="https://placehold.co/800x500/1B5E30/FFFFFF?text=Cuba+CSR+Project"
+                src={settings.csrImage || 'https://placehold.co/800x500/1B5E30/FFFFFF?text=Cuba+CSR+Project'}
                 alt="Dự án CSR Cuba"
                 className="w-full h-full object-cover min-h-[300px]"
               />
@@ -110,7 +110,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* Featured Product Combos */}
-      <section className="py-16 md:py-20 bg-gray-50">
+      <section
+        className="py-16 md:py-20 bg-gray-50"
+        style={settings.productsSectionBg ? { backgroundImage: `linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)), url('${settings.productsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+      >
         <div className="container-site">
           <div className="text-center mb-12">
             <h2 className="section-title">{t('productsTitle')}</h2>
@@ -130,7 +133,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* Stats */}
-      <section className="py-16 bg-brand">
+      <section
+        className="py-16 bg-brand"
+        style={settings.statsSectionBg ? { backgroundImage: `linear-gradient(rgba(19,67,31,0.88), rgba(19,67,31,0.88)), url('${settings.statsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+      >
         <div className="container-site">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">{t('statsTitle')}</h2>
@@ -153,7 +159,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       </section>
 
       {/* Testimonials */}
-      <section className="py-16 md:py-20">
+      <section
+        className="py-16 md:py-20"
+        style={settings.testimonialsSectionBg ? { backgroundImage: `linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.94)), url('${settings.testimonialsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+      >
         <div className="container-site">
           <div className="text-center mb-12">
             <h2 className="section-title">{t('testimonialTitle')}</h2>
@@ -183,7 +192,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
 
       {/* Latest Blog */}
       {latestPosts.length > 0 && (
-        <section className="py-16 md:py-20 bg-brand-surface">
+        <section
+          className="py-16 md:py-20 bg-brand-surface"
+          style={settings.newsSectionBg ? { backgroundImage: `linear-gradient(rgba(240,249,244,0.93), rgba(240,249,244,0.93)), url('${settings.newsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+        >
           <div className="container-site">
             <div className="flex items-center justify-between mb-10">
               <div>
@@ -224,7 +236,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       )}
 
       {/* Contact Form */}
-      <ContactFormSection source="homepage" />
+      <ContactFormSection source="homepage" backgroundImage={settings.contactSectionBg || undefined} />
 
       {/* Sustainability Banner */}
       <SustainabilityBanner backgroundImage={settings.sustainabilityBgImage || undefined} />

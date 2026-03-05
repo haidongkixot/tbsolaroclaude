@@ -30,6 +30,13 @@ export type SiteSettings = {
   faqHeroImage: string;
   showroomHeroImage: string;
   sustainabilityBgImage: string;
+  // Homepage section backgrounds
+  csrImage: string;
+  productsSectionBg: string;
+  statsSectionBg: string;
+  testimonialsSectionBg: string;
+  newsSectionBg: string;
+  contactSectionBg: string;
   footerPhone: string;
   footerEmail: string;
   footerAddress: string;
@@ -55,6 +62,12 @@ const defaults: SiteSettings = {
   faqHeroImage: '',
   showroomHeroImage: '',
   sustainabilityBgImage: '',
+  csrImage: '',
+  productsSectionBg: '',
+  statsSectionBg: '',
+  testimonialsSectionBg: '',
+  newsSectionBg: '',
+  contactSectionBg: '',
   footerPhone: '',
   footerEmail: '',
   footerAddress: '',
@@ -89,6 +102,12 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       faqHeroImage: row.faqHeroImage,
       showroomHeroImage: row.showroomHeroImage,
       sustainabilityBgImage: row.sustainabilityBgImage,
+      csrImage: row.csrImage,
+      productsSectionBg: row.productsSectionBg,
+      statsSectionBg: row.statsSectionBg,
+      testimonialsSectionBg: row.testimonialsSectionBg,
+      newsSectionBg: row.newsSectionBg,
+      contactSectionBg: row.contactSectionBg,
       footerPhone: row.footerPhone,
       footerEmail: row.footerEmail,
       footerAddress: row.footerAddress,

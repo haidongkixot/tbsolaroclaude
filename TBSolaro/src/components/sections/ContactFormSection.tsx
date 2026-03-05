@@ -9,6 +9,7 @@ interface ContactFormSectionProps {
   subtitle?: string;
   compact?: boolean;
   source?: string;
+  backgroundImage?: string;
 }
 
 export default function ContactFormSection({
@@ -16,6 +17,7 @@ export default function ContactFormSection({
   subtitle,
   compact = false,
   source = 'contact_form',
+  backgroundImage,
 }: ContactFormSectionProps) {
   const t = useTranslations('contactForm');
   const tc = useTranslations('common');
@@ -66,8 +68,12 @@ export default function ContactFormSection({
     );
   }
 
+  const bgStyle = !compact && backgroundImage
+    ? { backgroundImage: `linear-gradient(rgba(240,249,244,0.93), rgba(240,249,244,0.93)), url('${backgroundImage}')`, backgroundSize: 'cover' as const, backgroundPosition: 'center' as const }
+    : undefined;
+
   return (
-    <section className={compact ? 'py-10' : 'py-16 md:py-20 bg-brand-surface'}>
+    <section className={compact ? 'py-10' : 'py-16 md:py-20 bg-brand-surface'} style={bgStyle}>
       <div className="container-site">
         {!compact && (
           <div className="text-center mb-10">

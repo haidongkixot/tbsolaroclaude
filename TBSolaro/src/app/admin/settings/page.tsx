@@ -19,6 +19,13 @@ type Form = {
   faqHeroImage: string;
   showroomHeroImage: string;
   sustainabilityBgImage: string;
+  // Homepage section backgrounds
+  csrImage: string;
+  productsSectionBg: string;
+  statsSectionBg: string;
+  testimonialsSectionBg: string;
+  newsSectionBg: string;
+  contactSectionBg: string;
   footerPhone: string;
   footerEmail: string;
   footerAddress: string;
@@ -36,6 +43,8 @@ const empty: Form = {
   productsHeroImage: '', projectsHeroImage: '', aboutHeroImage: '',
   contactHeroImage: '', communityHeroImage: '', faqHeroImage: '',
   showroomHeroImage: '', sustainabilityBgImage: '',
+  csrImage: '', productsSectionBg: '', statsSectionBg: '',
+  testimonialsSectionBg: '', newsSectionBg: '', contactSectionBg: '',
   footerPhone: '', footerEmail: '', footerAddress: '',
   footerFacebook: '', footerYoutube: '',
 };
@@ -209,6 +218,31 @@ export default function AdminSettingsPage() {
                 <ImageUpload value={form[key] as string} onChange={(u) => set(key, u)} />
               </Field>
             ))}
+          </div>
+        </Section>
+
+        {/* ── Homepage Section Backgrounds ── */}
+        <Section icon="🏠" title="Trang chủ – Hình nền các khối (Homepage Sections)">
+          <p className="text-xs text-gray-500 mb-4">Mỗi khối có thể có hình nền riêng. Nếu không tải lên, khối sẽ dùng màu nền mặc định.</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <Field label="Khối CSR – Ảnh minh họa">
+              <ImageUpload value={form.csrImage} onChange={(u) => set('csrImage', u)} />
+            </Field>
+            <Field label="Khối Sản phẩm – Hình nền">
+              <ImageUpload value={form.productsSectionBg} onChange={(u) => set('productsSectionBg', u)} />
+            </Field>
+            <Field label="Khối Thống kê – Hình nền">
+              <ImageUpload value={form.statsSectionBg} onChange={(u) => set('statsSectionBg', u)} />
+            </Field>
+            <Field label="Khối Testimonial – Hình nền">
+              <ImageUpload value={form.testimonialsSectionBg} onChange={(u) => set('testimonialsSectionBg', u)} />
+            </Field>
+            <Field label="Khối Tin tức – Hình nền">
+              <ImageUpload value={form.newsSectionBg} onChange={(u) => set('newsSectionBg', u)} />
+            </Field>
+            <Field label="Khối Liên hệ – Hình nền">
+              <ImageUpload value={form.contactSectionBg} onChange={(u) => set('contactSectionBg', u)} />
+            </Field>
           </div>
         </Section>
 

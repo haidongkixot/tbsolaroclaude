@@ -230,6 +230,10 @@
   },
   "blog": {
     "breadcrumb": "Blog",
+    "heroTitle": "Tin tức & Truyền thông",
+    "heroSubtitle": "Cập nhật mới nhất về năng lượng mặt trời và hoạt động của TBSolaro",
+    "allTitle": "Tất cả bài viết",
+    "noPostsMsg": "Chưa có bài viết nào. Quay lại sau nhé!",
     "publishedAt": "Đăng ngày",
     "relatedTitle": "Bài viết liên quan",
     "latest": "Mới nhất",

@@ -113,6 +113,14 @@ model SiteSetting {
   // Sustainability Banner
   sustainabilityBgImage String @default("")
 
+  // Homepage section backgrounds
+  csrImage              String @default("")
+  productsSectionBg     String @default("")
+  statsSectionBg        String @default("")
+  testimonialsSectionBg String @default("")
+  newsSectionBg         String @default("")
+  contactSectionBg      String @default("")
+
   // Footer contact
   footerPhone    String @default("")
   footerEmail    String @default("")

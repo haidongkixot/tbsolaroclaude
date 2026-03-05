@@ -230,6 +230,10 @@
   },
   "blog": {
     "breadcrumb": "Blog",
+    "heroTitle": "News & Media",
+    "heroSubtitle": "Latest updates on solar energy and TBSolaro activities",
+    "allTitle": "All Articles",
+    "noPostsMsg": "No posts yet. Check back soon!",
     "publishedAt": "Published on",
     "relatedTitle": "Related articles",
     "latest": "Latest",
