@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server';
-import { Zap, Shield, Star, Users, Sun } from 'lucide-react';
+import { ArrowRight, Zap, Shield, Star, Users, Sun } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import HeroSlider from '@/components/sections/HeroSlider';

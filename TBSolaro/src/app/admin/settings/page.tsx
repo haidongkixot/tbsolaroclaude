@@ -183,7 +183,7 @@ export default function AdminSettingsPage() {
                     <Field label="Hình nền slide">
                       <ImageUpload value={slide.image} onChange={(u) => updateSlide(i, 'image', u)} />
                     </Field>
-                    <LanguageTabs locale={lang} onChange={setLang} />
+                    <LanguageTabs value={lang} onChange={setLang} />
                     <Field label="Tiêu đề lớn">
                       <input className="input-field" value={slide[`title${l}` as keyof HeroSlide]} onChange={(e) => updateSlide(i, `title${l}` as keyof HeroSlide, e.target.value)} placeholder="VD: Kiến tạo năng lượng bền vững" />
                     </Field>
