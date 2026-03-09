@@ -62,7 +62,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       <HeroSlider
         slides={settings.heroSlides}
         locale={locale}
-        badge={t('heroBadge')}
+        badge={
+          (locale === 'en' ? settings.heroBadgeEn : locale === 'es' ? settings.heroBadgeEs : settings.heroBadgeVi)
+          || t('heroBadge')
+        }
         btn1={t('heroBtn1')}
         btn2={t('heroBtn2')}
       />

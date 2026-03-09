@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard, Package, FolderOpen, FileText, HelpCircle,
-  MapPin, Download, MessageSquare, Settings, LogOut, Sun, ChevronRight, Users,
+  MapPin, Download, MessageSquare, Settings, LogOut, Sun, ChevronRight, Users, BookOpen,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -13,6 +13,7 @@ const nav = [
   { href: '/admin/products', label: 'Sản phẩm', icon: Package },
   { href: '/admin/projects', label: 'Dự án', icon: FolderOpen },
   { href: '/admin/blog', label: 'Blog', icon: FileText },
+  { href: '/admin/about', label: 'Về chúng tôi', icon: BookOpen },
   { href: '/admin/faq', label: 'FAQs', icon: HelpCircle },
   { href: '/admin/showrooms', label: 'Showroom', icon: MapPin },
   { href: '/admin/downloads', label: 'Tài liệu', icon: Download },
