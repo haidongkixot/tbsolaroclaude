@@ -11,9 +11,31 @@ export type HeroSlide = {
   subtitleEs: string;
 };
 
+export type TimelineItem = {
+  year: string;
+  titleVi: string; titleEn: string; titleEs: string;
+  descVi: string;  descEn: string;  descEs: string;
+};
+
+export type WhyUsItem = {
+  label: string;
+  titleVi: string; titleEn: string; titleEs: string;
+  descVi: string;  descEn: string;  descEs: string;
+};
+
+export type ProcessStep = {
+  num: string;
+  titleVi: string; titleEn: string; titleEs: string;
+  descVi: string;  descEn: string;  descEs: string;
+};
+
 export type SiteSettings = {
   logoUrl: string;
   heroSlides: HeroSlide[];
+  // Hero badge
+  heroBadgeVi: string;
+  heroBadgeEn: string;
+  heroBadgeEs: string;
   // legacy single-slide fields
   heroImage: string;
   heroTitleVi: string;
@@ -37,6 +59,11 @@ export type SiteSettings = {
   testimonialsSectionBg: string;
   newsSectionBg: string;
   contactSectionBg: string;
+  // About page content
+  aboutTimeline: TimelineItem[];
+  aboutWhyUs: WhyUsItem[];
+  aboutProcess: ProcessStep[];
+  aboutPartners: string;
   footerPhone: string;
   footerEmail: string;
   footerAddress: string;
@@ -47,6 +74,9 @@ export type SiteSettings = {
 const defaults: SiteSettings = {
   logoUrl: '',
   heroSlides: [],
+  heroBadgeVi: '',
+  heroBadgeEn: '',
+  heroBadgeEs: '',
   heroImage: '',
   heroTitleVi: '',
   heroTitleEn: '',
@@ -68,6 +98,10 @@ const defaults: SiteSettings = {
   testimonialsSectionBg: '',
   newsSectionBg: '',
   contactSectionBg: '',
+  aboutTimeline: [],
+  aboutWhyUs: [],
+  aboutProcess: [],
+  aboutPartners: '',
   footerPhone: '',
   footerEmail: '',
   footerAddress: '',
@@ -87,6 +121,9 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     return {
       logoUrl: row.logoUrl,
       heroSlides: tryParse(row.heroSlides, [] as HeroSlide[]),
+      heroBadgeVi: row.heroBadgeVi,
+      heroBadgeEn: row.heroBadgeEn,
+      heroBadgeEs: row.heroBadgeEs,
       heroImage: row.heroImage,
       heroTitleVi: row.heroTitleVi,
       heroTitleEn: row.heroTitleEn,
@@ -108,6 +145,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       testimonialsSectionBg: row.testimonialsSectionBg,
       newsSectionBg: row.newsSectionBg,
       contactSectionBg: row.contactSectionBg,
+      aboutTimeline: tryParse(row.aboutTimeline, [] as TimelineItem[]),
+      aboutWhyUs: tryParse(row.aboutWhyUs, [] as WhyUsItem[]),
+      aboutProcess: tryParse(row.aboutProcess, [] as ProcessStep[]),
+      aboutPartners: row.aboutPartners,
       footerPhone: row.footerPhone,
       footerEmail: row.footerEmail,
       footerAddress: row.footerAddress,

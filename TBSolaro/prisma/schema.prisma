@@ -113,6 +113,17 @@ model SiteSetting {
   // Sustainability Banner
   sustainabilityBgImage String @default("")
 
+  // Hero badge (shown in the hero slider banner)
+  heroBadgeVi String @default("")
+  heroBadgeEn String @default("")
+  heroBadgeEs String @default("")
+
+  // About page content
+  aboutTimeline String @default("[]")  // JSON: [{year,titleVi,titleEn,titleEs,descVi,descEn,descEs}]
+  aboutWhyUs    String @default("[]")  // JSON: [{label,titleVi,titleEn,titleEs,descVi,descEn,descEs}]
+  aboutProcess  String @default("[]")  // JSON: [{num,titleVi,titleEn,titleEs,descVi,descEn,descEs}]
+  aboutPartners String @default("")    // comma-separated partner names
+
   // Homepage section backgrounds
   csrImage              String @default("")
   productsSectionBg     String @default("")

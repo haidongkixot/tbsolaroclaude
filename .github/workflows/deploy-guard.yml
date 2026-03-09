@@ -1,0 +1,26 @@
+name: Deploy Guard
+
+on:
+  pull_request:
+    branches:
+      - main
+    types: [opened, synchronize, reopened]
+
+jobs:
+  enforce-branch-policy:
+    name: Enforce develop or hotfix → main
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check source branch
+        run: |
+          HEAD="${{ github.head_ref }}"
+          if [ "$HEAD" != "develop" ] && [[ "$HEAD" != hotfix/* ]]; then
+            echo "::error::PRs to main must come from 'develop' or a 'hotfix/*' branch."
+            echo "::error::Source branch was: $HEAD"
+            echo ""
+            echo "Workflow:"
+            echo "  feature/xxx → develop (staging) → main (production)"
+            echo "  hotfix/xxx  → main directly (then sync back to develop)"
+            exit 1
+          fi
+          echo "✓ Branch policy passed: $HEAD → main"

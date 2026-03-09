@@ -1,14 +1,15 @@
 import { NextResponse } from 'next/server';
 
-// Hardcoded admin credentials — swap for DB lookup when ready
-const USERS = [
-  { email: 'admin@tbsolaro.com', password: 'Admin@2025', name: 'Admin TBSolaro', role: 'superadmin' },
-];
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@tbsolaro.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@2025';
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
 
-  const user = USERS.find((u) => u.email === email && u.password === password);
+  const user =
+    email === ADMIN_EMAIL && password === ADMIN_PASSWORD
+      ? { name: 'Admin TBSolaro', role: 'superadmin' }
+      : null;
 
   if (!user) {
     return NextResponse.json(
