@@ -161,7 +161,7 @@ export default function AdminAboutPage() {
 
         {/* ── Hero Badge ── */}
         <Section icon="🏷️" title="Badge trên Hero Slider trang chủ">
-          <p className="text-xs text-gray-500 mb-4">Dòng chữ nhỏ hiển thị phía trên tiêu đề trong banner trang chủ, ví dụ: "Thành viên của Tập đoàn Thái Bình".</p>
+          <p className="text-xs text-gray-500 mb-4">Dòng chữ nhỏ hiển thị phía trên tiêu đề trong banner trang chủ, ví dụ: &ldquo;Thành viên của Tập đoàn Thái Bình&rdquo;.</p>
           <LanguageTabs value={lang} onChange={setLang} />
           <Field label={`Nội dung badge (${lang.toUpperCase()})`}>
             <input
@@ -222,7 +222,7 @@ export default function AdminAboutPage() {
 
         {/* ── Why Us ── */}
         <Section icon="⭐" title="Tại sao chọn TBSolaro (Why Us)">
-          <p className="text-xs text-gray-500 mb-4">Các lý do nổi bật hiển thị trong phần "Tại sao chọn TBSolaro" trên trang About.</p>
+          <p className="text-xs text-gray-500 mb-4">Các lý do nổi bật hiển thị trong phần &ldquo;Tại sao chọn TBSolaro&rdquo; trên trang About.</p>
           <div className="space-y-3">
             {form.aboutWhyUs.map((item, i) => (
               <div key={i} className="border border-gray-200 rounded-xl overflow-hidden">
