@@ -4,7 +4,7 @@ import PageHero from '@/components/sections/PageHero';
 import ProductCard from '@/components/sections/ProductCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getPublishedProducts, getFeaturedCombos } from '@/lib/db/products';
-import { getSiteSettings } from '@/lib/db/settings';
+import { getSiteSettings, st } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Sản Phẩm',
@@ -34,8 +34,8 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
         <section className="py-16 md:py-20">
           <div className="container-site">
             <div className="text-center mb-10">
-              <h2 className="section-title">{t('featuredTitle')}</h2>
-              <p className="section-subtitle">{t('featuredSubtitle')}</p>
+              <h2 className="section-title">{st(settings.sectionTitles, 'products', 'featuredTitle', locale) || t('featuredTitle')}</h2>
+              <p className="section-subtitle">{st(settings.sectionTitles, 'products', 'featuredSubtitle', locale) || t('featuredSubtitle')}</p>
             </div>
             <div className="space-y-6">
               {featuredCombos.slice(0, 1).map((product) => (
@@ -50,7 +50,7 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
       <section className="py-8 pb-16 md:pb-20 bg-gray-50">
         <div className="container-site">
           <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">{t('allTitle')}</h2>
+            <h2 className="text-2xl font-bold text-gray-900">{st(settings.sectionTitles, 'products', 'allTitle', locale) || t('allTitle')}</h2>
             <div className="flex flex-wrap gap-2">
               {[t('filterAll'), t('filterCombo'), t('filterPanel'), t('filterBattery'), t('filterInverter')].map((cat) => (
                 <button

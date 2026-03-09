@@ -6,7 +6,7 @@ import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getCSRProjects, getProjectsByCategory } from '@/lib/db/projects';
-import { getSiteSettings } from '@/lib/db/settings';
+import { getSiteSettings, st } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
   title: 'Dự Án',
@@ -43,8 +43,8 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
       <section className="py-16 md:py-20">
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('scaleTitle')}</h2>
-            <p className="section-subtitle">{t('scaleSubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'projects', 'scaleTitle', locale) || t('scaleTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'projects', 'scaleSubtitle', locale) || t('scaleSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-12">
             {scaleKeys.map((scale) => (

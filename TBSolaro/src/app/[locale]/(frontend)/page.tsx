@@ -7,7 +7,7 @@ import ContactFormSection from '@/components/sections/ContactFormSection';
 import ProductCard from '@/components/sections/ProductCard';
 import { getFeaturedCombos } from '@/lib/db/products';
 import { getPublishedPosts } from '@/lib/db/blog';
-import { getSiteSettings } from '@/lib/db/settings';
+import { getSiteSettings, st } from '@/lib/db/settings';
 
 const certifications = ['IRES', 'GBC', 'IEC', 'Fronius', 'Huawei', 'Dropbox'];
 
@@ -73,7 +73,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {/* Certifications */}
       <section className="py-10 bg-white border-b border-gray-100">
         <div className="container-site">
-          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{t('certTitle')}</p>
+          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'home', 'certTitle', locale) || t('certTitle')}</p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
             {certifications.map((cert) => (
               <div key={cert} className="px-4 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors cursor-pointer">
@@ -97,12 +97,12 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               <div className="absolute inset-0 bg-gradient-to-r from-transparent to-brand/30" />
             </div>
             <div className="p-8 md:p-12 flex flex-col justify-center">
-              <span className="tag-badge !bg-white/20 !text-white !border-white/30 mb-4">{t('csrBadge')}</span>
+              <span className="tag-badge !bg-white/20 !text-white !border-white/30 mb-4">{st(settings.sectionTitles, 'home', 'csrBadge', locale) || t('csrBadge')}</span>
               <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-                {t('csrTitle')}
+                {st(settings.sectionTitles, 'home', 'csrTitle', locale) || t('csrTitle')}
               </h2>
               <p className="text-white/75 mb-8 leading-relaxed">
-                {t('csrDesc')}
+                {st(settings.sectionTitles, 'home', 'csrDesc', locale) || t('csrDesc')}
               </p>
               <Link href="/community" className="btn-white self-start">
                 {t('csrBtn')} <ArrowRight size={16} />
@@ -119,8 +119,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       >
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('productsTitle')}</h2>
-            <p className="section-subtitle">{t('productsSubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'home', 'productsTitle', locale) || t('productsTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'home', 'productsSubtitle', locale) || t('productsSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6 mb-8">
             {featuredCombos.map((product) => (
@@ -142,8 +142,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       >
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">{t('statsTitle')}</h2>
-            <p className="text-white/70 text-lg">{t('statsSubtitle')}</p>
+            <h2 className="text-3xl md:text-4xl font-bold text-white mb-3">{st(settings.sectionTitles, 'home', 'statsTitle', locale) || t('statsTitle')}</h2>
+            <p className="text-white/70 text-lg">{st(settings.sectionTitles, 'home', 'statsSubtitle', locale) || t('statsSubtitle')}</p>
           </div>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {stats.map(({ value, labelKey, Icon }) => (
@@ -168,8 +168,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       >
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('testimonialTitle')}</h2>
-            <p className="section-subtitle">{t('testimonialSubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'home', 'testimonialTitle', locale) || t('testimonialTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'home', 'testimonialSubtitle', locale) || t('testimonialSubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((testimony) => (
@@ -202,8 +202,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
           <div className="container-site">
             <div className="flex items-center justify-between mb-10">
               <div>
-                <h2 className="section-title !mb-1">{t('blogTitle')}</h2>
-                <p className="text-gray-500">{t('blogSubtitle')}</p>
+                <h2 className="section-title !mb-1">{st(settings.sectionTitles, 'home', 'blogTitle', locale) || t('blogTitle')}</h2>
+                <p className="text-gray-500">{st(settings.sectionTitles, 'home', 'blogSubtitle', locale) || t('blogSubtitle')}</p>
               </div>
               <Link href="/blog" className="hidden md:flex items-center gap-1 text-brand font-semibold text-sm hover:gap-2 transition-all">
                 {t('viewAllBlog')} <ArrowRight size={16} />

@@ -4,7 +4,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { Save, Image as ImageIcon, Plus, Trash2, GripVertical } from 'lucide-react';
 import ImageUpload from '@/components/admin/ImageUpload';
 import LanguageTabs from '@/components/admin/LanguageTabs';
-import type { HeroSlide } from '@/lib/db/settings';
+import type { HeroSlide, SectionTitles, LangVal } from '@/lib/db/settings';
 
 type Lang = 'vi' | 'en' | 'es';
 
@@ -31,11 +31,32 @@ type Form = {
   footerAddress: string;
   footerFacebook: string;
   footerYoutube: string;
+  sectionTitles: SectionTitles;
 };
 
 const emptySlide = (): HeroSlide => ({
   image: '', titleVi: '', titleEn: '', titleEs: '',
   subtitleVi: '', subtitleEn: '', subtitleEs: '',
+});
+
+const emptyLang = (): LangVal => ({ vi: '', en: '', es: '' });
+
+const emptySectionTitles = (): SectionTitles => ({
+  home: {
+    certTitle: emptyLang(), csrBadge: emptyLang(), csrTitle: emptyLang(), csrDesc: emptyLang(),
+    productsTitle: emptyLang(), productsSubtitle: emptyLang(),
+    statsTitle: emptyLang(), statsSubtitle: emptyLang(),
+    testimonialTitle: emptyLang(), testimonialSubtitle: emptyLang(),
+    blogTitle: emptyLang(), blogSubtitle: emptyLang(),
+  },
+  products: { featuredTitle: emptyLang(), featuredSubtitle: emptyLang(), allTitle: emptyLang() },
+  projects: { scaleTitle: emptyLang(), scaleSubtitle: emptyLang() },
+  about: {
+    historyTitle: emptyLang(), historySubtitle: emptyLang(),
+    whyTitle: emptyLang(), whySubtitle: emptyLang(),
+    processTitle: emptyLang(), processSubtitle: emptyLang(),
+    partnersTitle: emptyLang(),
+  },
 });
 
 const empty: Form = {
@@ -47,6 +68,7 @@ const empty: Form = {
   testimonialsSectionBg: '', newsSectionBg: '', contactSectionBg: '',
   footerPhone: '', footerEmail: '', footerAddress: '',
   footerFacebook: '', footerYoutube: '',
+  sectionTitles: emptySectionTitles(),
 };
 
 const PAGE_HEROES: { key: keyof Form; label: string }[] = [
@@ -69,12 +91,28 @@ export default function AdminSettingsPage() {
     fetch('/api/admin/settings')
       .then((r) => r.json())
       .then((data) => {
+        const parsedST: SectionTitles = (() => {
+          try { return typeof data.sectionTitles === 'string' ? JSON.parse(data.sectionTitles) : (data.sectionTitles || {}); }
+          catch { return {}; }
+        })();
+        // Deep merge with defaults so all keys exist
+        const merged = emptySectionTitles();
+        for (const page of Object.keys(merged) as (keyof SectionTitles)[]) {
+          if (parsedST[page]) {
+            for (const key of Object.keys(merged[page])) {
+              const k = key as string;
+              const src = (parsedST[page] as Record<string, LangVal>)[k];
+              if (src) (merged[page] as Record<string, LangVal>)[k] = src;
+            }
+          }
+        }
         setForm((prev) => ({
           ...prev,
           ...data,
           heroSlides: Array.isArray(data.heroSlides)
             ? data.heroSlides
             : (() => { try { return JSON.parse(data.heroSlides || '[]'); } catch { return []; } })(),
+          sectionTitles: merged,
         }));
       })
       .catch(() => {});
@@ -83,6 +121,16 @@ export default function AdminSettingsPage() {
   const set = useCallback((key: keyof Form, val: string) => {
     setForm((prev) => ({ ...prev, [key]: val }));
   }, []);
+
+  function setSectionTitle(page: keyof SectionTitles, key: string, locale: Lang, val: string) {
+    setForm((prev) => {
+      const st = { ...prev.sectionTitles };
+      const section = { ...(st[page] as Record<string, LangVal>) };
+      section[key] = { ...section[key], [locale]: val };
+      (st as Record<string, unknown>)[page] = section;
+      return { ...prev, sectionTitles: st };
+    });
+  }
 
   function updateSlide(i: number, field: keyof HeroSlide, val: string) {
     setForm((prev) => {
@@ -119,7 +167,7 @@ export default function AdminSettingsPage() {
   async function handleSave() {
     setStatus('saving');
     try {
-      const payload = { ...form, heroSlides: JSON.stringify(form.heroSlides) };
+      const payload = { ...form, heroSlides: JSON.stringify(form.heroSlides), sectionTitles: JSON.stringify(form.sectionTitles) };
       const res = await fetch('/api/admin/settings', {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
@@ -251,6 +299,66 @@ export default function AdminSettingsPage() {
           <Field label="Hình nền banner">
             <ImageUpload value={form.sustainabilityBgImage} onChange={(u) => set('sustainabilityBgImage', u)} />
           </Field>
+        </Section>
+
+        {/* ── Section Titles ── */}
+        <Section icon="✏️" title="Tiêu đề các Section (Section Titles)">
+          <p className="text-xs text-gray-500 mb-4">Ghi đè tiêu đề mặc định của các khối nội dung trên từng trang. Để trống sẽ dùng nội dung mặc định.</p>
+          <LanguageTabs value={lang} onChange={setLang} />
+          <div className="space-y-6 mt-4">
+
+            {/* Homepage */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">🏠 Trang chủ (Homepage)</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field label="Chứng nhận — tiêu đề"><input className="input-field" value={form.sectionTitles.home.certTitle[lang]} onChange={(e) => setSectionTitle('home', 'certTitle', lang, e.target.value)} placeholder="Chứng nhận & Đối tác" /></Field>
+                <Field label="CSR — badge"><input className="input-field" value={form.sectionTitles.home.csrBadge[lang]} onChange={(e) => setSectionTitle('home', 'csrBadge', lang, e.target.value)} placeholder="VD: Trách nhiệm xã hội" /></Field>
+                <Field label="CSR — tiêu đề"><input className="input-field" value={form.sectionTitles.home.csrTitle[lang]} onChange={(e) => setSectionTitle('home', 'csrTitle', lang, e.target.value)} placeholder="Thực tế từ hành trình CSR..." /></Field>
+                <Field label="CSR — mô tả"><input className="input-field" value={form.sectionTitles.home.csrDesc[lang]} onChange={(e) => setSectionTitle('home', 'csrDesc', lang, e.target.value)} placeholder="Mô tả ngắn về dự án CSR..." /></Field>
+                <Field label="Sản phẩm — tiêu đề"><input className="input-field" value={form.sectionTitles.home.productsTitle[lang]} onChange={(e) => setSectionTitle('home', 'productsTitle', lang, e.target.value)} placeholder="Combo sản phẩm nổi bật" /></Field>
+                <Field label="Sản phẩm — phụ đề"><input className="input-field" value={form.sectionTitles.home.productsSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'productsSubtitle', lang, e.target.value)} placeholder="Giải pháp trọn gói năng lượng..." /></Field>
+                <Field label="Thống kê — tiêu đề"><input className="input-field" value={form.sectionTitles.home.statsTitle[lang]} onChange={(e) => setSectionTitle('home', 'statsTitle', lang, e.target.value)} placeholder="TBSolaro tự hào" /></Field>
+                <Field label="Thống kê — phụ đề"><input className="input-field" value={form.sectionTitles.home.statsSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'statsSubtitle', lang, e.target.value)} placeholder="Những con số nói lên..." /></Field>
+                <Field label="Testimonial — tiêu đề"><input className="input-field" value={form.sectionTitles.home.testimonialTitle[lang]} onChange={(e) => setSectionTitle('home', 'testimonialTitle', lang, e.target.value)} placeholder="Trải nghiệm thực tế từ người dùng" /></Field>
+                <Field label="Testimonial — phụ đề"><input className="input-field" value={form.sectionTitles.home.testimonialSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'testimonialSubtitle', lang, e.target.value)} placeholder="Hàng nghìn khách hàng đã tin tưởng..." /></Field>
+                <Field label="Tin tức — tiêu đề"><input className="input-field" value={form.sectionTitles.home.blogTitle[lang]} onChange={(e) => setSectionTitle('home', 'blogTitle', lang, e.target.value)} placeholder="Tin tức & Truyền thông" /></Field>
+                <Field label="Tin tức — phụ đề"><input className="input-field" value={form.sectionTitles.home.blogSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'blogSubtitle', lang, e.target.value)} placeholder="Cập nhật mới nhất..." /></Field>
+              </div>
+            </div>
+
+            {/* Products page */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">📦 Trang Sản phẩm</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field label="Combo nổi bật — tiêu đề"><input className="input-field" value={form.sectionTitles.products.featuredTitle[lang]} onChange={(e) => setSectionTitle('products', 'featuredTitle', lang, e.target.value)} placeholder="Combo sản phẩm" /></Field>
+                <Field label="Combo nổi bật — phụ đề"><input className="input-field" value={form.sectionTitles.products.featuredSubtitle[lang]} onChange={(e) => setSectionTitle('products', 'featuredSubtitle', lang, e.target.value)} placeholder="Bộ giải pháp năng lượng..." /></Field>
+                <Field label="Tất cả sản phẩm — tiêu đề"><input className="input-field" value={form.sectionTitles.products.allTitle[lang]} onChange={(e) => setSectionTitle('products', 'allTitle', lang, e.target.value)} placeholder="Tất cả sản phẩm" /></Field>
+              </div>
+            </div>
+
+            {/* Projects page */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">🏗️ Trang Dự án</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field label="Quy mô triển khai — tiêu đề"><input className="input-field" value={form.sectionTitles.projects.scaleTitle[lang]} onChange={(e) => setSectionTitle('projects', 'scaleTitle', lang, e.target.value)} placeholder="Dự án triển khai ở nhiều quy mô" /></Field>
+                <Field label="Quy mô triển khai — phụ đề"><input className="input-field" value={form.sectionTitles.projects.scaleSubtitle[lang]} onChange={(e) => setSectionTitle('projects', 'scaleSubtitle', lang, e.target.value)} placeholder="Đáp ứng nhu cầu đa dạng..." /></Field>
+              </div>
+            </div>
+
+            {/* About page */}
+            <div>
+              <h4 className="text-xs font-semibold uppercase tracking-widest text-gray-400 mb-3">🏢 Trang Giới thiệu (About)</h4>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <Field label="Lịch sử — tiêu đề"><input className="input-field" value={form.sectionTitles.about.historyTitle[lang]} onChange={(e) => setSectionTitle('about', 'historyTitle', lang, e.target.value)} placeholder="Lịch sử hình thành" /></Field>
+                <Field label="Lịch sử — phụ đề"><input className="input-field" value={form.sectionTitles.about.historySubtitle[lang]} onChange={(e) => setSectionTitle('about', 'historySubtitle', lang, e.target.value)} placeholder="Chặng đường phát triển..." /></Field>
+                <Field label="Tại sao chọn — tiêu đề"><input className="input-field" value={form.sectionTitles.about.whyTitle[lang]} onChange={(e) => setSectionTitle('about', 'whyTitle', lang, e.target.value)} placeholder="Tại sao chọn TBSolaro" /></Field>
+                <Field label="Tại sao chọn — phụ đề"><input className="input-field" value={form.sectionTitles.about.whySubtitle[lang]} onChange={(e) => setSectionTitle('about', 'whySubtitle', lang, e.target.value)} placeholder="Ba giá trị cốt lõi..." /></Field>
+                <Field label="Quy trình — tiêu đề"><input className="input-field" value={form.sectionTitles.about.processTitle[lang]} onChange={(e) => setSectionTitle('about', 'processTitle', lang, e.target.value)} placeholder="Quy trình sản xuất" /></Field>
+                <Field label="Quy trình — phụ đề"><input className="input-field" value={form.sectionTitles.about.processSubtitle[lang]} onChange={(e) => setSectionTitle('about', 'processSubtitle', lang, e.target.value)} placeholder="Quy trình sản xuất nghiêm ngặt..." /></Field>
+                <Field label="Đối tác — tiêu đề"><input className="input-field" value={form.sectionTitles.about.partnersTitle[lang]} onChange={(e) => setSectionTitle('about', 'partnersTitle', lang, e.target.value)} placeholder="Đối tác & Đơn vị chứng nhận" /></Field>
+              </div>
+            </div>
+          </div>
         </Section>
 
         {/* ── Footer ── */}
