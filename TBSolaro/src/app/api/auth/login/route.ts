@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-const ADMIN_EMAIL = process.env.ADMIN_EMAIL ?? 'admin@tbsolaro.com';
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD ?? 'Admin@2025';
+const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@tbsolaro.com';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Admin@2025';
 
 export async function POST(request: Request) {
   const { email, password } = await request.json();
