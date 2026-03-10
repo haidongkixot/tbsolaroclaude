@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import Link from 'next/link';
-import { Plus, Edit, Trash2, FileText, Shield, Loader2, BookOpen } from 'lucide-react';
+import { Plus, Edit, Trash2, FileText, Shield, Loader2, BookOpen, Eye } from 'lucide-react';
 
 type WikiPage = {
   id: string;
@@ -74,7 +74,7 @@ export default function AdminWikiPage() {
                       <div className="w-9 h-9 rounded-xl bg-brand-surface flex items-center justify-center shrink-0">
                         {page.isSystem ? <BookOpen size={15} className="text-brand" /> : <FileText size={15} className="text-brand" />}
                       </div>
-                      <p className="font-semibold text-gray-900">{page.title}</p>
+                      <Link href={`/admin/wiki/${page.id}`} className="font-semibold text-gray-900 hover:text-brand transition-colors">{page.title}</Link>
                     </div>
                   </td>
                   <td className="px-4 py-4 text-xs text-gray-400 font-mono">{page.slug}</td>
@@ -94,6 +94,9 @@ export default function AdminWikiPage() {
                   </td>
                   <td className="px-6 py-4">
                     <div className="flex items-center justify-end gap-1">
+                      <Link href={`/admin/wiki/${page.id}`} className="p-2 text-gray-400 hover:text-brand hover:bg-brand-surface rounded-lg transition-colors" title="Xem nội dung">
+                        <Eye size={14} />
+                      </Link>
                       <Link href={`/admin/wiki/${page.id}/edit`} className="p-2 text-gray-400 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors" title="Chỉnh sửa">
                         <Edit size={14} />
                       </Link>
