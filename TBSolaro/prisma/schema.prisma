@@ -138,6 +138,9 @@ model SiteSetting {
   footerAddress  String @default("")
   footerFacebook String @default("")
   footerYoutube  String @default("")
+
+  // Section titles (JSON: {home:{productsTitle:{vi,en,es},...}, products:{...}, projects:{...}, about:{...}})
+  sectionTitles String @default("{}")
 }
 
 model ApiKey {

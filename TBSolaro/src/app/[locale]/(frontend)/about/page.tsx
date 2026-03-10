@@ -4,7 +4,7 @@ import { CheckCircle } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import ContactFormSection from '@/components/sections/ContactFormSection';
-import { getSiteSettings } from '@/lib/db/settings';
+import { getSiteSettings, st } from '@/lib/db/settings';
 import type { TimelineItem, WhyUsItem, ProcessStep } from '@/lib/db/settings';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight } from 'lucide-react';
@@ -62,8 +62,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="py-16 md:py-24">
         <div className="container-site">
           <div className="text-center mb-14">
-            <h2 className="section-title">{t('historyTitle')}</h2>
-            <p className="section-subtitle">{t('historySubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'about', 'historyTitle', locale) || t('historyTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'about', 'historySubtitle', locale) || t('historySubtitle')}</p>
           </div>
           <div className="relative">
             <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-px bg-brand-surface-dark hidden md:block" aria-hidden="true" />
@@ -89,8 +89,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="py-16 md:py-20 bg-brand-surface">
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('whyTitle')}</h2>
-            <p className="section-subtitle">{t('whySubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'about', 'whyTitle', locale) || t('whyTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'about', 'whySubtitle', locale) || t('whySubtitle')}</p>
           </div>
           <div className="grid md:grid-cols-3 gap-8">
             {whyUs.map((item, i) => (
@@ -110,8 +110,8 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       <section className="py-16 md:py-20">
         <div className="container-site">
           <div className="text-center mb-12">
-            <h2 className="section-title">{t('processTitle')}</h2>
-            <p className="section-subtitle">{t('processSubtitle')}</p>
+            <h2 className="section-title">{st(settings.sectionTitles, 'about', 'processTitle', locale) || t('processTitle')}</h2>
+            <p className="section-subtitle">{st(settings.sectionTitles, 'about', 'processSubtitle', locale) || t('processSubtitle')}</p>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {process.map((step, i) => (
@@ -149,7 +149,7 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
       {/* Partners */}
       <section className="py-12 bg-white border-b border-gray-100">
         <div className="container-site">
-          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{t('partnersTitle')}</p>
+          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'about', 'partnersTitle', locale) || t('partnersTitle')}</p>
           <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
             {partners.map((p) => (
               <div key={p} className="px-5 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors">

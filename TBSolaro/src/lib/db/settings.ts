@@ -29,6 +29,65 @@ export type ProcessStep = {
   descVi: string;  descEn: string;  descEs: string;
 };
 
+export type LangVal = { vi: string; en: string; es: string };
+
+export type SectionTitles = {
+  home: {
+    certTitle: LangVal;
+    csrBadge: LangVal; csrTitle: LangVal; csrDesc: LangVal;
+    productsTitle: LangVal; productsSubtitle: LangVal;
+    statsTitle: LangVal; statsSubtitle: LangVal;
+    testimonialTitle: LangVal; testimonialSubtitle: LangVal;
+    blogTitle: LangVal; blogSubtitle: LangVal;
+  };
+  products: {
+    featuredTitle: LangVal; featuredSubtitle: LangVal;
+    allTitle: LangVal;
+  };
+  projects: {
+    scaleTitle: LangVal; scaleSubtitle: LangVal;
+  };
+  about: {
+    historyTitle: LangVal; historySubtitle: LangVal;
+    whyTitle: LangVal; whySubtitle: LangVal;
+    processTitle: LangVal; processSubtitle: LangVal;
+    partnersTitle: LangVal;
+  };
+};
+
+export function st(
+  titles: SectionTitles,
+  page: keyof SectionTitles,
+  key: string,
+  locale: string,
+): string {
+  const section = titles[page] as Record<string, LangVal> | undefined;
+  if (!section) return '';
+  const val = section[key];
+  if (!val) return '';
+  return val[locale as 'vi' | 'en' | 'es'] || val.vi || '';
+}
+
+const emptyLang = (): LangVal => ({ vi: '', en: '', es: '' });
+
+const defaultSectionTitles: SectionTitles = {
+  home: {
+    certTitle: emptyLang(), csrBadge: emptyLang(), csrTitle: emptyLang(), csrDesc: emptyLang(),
+    productsTitle: emptyLang(), productsSubtitle: emptyLang(),
+    statsTitle: emptyLang(), statsSubtitle: emptyLang(),
+    testimonialTitle: emptyLang(), testimonialSubtitle: emptyLang(),
+    blogTitle: emptyLang(), blogSubtitle: emptyLang(),
+  },
+  products: { featuredTitle: emptyLang(), featuredSubtitle: emptyLang(), allTitle: emptyLang() },
+  projects: { scaleTitle: emptyLang(), scaleSubtitle: emptyLang() },
+  about: {
+    historyTitle: emptyLang(), historySubtitle: emptyLang(),
+    whyTitle: emptyLang(), whySubtitle: emptyLang(),
+    processTitle: emptyLang(), processSubtitle: emptyLang(),
+    partnersTitle: emptyLang(),
+  },
+};
+
 export type SiteSettings = {
   logoUrl: string;
   heroSlides: HeroSlide[];
@@ -69,6 +128,7 @@ export type SiteSettings = {
   footerAddress: string;
   footerFacebook: string;
   footerYoutube: string;
+  sectionTitles: SectionTitles;
 };
 
 const defaults: SiteSettings = {
@@ -107,6 +167,7 @@ const defaults: SiteSettings = {
   footerAddress: '',
   footerFacebook: '',
   footerYoutube: '',
+  sectionTitles: defaultSectionTitles,
 };
 
 function tryParse<T>(v: string, fallback: T): T {
@@ -154,6 +215,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       footerAddress: row.footerAddress,
       footerFacebook: row.footerFacebook,
       footerYoutube: row.footerYoutube,
+      sectionTitles: tryParse(row.sectionTitles, defaultSectionTitles as unknown as SectionTitles),
     };
   } catch {
     return defaults;

@@ -372,7 +372,7 @@ Hãy tìm nguyên nhân và sửa.</code></pre>
 
 <h3>5.3 Kiểm tra giao diện</h3>
 <ol>
-<li>Trong Terminal VS Code (Ctrl+`), chạy: <code>npm run dev</code></li>
+<li>Trong Terminal VS Code (Ctrl+\`), chạy: <code>npm run dev</code></li>
 <li>Mở trình duyệt tại <code>http://localhost:3000</code></li>
 <li>Kiểm tra responsive: nhấn F12 → icon điện thoại để xem trên mobile</li>
 <li>Kiểm tra các kích thước: 375px (iPhone), 768px (iPad), 1440px (desktop)</li>
