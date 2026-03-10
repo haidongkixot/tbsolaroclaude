@@ -6,9 +6,9 @@ import Link from 'next/link';
 import { ArrowLeft, Save, Loader2, Shield } from 'lucide-react';
 import RichEditor from '@/components/admin/RichEditor';
 
-export default function WikiEditPage({ params }: { params: Promise<{ id: string }> }) {
+export default function WikiEditPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [id, setId] = useState('');
+  const { id } = params;
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
@@ -19,20 +19,20 @@ export default function WikiEditPage({ params }: { params: Promise<{ id: string 
   const [error, setError] = useState('');
 
   useEffect(() => {
-    params.then(async (p) => {
-      setId(p.id);
-      const res = await fetch(`/api/admin/wiki/${p.id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setTitle(data.title);
-        setSlug(data.slug);
-        setContent(data.content);
-        setSortOrder(data.sortOrder);
-        setIsSystem(data.isSystem);
-      }
-      setLoading(false);
-    });
-  }, [params]);
+    fetch(`/api/admin/wiki/${id}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data) {
+          setTitle(data.title);
+          setSlug(data.slug);
+          setContent(data.content);
+          setSortOrder(data.sortOrder);
+          setIsSystem(data.isSystem);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [id]);
 
   async function handleSave() {
     if (!title.trim() || !slug.trim()) { setError('Tiêu đề và slug là bắt buộc.'); return; }
