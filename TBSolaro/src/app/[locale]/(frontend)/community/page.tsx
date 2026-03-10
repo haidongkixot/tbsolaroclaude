@@ -5,7 +5,7 @@ import { Link } from '@/i18n/navigation';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
-import { getCSRProjects } from '@/lib/data/projects';
+import { getCSRProjects } from '@/lib/db/projects';
 import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
@@ -13,9 +13,13 @@ export const metadata: Metadata = {
   description: 'TBSolaro lan tỏa ánh sáng, nuôi dưỡng tương lai – Các dự án CSR mang năng lượng sạch đến cộng đồng.',
 };
 
-export default async function CommunityPage() {
-  const [t, settings] = await Promise.all([getTranslations('community'), getSiteSettings()]);
-  const csrProjects = getCSRProjects();
+export default async function CommunityPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const [t, settings, csrProjects] = await Promise.all([
+    getTranslations('community'),
+    getSiteSettings(),
+    getCSRProjects(locale),
+  ]);
 
   return (
     <>
@@ -39,11 +43,6 @@ export default async function CommunityPage() {
             {csrProjects.map((project) => (
               <ProjectCard key={project.id} project={project} variant="csr" />
             ))}
-          </div>
-          <div className="text-center mt-10">
-            <Link href="/projects" className="btn-primary">
-              {t('viewMoreBtn')} <ArrowRight size={16} />
-            </Link>
           </div>
         </div>
       </section>
