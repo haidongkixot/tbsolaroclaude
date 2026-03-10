@@ -213,14 +213,14 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
               {latestPosts.map((post) => (
                 <article key={post.id} className="card group overflow-hidden flex flex-col relative cursor-pointer">
                   <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={post.title} />
-                  <div className="relative overflow-hidden aspect-video bg-gray-100">
+                  <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
                     <img
                       src={post.featuredImage}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   </div>
-                  <div className="p-5 flex flex-col flex-1 relative z-10">
+                  <div className="p-5 flex flex-col flex-1 pointer-events-none relative">
                     <div className="flex items-center gap-2 mb-3">
                       <span className="tag-badge">{post.tags[0] || t('defaultTag')}</span>
                       <span className="text-xs text-gray-400">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString() : ''}</span>

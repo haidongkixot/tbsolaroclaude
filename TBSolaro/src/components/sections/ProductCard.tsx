@@ -17,14 +17,14 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
     return (
       <article className="card group flex flex-col relative cursor-pointer">
         <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={product.title} />
-        <div className="relative overflow-hidden aspect-[4/3] bg-gray-100">
+        <div className="relative overflow-hidden aspect-[4/3] bg-gray-100 pointer-events-none">
           <img
             src={product.featuredImage}
             alt={product.title}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        <div className="p-4 flex flex-col flex-1 relative z-10">
+        <div className="p-4 flex flex-col flex-1 pointer-events-none relative">
           <p className="text-xs text-brand font-semibold uppercase tracking-wider mb-1">{product.category}</p>
           <h3 className="font-bold text-gray-900 text-sm mb-1 group-hover:text-brand transition-colors">{product.title}</h3>
           {product.subtitle && <p className="text-xs text-gray-500 mb-2">{product.subtitle}</p>}
@@ -79,7 +79,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
   return (
     <article className="card group flex flex-col relative cursor-pointer">
       <Link href={`/products/${product.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={product.title} />
-      <div className="relative overflow-hidden aspect-video bg-gray-100">
+      <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
         <img
           src={product.featuredImage}
           alt={product.title}
@@ -89,7 +89,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
           <span className="tag-badge text-xs">{product.category}</span>
         </div>
       </div>
-      <div className="p-5 flex flex-col flex-1 relative z-10">
+      <div className="p-5 flex flex-col flex-1 pointer-events-none relative">
         <h3 className="font-bold text-gray-900 text-base mb-1 group-hover:text-brand transition-colors">{product.title}</h3>
         {product.subtitle && <p className="text-brand text-sm font-medium mb-2">{product.subtitle}</p>}
         <p className="text-sm text-gray-600 line-clamp-2 mb-4 flex-1 leading-relaxed">{product.excerpt}</p>
@@ -109,7 +109,7 @@ export default function ProductCard({ product, variant = 'default' }: ProductCar
             <a
               href={product.downloadUrl}
               onClick={(e) => e.stopPropagation()}
-              className="text-gray-400 hover:text-brand transition-colors"
+              className="text-gray-400 hover:text-brand transition-colors pointer-events-auto relative z-10"
               aria-label={t('downloadDoc')}
             >
               <Download size={16} />

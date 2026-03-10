@@ -42,7 +42,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
               {posts.map((post) => (
                 <article key={post.id} className="card group overflow-hidden flex flex-col relative cursor-pointer">
                   <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={post.title} />
-                  <div className="relative overflow-hidden aspect-video bg-gray-100">
+                  <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
                     <img
                       src={post.featuredImage || 'https://placehold.co/800x450/1B5E30/FFFFFF?text=TBSolaro'}
                       alt={post.title}
@@ -54,7 +54,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
                       </div>
                     )}
                   </div>
-                  <div className="p-5 flex flex-col flex-1 relative z-10">
+                  <div className="p-5 flex flex-col flex-1 pointer-events-none relative">
                     <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
                       {post.publishedAt && (
                         <span className="flex items-center gap-1">

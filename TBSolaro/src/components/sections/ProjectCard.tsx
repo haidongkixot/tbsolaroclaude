@@ -25,14 +25,14 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
     return (
       <article className="card group flex gap-0 overflow-hidden relative cursor-pointer">
         <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={project.title} />
-        <div className="w-2/5 relative overflow-hidden bg-gray-100 shrink-0">
+        <div className="w-2/5 relative overflow-hidden bg-gray-100 shrink-0 pointer-events-none">
           <img
             src={project.featuredImage}
             alt={project.title}
             className="w-full h-full object-cover min-h-[180px] group-hover:scale-105 transition-transform duration-300"
           />
         </div>
-        <div className="p-5 flex flex-col justify-between relative z-10">
+        <div className="p-5 flex flex-col justify-between pointer-events-none relative">
           <div>
             <span className={cn('inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border mb-3', categoryColors[project.category])}>
               {t(project.category as 'enterprise' | 'household' | 'community' | 'csr')}
@@ -54,7 +54,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
     return (
       <article className="card group overflow-hidden flex flex-col relative cursor-pointer">
         <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={project.title} />
-        <div className="relative overflow-hidden aspect-video bg-gray-100">
+        <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
           <img
             src={project.featuredImage}
             alt={project.title}
@@ -67,7 +67,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
             </span>
           </div>
         </div>
-        <div className="p-5 flex flex-col flex-1 relative z-10">
+        <div className="p-5 flex flex-col flex-1 pointer-events-none relative">
           <h3 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-brand transition-colors line-clamp-2">{project.title}</h3>
           <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed mb-3 flex-1">{project.excerpt}</p>
           <div className="flex items-center gap-3 text-xs text-gray-400">
@@ -89,7 +89,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
   return (
     <article className="card group overflow-hidden flex flex-col relative cursor-pointer">
       <Link href={`/projects/${project.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={project.title} />
-      <div className="relative overflow-hidden aspect-video bg-gray-100">
+      <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
         <img
           src={project.featuredImage}
           alt={project.title}
@@ -101,7 +101,7 @@ export default function ProjectCard({ project, variant = 'default' }: ProjectCar
           </span>
         </div>
       </div>
-      <div className="p-5 flex flex-col flex-1 relative z-10">
+      <div className="p-5 flex flex-col flex-1 pointer-events-none relative">
         <h3 className="font-bold text-gray-900 text-sm mb-2 group-hover:text-brand transition-colors line-clamp-2">{project.title}</h3>
         <p className="text-xs text-gray-600 line-clamp-3 leading-relaxed mb-4 flex-1">{project.excerpt}</p>
         <div className="flex flex-wrap gap-3 text-xs text-gray-500 mb-3">
