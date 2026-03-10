@@ -4,8 +4,8 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Edit, Loader2, Shield } from 'lucide-react';
 
-export default function WikiViewPage({ params }: { params: Promise<{ id: string }> }) {
-  const [id, setId] = useState('');
+export default function WikiViewPage({ params }: { params: { id: string } }) {
+  const { id } = params;
   const [title, setTitle] = useState('');
   const [slug, setSlug] = useState('');
   const [content, setContent] = useState('');
@@ -14,20 +14,20 @@ export default function WikiViewPage({ params }: { params: Promise<{ id: string 
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    params.then(async (p) => {
-      setId(p.id);
-      const res = await fetch(`/api/admin/wiki/${p.id}`);
-      if (res.ok) {
-        const data = await res.json();
-        setTitle(data.title);
-        setSlug(data.slug);
-        setContent(data.content);
-        setIsSystem(data.isSystem);
-        setUpdatedAt(data.updatedAt);
-      }
-      setLoading(false);
-    });
-  }, [params]);
+    fetch(`/api/admin/wiki/${id}`)
+      .then((r) => r.ok ? r.json() : null)
+      .then((data) => {
+        if (data) {
+          setTitle(data.title);
+          setSlug(data.slug);
+          setContent(data.content);
+          setIsSystem(data.isSystem);
+          setUpdatedAt(data.updatedAt);
+        }
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, [id]);
 
   if (loading) {
     return <div className="py-16 flex justify-center"><Loader2 size={24} className="animate-spin text-brand" /></div>;
