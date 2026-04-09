@@ -4,11 +4,21 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { MapPin, Phone, Clock, Navigation, PhoneCall, Search, CheckCircle } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
-import { getPublishedShowrooms } from '@/lib/data/showrooms';
 
-export default function ShowroomContent({ heroImage }: { heroImage?: string }) {
+interface ShowroomItem {
+  id: string;
+  name: string;
+  address: string;
+  phone: string;
+  email: string;
+  openingHours: string;
+  mapEmbed: string;
+  lat: number | null;
+  lng: number | null;
+}
+
+export default function ShowroomContent({ heroImage, showrooms }: { heroImage?: string; showrooms: ShowroomItem[] }) {
   const t = useTranslations('showroom');
-  const showrooms = getPublishedShowrooms();
   const [selected, setSelected] = useState(showrooms[0]?.id || '');
   const [search, setSearch] = useState('');
   const [bookingForm, setBookingForm] = useState({ name: '', email: '', phone: '', area: '', showroom: showrooms[0]?.name || '', time: '' });
@@ -21,6 +31,8 @@ export default function ShowroomContent({ heroImage }: { heroImage?: string }) {
       s.name.toLowerCase().includes(search.toLowerCase()) ||
       s.address.toLowerCase().includes(search.toLowerCase())
   );
+
+  const selectedShowroom = showrooms.find((s) => s.id === selected);
 
   const handleBooking = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,74 +65,92 @@ export default function ShowroomContent({ heroImage }: { heroImage?: string }) {
         <div className="container-site">
           <h2 className="section-title mb-6">{t('listTitle')}</h2>
 
-          <div className="grid lg:grid-cols-5 gap-6">
-            {/* List */}
-            <div className="lg:col-span-2 space-y-4">
-              {/* Search */}
-              <div className="relative">
-                <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder={t('searchPlaceholder')}
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                  className="input-field pl-10"
-                />
-              </div>
-
-              {filtered.map((showroom) => (
-                <button
-                  key={showroom.id}
-                  onClick={() => setSelected(showroom.id)}
-                  className={`w-full text-left p-5 rounded-2xl border-2 transition-all ${
-                    selected === showroom.id
-                      ? 'border-brand bg-brand-surface'
-                      : 'border-gray-200 bg-white hover:border-brand/40'
-                  }`}
-                >
-                  <h3 className="font-bold text-gray-900 mb-3">{showroom.name}</h3>
-                  <div className="space-y-2 text-sm text-gray-600">
-                    <div className="flex gap-2">
-                      <MapPin size={14} className="text-brand shrink-0 mt-0.5" />
-                      <span>{showroom.address}</span>
-                    </div>
-                    <div className="flex gap-2">
-                      <Phone size={14} className="text-brand shrink-0 mt-0.5" />
-                      <a href={`tel:${showroom.phone}`} className="hover:text-brand">{showroom.phone}</a>
-                    </div>
-                    <div className="flex gap-2">
-                      <Clock size={14} className="text-brand shrink-0 mt-0.5" />
-                      <span>{showroom.openingHours}</span>
-                    </div>
-                  </div>
-                  <div className="flex gap-2 mt-4">
-                    <button className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand px-3 py-1.5 rounded-full hover:bg-brand-dark transition-colors">
-                      <Navigation size={11} /> {t('directionsBtn')}
-                    </button>
-                    <a
-                      href={`tel:${showroom.phone}`}
-                      className="flex items-center gap-1.5 text-xs font-semibold text-brand border border-brand px-3 py-1.5 rounded-full hover:bg-brand hover:text-white transition-colors"
-                    >
-                      <PhoneCall size={11} /> {t('callBtn')}
-                    </a>
-                  </div>
-                </button>
-              ))}
-            </div>
-
-            {/* Map placeholder */}
-            <div className="lg:col-span-3">
-              <div className="w-full h-[500px] rounded-2xl overflow-hidden bg-gray-200 border border-gray-200 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <MapPin size={40} className="mx-auto mb-3 text-brand" />
-                  <p className="font-medium">{t('mapLabel')}</p>
-                  <p className="text-sm mt-1">{showrooms.find((s) => s.id === selected)?.name || ''}</p>
-                  <p className="text-xs mt-1 text-gray-400">{showrooms.find((s) => s.id === selected)?.address || ''}</p>
-                  <p className="text-xs text-brand mt-3">[Google Maps sẽ được tích hợp tại đây]</p>
+          {showrooms.length === 0 ? (
+            <p className="text-gray-400 text-center py-16">Chưa có showroom nào.</p>
+          ) : (
+            <div className="grid lg:grid-cols-5 gap-6">
+              {/* List */}
+              <div className="lg:col-span-2 space-y-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder={t('searchPlaceholder')}
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                    className="input-field pl-10"
+                  />
                 </div>
+
+                {filtered.map((showroom) => (
+                  <button
+                    key={showroom.id}
+                    onClick={() => setSelected(showroom.id)}
+                    className={`w-full text-left p-5 rounded-2xl border-2 transition-all ${
+                      selected === showroom.id
+                        ? 'border-brand bg-brand-surface'
+                        : 'border-gray-200 bg-white hover:border-brand/40'
+                    }`}
+                  >
+                    <h3 className="font-bold text-gray-900 mb-3">{showroom.name}</h3>
+                    <div className="space-y-2 text-sm text-gray-600">
+                      {showroom.address && (
+                        <div className="flex gap-2">
+                          <MapPin size={14} className="text-brand shrink-0 mt-0.5" />
+                          <span>{showroom.address}</span>
+                        </div>
+                      )}
+                      {showroom.phone && (
+                        <div className="flex gap-2">
+                          <Phone size={14} className="text-brand shrink-0 mt-0.5" />
+                          <a href={`tel:${showroom.phone}`} className="hover:text-brand">{showroom.phone}</a>
+                        </div>
+                      )}
+                      {showroom.openingHours && (
+                        <div className="flex gap-2">
+                          <Clock size={14} className="text-brand shrink-0 mt-0.5" />
+                          <span>{showroom.openingHours}</span>
+                        </div>
+                      )}
+                    </div>
+                    <div className="flex gap-2 mt-4">
+                      <button className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand px-3 py-1.5 rounded-full hover:bg-brand-dark transition-colors">
+                        <Navigation size={11} /> {t('directionsBtn')}
+                      </button>
+                      {showroom.phone && (
+                        <a
+                          href={`tel:${showroom.phone}`}
+                          className="flex items-center gap-1.5 text-xs font-semibold text-brand border border-brand px-3 py-1.5 rounded-full hover:bg-brand hover:text-white transition-colors"
+                        >
+                          <PhoneCall size={11} /> {t('callBtn')}
+                        </a>
+                      )}
+                    </div>
+                  </button>
+                ))}
+              </div>
+
+              {/* Map */}
+              <div className="lg:col-span-3">
+                {selectedShowroom?.mapEmbed ? (
+                  <div
+                    className="w-full h-[500px] rounded-2xl overflow-hidden border border-gray-200"
+                    dangerouslySetInnerHTML={{ __html: selectedShowroom.mapEmbed }}
+                  />
+                ) : (
+                  <div className="w-full h-[500px] rounded-2xl overflow-hidden bg-gray-200 border border-gray-200 flex items-center justify-center">
+                    <div className="text-center text-gray-500">
+                      <MapPin size={40} className="mx-auto mb-3 text-brand" />
+                      <p className="font-medium">{t('mapLabel')}</p>
+                      <p className="text-sm mt-1">{selectedShowroom?.name || ''}</p>
+                      <p className="text-xs mt-1 text-gray-400">{selectedShowroom?.address || ''}</p>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
-          </div>
+          )}
         </div>
       </section>
 

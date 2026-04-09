@@ -1,18 +1,33 @@
 'use client';
 
 import { useState } from 'react';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { ChevronDown, Send, CheckCircle } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
-import { getPublishedFAQs } from '@/lib/data/faq';
 
-export default function FAQContent({ heroImage }: { heroImage?: string }) {
+interface FAQItem {
+  id: string;
+  questionVi: string;
+  questionEn: string;
+  questionEs: string;
+  answerVi: string;
+  answerEn: string;
+  answerEs: string;
+  category: string;
+}
+
+export default function FAQContent({ heroImage, faqs }: { heroImage?: string; faqs: FAQItem[] }) {
   const t = useTranslations('faq');
-  const faqs = getPublishedFAQs();
+  const locale = useLocale();
   const [openId, setOpenId] = useState<string | null>(null);
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+
+  const l = locale === 'en' ? 'En' : locale === 'es' ? 'Es' : 'Vi';
+
+  const getQ = (faq: FAQItem) => (faq as unknown as Record<string, string>)[`question${l}`] || faq.questionVi;
+  const getA = (faq: FAQItem) => (faq as unknown as Record<string, string>)[`answer${l}`] || faq.answerVi;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,30 +62,34 @@ export default function FAQContent({ heroImage }: { heroImage?: string }) {
             {/* FAQ Accordion */}
             <div className="lg:col-span-2">
               <h2 className="text-2xl font-bold text-gray-900 mb-8">{t('popularTitle')}</h2>
-              <div className="space-y-3">
-                {faqs.map((faq) => (
-                  <div key={faq.id} className="accordion-item">
-                    <button
-                      onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
-                      className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left hover:bg-gray-50 transition-colors"
-                      aria-expanded={openId === faq.id}
-                    >
-                      <span className="font-medium text-gray-900 text-sm leading-relaxed pr-2">
-                        {faq.question}
-                      </span>
-                      <ChevronDown
-                        size={18}
-                        className={`shrink-0 text-brand transition-transform duration-200 mt-0.5 ${openId === faq.id ? 'rotate-180' : ''}`}
-                      />
-                    </button>
-                    {openId === faq.id && (
-                      <div className="px-6 pb-6 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
-                        {faq.answer}
-                      </div>
-                    )}
-                  </div>
-                ))}
-              </div>
+              {faqs.length === 0 ? (
+                <p className="text-gray-400 text-center py-10">{t('noFaqs') ?? 'Chưa có câu hỏi nào.'}</p>
+              ) : (
+                <div className="space-y-3">
+                  {faqs.map((faq) => (
+                    <div key={faq.id} className="accordion-item">
+                      <button
+                        onClick={() => setOpenId(openId === faq.id ? null : faq.id)}
+                        className="w-full flex items-start justify-between gap-4 px-6 py-5 text-left hover:bg-gray-50 transition-colors"
+                        aria-expanded={openId === faq.id}
+                      >
+                        <span className="font-medium text-gray-900 text-sm leading-relaxed pr-2">
+                          {getQ(faq)}
+                        </span>
+                        <ChevronDown
+                          size={18}
+                          className={`shrink-0 text-brand transition-transform duration-200 mt-0.5 ${openId === faq.id ? 'rotate-180' : ''}`}
+                        />
+                      </button>
+                      {openId === faq.id && (
+                        <div className="px-6 pb-6 text-sm text-gray-600 leading-relaxed border-t border-gray-100 pt-4">
+                          {getA(faq)}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {/* Contact Form Sidebar */}

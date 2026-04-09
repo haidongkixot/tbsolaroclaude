@@ -178,6 +178,55 @@ model AdminUser {
   updatedAt    DateTime  @updatedAt
 }
 
+model Showroom {
+  id           String   @id @default(cuid())
+  status       String   @default("draft")
+  sortOrder    Int      @default(0)
+  name         String
+  address      String   @default("")
+  phone        String   @default("")
+  email        String   @default("")
+  openingHours String   @default("")
+  mapEmbed     String   @default("")
+  lat          Float?
+  lng          Float?
+  gallery      String   @default("[]")
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model FAQ {
+  id         String   @id @default(cuid())
+  status     String   @default("draft")
+  category   String   @default("")
+  sortOrder  Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  questionVi String
+  questionEn String   @default("")
+  questionEs String   @default("")
+  answerVi   String
+  answerEn   String   @default("")
+  answerEs   String   @default("")
+}
+
+model DownloadDocument {
+  id            String   @id @default(cuid())
+  status        String   @default("draft")
+  sortOrder     Int      @default(0)
+  title         String
+  description   String   @default("")
+  fileUrl       String   @default("")
+  fileType      String   @default("PDF")
+  category      String   @default("")
+  version       String   @default("")
+  featuredImage String   @default("")
+  icon          String   @default("")
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 model BlogPost {
   id            String    @id @default(cuid())
   slug          String    @unique

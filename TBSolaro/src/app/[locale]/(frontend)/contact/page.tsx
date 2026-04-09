@@ -3,7 +3,7 @@ import { getTranslations } from 'next-intl/server';
 import { Download, FileText } from 'lucide-react';
 import PageHero from '@/components/sections/PageHero';
 import ContactFormSection from '@/components/sections/ContactFormSection';
-import { getPublishedDocuments } from '@/lib/data/downloads';
+import { prisma } from '@/lib/prisma';
 import { getSiteSettings } from '@/lib/db/settings';
 
 export const metadata: Metadata = {
@@ -12,8 +12,11 @@ export const metadata: Metadata = {
 };
 
 export default async function ContactPage() {
-  const [t, settings] = await Promise.all([getTranslations('contact'), getSiteSettings()]);
-  const documents = getPublishedDocuments().slice(0, 3);
+  const [t, settings, documents] = await Promise.all([
+    getTranslations('contact'),
+    getSiteSettings(),
+    prisma.downloadDocument.findMany({ where: { status: 'published' }, orderBy: { sortOrder: 'asc' }, take: 3 }),
+  ]);
 
   return (
     <>
@@ -43,8 +46,12 @@ export default async function ContactPage() {
             {documents.map((doc) => (
               <div key={doc.id} className="card p-6 flex flex-col">
                 <div className="flex items-start gap-4 mb-4">
-                  <div className="w-12 h-12 rounded-xl bg-brand-surface flex items-center justify-center shrink-0 border border-brand/10">
-                    <FileText size={22} className="text-brand" />
+                  <div className="w-12 h-12 rounded-xl bg-brand-surface flex items-center justify-center shrink-0 border border-brand/10 overflow-hidden">
+                    {doc.icon ? (
+                      <img src={doc.icon} alt="" className="w-7 h-7 object-contain" />
+                    ) : (
+                      <FileText size={22} className="text-brand" />
+                    )}
                   </div>
                   <div>
                     <span className="text-xs font-semibold text-brand uppercase tracking-wider">{doc.fileType} • {doc.category}</span>
