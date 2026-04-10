@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { ArrowLeft, Save, Globe } from 'lucide-react';
-import LanguageTabs, { type Locale } from '@/components/admin/LanguageTabs';
 import RichEditor from '@/components/admin/RichEditor';
 import ImageUpload from '@/components/admin/ImageUpload';
 import GalleryManager from '@/components/admin/GalleryManager';
@@ -62,13 +61,16 @@ interface Props {
   onSave: (data: Record<string, unknown>) => Promise<void>;
 }
 
+const LANGS = [
+  { code: 'Vi' as const, flag: '🇻🇳', label: 'Tiếng Việt', slugKey: 'slug' as const },
+  { code: 'En' as const, flag: '🇬🇧', label: 'English', slugKey: 'slugEn' as const },
+  { code: 'Es' as const, flag: '🇪🇸', label: 'Español', slugKey: 'slugEs' as const },
+];
+
 export default function BlogEditor({ initial, onSave }: Props) {
   const [form, setForm] = useState<Form>(initial ? parseInitial(initial) : emptyForm());
-  const [lang, setLang] = useState<Locale>('vi');
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
-
-  const l = lang.charAt(0).toUpperCase() + lang.slice(1) as 'Vi' | 'En' | 'Es';
 
   function set<K extends keyof Form>(key: K, value: Form[K]) {
     setForm((f) => ({ ...f, [key]: value }));
@@ -98,7 +100,8 @@ export default function BlogEditor({ initial, onSave }: Props) {
   }
 
   return (
-    <div className="max-w-6xl mx-auto">
+    <div className="max-w-7xl mx-auto">
+      {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center gap-4">
           <Link href="/admin/blog" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-700">
@@ -121,77 +124,95 @@ export default function BlogEditor({ initial, onSave }: Props) {
       </div>
 
       <div className="flex gap-6 items-start">
-        {/* Main */}
-        <div className="flex-1 space-y-5">
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
-            <LanguageTabs value={lang} onChange={setLang} />
-            <div className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Tiêu đề *</label>
-                <input className="input-field"
-                  value={(form as unknown as Record<string, string>)[`title${l}`] ?? ''}
-                  onChange={(e) => {
-                    setL(`title${l}`, e.target.value);
-                    if (!initial) {
-                      if (lang === 'vi') set('slug', slugify(e.target.value));
-                      else if (lang === 'en') set('slugEn', slugify(e.target.value));
-                      else if (lang === 'es') set('slugEs', slugify(e.target.value));
-                    }
-                  }}
-                  placeholder={`Tiêu đề bài viết (${lang.toUpperCase()})`} />
+        {/* Main content — 3 language editors */}
+        <div className="flex-1 space-y-6">
+          {LANGS.map(({ code, flag, label, slugKey }) => (
+            <div key={code} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+              {/* Language header */}
+              <div className="px-6 py-3 bg-gray-50 border-b border-gray-200 flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <span className="text-lg">{flag}</span>
+                  <span className="font-semibold text-gray-900 text-sm">{label}</span>
+                  {code === 'Vi' && <span className="text-[10px] bg-brand text-white px-1.5 py-0.5 rounded-full font-medium">Chính</span>}
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-400">
+                  <span>Slug:</span>
+                  <input
+                    className="input-field text-xs py-1 px-2 w-56"
+                    value={form[slugKey]}
+                    onChange={(e) => set(slugKey, e.target.value)}
+                    placeholder={code === 'Vi' ? 'tieu-de-bai-viet' : `${code.toLowerCase()}-slug`}
+                  />
+                </div>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
-                <textarea rows={2} className="textarea-field"
-                  value={(form as unknown as Record<string, string>)[`excerpt${l}`] ?? ''}
-                  onChange={(e) => setL(`excerpt${l}`, e.target.value)} placeholder="Excerpt..." />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Nội dung</label>
-                <RichEditor
-                  value={(form as unknown as Record<string, string>)[`content${l}`] ?? ''}
-                  onChange={(html) => setL(`content${l}`, html)}
-                  placeholder={`Viết nội dung (${lang.toUpperCase()})...`}
-                />
-              </div>
-            </div>
-          </div>
 
-          <div className="bg-white rounded-2xl border border-gray-200 p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">SEO ({lang.toUpperCase()})</h3>
-            <div className="space-y-3">
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
-                <input className="input-field" value={(form as unknown as Record<string, string>)[`seoTitle${l}`] ?? ''}
-                  onChange={(e) => setL(`seoTitle${l}`, e.target.value)} />
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
-                <textarea rows={2} className="textarea-field" value={(form as unknown as Record<string, string>)[`seoDesc${l}`] ?? ''}
-                  onChange={(e) => setL(`seoDesc${l}`, e.target.value)} />
+              <div className="p-6 space-y-4">
+                {/* Title */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Tiêu đề {code === 'Vi' && '*'}
+                  </label>
+                  <input
+                    className="input-field"
+                    value={(form as unknown as Record<string, string>)[`title${code}`] ?? ''}
+                    onChange={(e) => {
+                      setL(`title${code}`, e.target.value);
+                      if (!initial) set(slugKey, slugify(e.target.value));
+                    }}
+                    placeholder={code === 'Vi' ? 'Tiêu đề bài viết' : code === 'En' ? 'Article title' : 'Título del artículo'}
+                  />
+                </div>
+
+                {/* Excerpt */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Mô tả ngắn</label>
+                  <textarea
+                    rows={2}
+                    className="textarea-field"
+                    value={(form as unknown as Record<string, string>)[`excerpt${code}`] ?? ''}
+                    onChange={(e) => setL(`excerpt${code}`, e.target.value)}
+                    placeholder={code === 'Vi' ? 'Mô tả ngắn...' : code === 'En' ? 'Short description...' : 'Descripción breve...'}
+                  />
+                </div>
+
+                {/* Rich text content */}
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                    Nội dung {flag}
+                  </label>
+                  <RichEditor
+                    value={(form as unknown as Record<string, string>)[`content${code}`] ?? ''}
+                    onChange={(html) => setL(`content${code}`, html)}
+                    placeholder={code === 'Vi' ? 'Viết nội dung tiếng Việt...' : code === 'En' ? 'Write English content...' : 'Escribir contenido en español...'}
+                  />
+                </div>
+
+                {/* SEO per language */}
+                <details className="group">
+                  <summary className="cursor-pointer text-xs font-semibold text-gray-500 uppercase tracking-wide flex items-center gap-1 py-2 hover:text-gray-700">
+                    <span className="group-open:rotate-90 transition-transform">▶</span> SEO ({code})
+                  </summary>
+                  <div className="space-y-3 pt-2">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Meta Title</label>
+                      <input className="input-field text-sm" value={(form as unknown as Record<string, string>)[`seoTitle${code}`] ?? ''}
+                        onChange={(e) => setL(`seoTitle${code}`, e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">Meta Description</label>
+                      <textarea rows={2} className="textarea-field text-sm" value={(form as unknown as Record<string, string>)[`seoDesc${code}`] ?? ''}
+                        onChange={(e) => setL(`seoDesc${code}`, e.target.value)} />
+                    </div>
+                  </div>
+                </details>
               </div>
             </div>
-          </div>
+          ))}
         </div>
 
         {/* Sidebar */}
-        <div className="w-72 space-y-5 shrink-0">
+        <div className="w-72 space-y-5 shrink-0 sticky top-6">
           <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (VI)</label>
-              <input className="input-field text-sm" value={form.slug}
-                onChange={(e) => set('slug', e.target.value)} />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (EN)</label>
-              <input className="input-field text-sm" value={form.slugEn}
-                onChange={(e) => set('slugEn', e.target.value)} placeholder="auto from EN title" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (ES)</label>
-              <input className="input-field text-sm" value={form.slugEs}
-                onChange={(e) => set('slugEs', e.target.value)} placeholder="auto from ES title" />
-            </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>
               <select className="input-field bg-white text-sm" value={form.status}
