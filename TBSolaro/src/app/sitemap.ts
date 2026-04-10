@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [products, projects, blogs] = await Promise.all([
     prisma.product.findMany({ where: { status: 'published' }, select: { slug: true, updatedAt: true } }),
     prisma.project.findMany({ where: { status: 'published' }, select: { slug: true, updatedAt: true } }),
-    prisma.blogPost.findMany({ where: { status: 'published' }, select: { slug: true, updatedAt: true } }),
+    prisma.blogPost.findMany({ where: { status: 'published' }, select: { slug: true, slugEn: true, slugEs: true, updatedAt: true } }),
   ]);
 
   const staticPages = [
@@ -60,19 +60,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }))
   );
 
-  const blogEntries = blogs.flatMap((p) =>
-    LOCALES.map((locale) => ({
-      url: `${BASE}${locale === 'vi' ? '' : `/${locale}`}/blog/${p.slug}`,
+  const blogEntries = blogs.flatMap((p) => {
+    const slugFor = (l: string) => l === 'en' && p.slugEn ? p.slugEn : l === 'es' && p.slugEs ? p.slugEs : p.slug;
+    return LOCALES.map((locale) => ({
+      url: `${BASE}${locale === 'vi' ? '' : `/${locale}`}/blog/${slugFor(locale)}`,
       lastModified: p.updatedAt,
       changeFrequency: 'weekly' as const,
       priority: 0.6,
       alternates: {
         languages: Object.fromEntries(
-          LOCALES.map((l) => [l, `${BASE}${l === 'vi' ? '' : `/${l}`}/blog/${p.slug}`])
+          LOCALES.map((l) => [l, `${BASE}${l === 'vi' ? '' : `/${l}`}/blog/${slugFor(l)}`])
         ),
       },
-    }))
-  );
+    }));
+  });
 
   return [...staticEntries, ...productEntries, ...projectEntries, ...blogEntries];
 }

@@ -9,7 +9,8 @@ import ImageUpload from '@/components/admin/ImageUpload';
 import GalleryManager from '@/components/admin/GalleryManager';
 
 type Form = {
-  slug: string; status: string; author: string; publishedAt: string;
+  slug: string; slugEn: string; slugEs: string;
+  status: string; author: string; publishedAt: string;
   featuredImage: string; gallery: string[]; tags: string[]; relatedSlugs: string[]; seoOgImage: string;
   titleVi: string; titleEn: string; titleEs: string;
   excerptVi: string; excerptEn: string; excerptEs: string;
@@ -28,7 +29,7 @@ function slugify(text: string) {
 
 function emptyForm(): Form {
   return {
-    slug: '', status: 'draft', author: 'Admin', publishedAt: '', seoOgImage: '',
+    slug: '', slugEn: '', slugEs: '', status: 'draft', author: 'Admin', publishedAt: '', seoOgImage: '',
     featuredImage: '', gallery: [], tags: [], relatedSlugs: [],
     titleVi: '', titleEn: '', titleEs: '',
     excerptVi: '', excerptEn: '', excerptEs: '',
@@ -40,7 +41,8 @@ function emptyForm(): Form {
 
 function parseInitial(data: Record<string, unknown>): Form {
   return {
-    slug: (data.slug as string) ?? '', status: (data.status as string) ?? 'draft',
+    slug: (data.slug as string) ?? '', slugEn: (data.slugEn as string) ?? '', slugEs: (data.slugEs as string) ?? '',
+    status: (data.status as string) ?? 'draft',
     author: (data.author as string) ?? 'Admin', seoOgImage: (data.seoOgImage as string) ?? '',
     publishedAt: data.publishedAt ? new Date(data.publishedAt as string).toISOString().split('T')[0] : '',
     featuredImage: (data.featuredImage as string) ?? '',
@@ -130,7 +132,11 @@ export default function BlogEditor({ initial, onSave }: Props) {
                   value={(form as unknown as Record<string, string>)[`title${l}`] ?? ''}
                   onChange={(e) => {
                     setL(`title${l}`, e.target.value);
-                    if (lang === 'vi' && !initial) set('slug', slugify(e.target.value));
+                    if (!initial) {
+                      if (lang === 'vi') set('slug', slugify(e.target.value));
+                      else if (lang === 'en') set('slugEn', slugify(e.target.value));
+                      else if (lang === 'es') set('slugEs', slugify(e.target.value));
+                    }
                   }}
                   placeholder={`Tiêu đề bài viết (${lang.toUpperCase()})`} />
               </div>
@@ -172,9 +178,19 @@ export default function BlogEditor({ initial, onSave }: Props) {
         <div className="w-72 space-y-5 shrink-0">
           <div className="bg-white rounded-2xl border border-gray-200 p-5 space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Slug</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (VI)</label>
               <input className="input-field text-sm" value={form.slug}
                 onChange={(e) => set('slug', e.target.value)} />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (EN)</label>
+              <input className="input-field text-sm" value={form.slugEn}
+                onChange={(e) => set('slugEn', e.target.value)} placeholder="auto from EN title" />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Slug (ES)</label>
+              <input className="input-field text-sm" value={form.slugEs}
+                onChange={(e) => set('slugEs', e.target.value)} placeholder="auto from ES title" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Trạng thái</label>

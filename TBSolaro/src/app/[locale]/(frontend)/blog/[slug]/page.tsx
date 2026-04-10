@@ -15,13 +15,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = await getPostBySlug(slug, locale);
   if (!post) return {};
-  const url = `https://tbsolaro.com${locale === 'vi' ? '' : `/${locale}`}/blog/${slug}`;
+  const url = `https://tbsolaro.com${locale === 'vi' ? '' : `/${locale}`}/blog/${post.slug}`;
   return {
     title: post.title,
     description: post.excerpt,
     alternates: {
       canonical: url,
-      languages: { vi: `https://tbsolaro.com/blog/${slug}`, en: `https://tbsolaro.com/en/blog/${slug}`, es: `https://tbsolaro.com/es/blog/${slug}` },
+      languages: {
+        vi: `https://tbsolaro.com/blog/${post.slugVi}`,
+        en: `https://tbsolaro.com/en/blog/${post.slugEn}`,
+        es: `https://tbsolaro.com/es/blog/${post.slugEs}`,
+      },
     },
     openGraph: {
       title: post.title, description: post.excerpt, url, type: 'article',

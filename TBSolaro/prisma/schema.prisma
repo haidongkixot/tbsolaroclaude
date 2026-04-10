@@ -230,6 +230,8 @@ model DownloadDocument {
 model BlogPost {
   id            String    @id @default(cuid())
   slug          String    @unique
+  slugEn        String    @default("")
+  slugEs        String    @default("")
   status        String    @default("draft")
   publishedAt   DateTime?
   author        String    @default("Admin")

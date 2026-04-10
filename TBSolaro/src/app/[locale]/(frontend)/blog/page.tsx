@@ -42,7 +42,7 @@ export default async function BlogPage({ params }: { params: Promise<{ locale: s
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
                 <article key={post.id} className="card group overflow-hidden flex flex-col relative cursor-pointer">
-                  <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={post.title} />
+                  <Link href={`/blog/${post.slug}`} className="absolute inset-0 z-0 rounded-2xl" aria-label={post.title} prefetch={false} />
                   <div className="relative overflow-hidden aspect-video bg-gray-100 pointer-events-none">
                     <img
                       src={post.featuredImage || 'https://placehold.co/800x450/1B5E30/FFFFFF?text=TBSolaro'}
