@@ -122,7 +122,9 @@ async function main() {
   // Blog Posts
   const blogs = [
     {
-      id: 'blog-1', slug: 'kien-tao-nang-luong-ben-vung', status: 'published',
+      id: 'blog-1', slug: 'kien-tao-nang-luong-ben-vung',
+      slugEn: 'building-sustainable-energy', slugEs: 'construyendo-energia-sostenible',
+      status: 'published',
       publishedAt: new Date('2024-03-15'), author: 'Đội ngũ TBSolaro',
       titleVi: 'Kiến tạo năng lượng bền vững – Nuôi dưỡng tương lai xanh',
       excerptVi: 'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình.',
@@ -133,7 +135,9 @@ async function main() {
       relatedSlugs: JSON.stringify([]),
     },
     {
-      id: 'blog-2', slug: 'xu-huong-nang-luong-tai-tao-2024', status: 'published',
+      id: 'blog-2', slug: 'xu-huong-nang-luong-tai-tao-2024',
+      slugEn: 'renewable-energy-trends-2024', slugEs: 'tendencias-energia-renovable-2024',
+      status: 'published',
       publishedAt: new Date('2024-02-10'), author: 'Đội ngũ TBSolaro',
       titleVi: 'Xu hướng năng lượng tái tạo 2024',
       excerptVi: 'Các xu hướng mới nhất trong ngành năng lượng tái tạo toàn cầu.',
@@ -144,7 +148,9 @@ async function main() {
       relatedSlugs: JSON.stringify([]),
     },
     {
-      id: 'blog-3', slug: 'loi-ich-dien-mat-troi-doanh-nghiep', status: 'published',
+      id: 'blog-3', slug: 'loi-ich-dien-mat-troi-doanh-nghiep',
+      slugEn: 'solar-energy-benefits-for-business', slugEs: 'beneficios-energia-solar-para-empresas',
+      status: 'published',
       publishedAt: new Date('2024-01-05'), author: 'Đội ngũ TBSolaro',
       titleVi: 'Lợi ích điện mặt trời cho doanh nghiệp',
       excerptVi: 'Tại sao các doanh nghiệp nên đầu tư vào hệ thống điện mặt trời ngay từ bây giờ?',
@@ -159,7 +165,7 @@ async function main() {
   for (const b of blogs) {
     await prisma.blogPost.upsert({
       where: { slug: b.slug },
-      update: {},
+      update: { slugEn: b.slugEn, slugEs: b.slugEs },
       create: b,
     });
   }

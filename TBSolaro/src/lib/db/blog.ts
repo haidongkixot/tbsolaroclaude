@@ -14,9 +14,14 @@ function tryParse<T>(v: string, fallback: T): T {
 
 // eslint-disable-next-line
 function localize(row: Record<string, any>, l: Lang) {
+  // Resolve the slug for this locale: use slugEn/slugEs if set, otherwise fall back to main slug
+  const localeSlug = l === 'Vi' ? row.slug : (row[`slug${l}`] || row.slug);
   return {
     id: row.id,
-    slug: row.slug,
+    slug: localeSlug,
+    slugVi: row.slug,
+    slugEn: row.slugEn || row.slug,
+    slugEs: row.slugEs || row.slug,
     status: row.status,
     author: row.author,
     publishedAt: row.publishedAt ? new Date(row.publishedAt as string).toISOString() : null,
@@ -46,7 +51,19 @@ export async function getPublishedPosts(locale = 'vi') {
 
 export async function getPostBySlug(slug: string, locale = 'vi') {
   const l = toLang(locale);
-  const row = await prisma.blogPost.findUnique({ where: { slug } });
+
+  // Try locale-specific slug first (for EN/ES), then fall back to main slug
+  let row = null;
+  if (locale === 'en') {
+    row = await prisma.blogPost.findFirst({ where: { slugEn: slug, status: 'published' } });
+  } else if (locale === 'es') {
+    row = await prisma.blogPost.findFirst({ where: { slugEs: slug, status: 'published' } });
+  }
+  // Fall back to main slug (always works for VI, and as fallback for EN/ES)
+  if (!row) {
+    row = await prisma.blogPost.findUnique({ where: { slug } });
+  }
+
   if (!row) return null;
   return localize(row as unknown as Record<string, unknown>, l);
 }
