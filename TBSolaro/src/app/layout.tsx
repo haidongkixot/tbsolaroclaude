@@ -7,10 +7,15 @@ export const metadata: Metadata = {
     template: '%s | TBSolaro',
   },
   description: 'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình. Kiến tạo năng lượng bền vững, nuôi dưỡng tương lai xanh.',
-  keywords: ['năng lượng mặt trời', 'điện mặt trời', 'TBSolaro', 'solar', 'năng lượng tái tạo'],
+  keywords: ['năng lượng mặt trời', 'điện mặt trời', 'TBSolaro', 'solar energy', 'energía solar', 'năng lượng tái tạo', 'renewable energy', 'Thai Binh Group'],
+  metadataBase: new URL('https://tbsolaro.com'),
   openGraph: {
     type: 'website',
     siteName: 'TBSolaro',
+    images: [{ url: '/og-default.png', width: 1200, height: 630 }],
+  },
+  twitter: {
+    card: 'summary_large_image',
   },
 };
 

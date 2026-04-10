@@ -2,16 +2,17 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRight } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
+import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getCSRProjects, getProjectsByCategory } from '@/lib/db/projects';
 import { getSiteSettings, st } from '@/lib/db/settings';
 
-export const metadata: Metadata = {
-  title: 'Dự Án',
-  description: 'Khám phá các dự án năng lượng mặt trời của TBSolaro – từ hộ gia đình đến doanh nghiệp và cộng đồng CSR.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('projects', locale);
+}
 
 const scaleKeys = [
   { key: 'enterprise', icon: '🏭', titleKey: 'enterpriseTitle', descKey: 'enterpriseDesc', image: 'https://placehold.co/700x400/1B5E30/FFFFFF?text=Enterprise+Solar' },

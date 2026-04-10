@@ -1,12 +1,13 @@
 import type { Metadata } from 'next';
+import { buildMetadata } from '@/lib/seo';
 import { getSiteSettings } from '@/lib/db/settings';
 import { prisma } from '@/lib/prisma';
 import FAQContent from './_components/FAQContent';
 
-export const metadata: Metadata = {
-  title: 'FAQ',
-  description: 'Giải đáp các câu hỏi thường gặp về sản phẩm và dịch vụ năng lượng mặt trời của TBSolaro.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('faq', locale);
+}
 
 export default async function FAQPage() {
   const [settings, faqs] = await Promise.all([

@@ -15,7 +15,22 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const post = await getPostBySlug(slug, locale);
   if (!post) return {};
-  return { title: post.title, description: post.excerpt };
+  const url = `https://tbsolaro.com${locale === 'vi' ? '' : `/${locale}`}/blog/${slug}`;
+  return {
+    title: post.title,
+    description: post.excerpt,
+    alternates: {
+      canonical: url,
+      languages: { vi: `https://tbsolaro.com/blog/${slug}`, en: `https://tbsolaro.com/en/blog/${slug}`, es: `https://tbsolaro.com/es/blog/${slug}` },
+    },
+    openGraph: {
+      title: post.title, description: post.excerpt, url, type: 'article',
+      images: post.featuredImage ? [{ url: post.featuredImage, width: 1200, height: 630 }] : [],
+      publishedTime: post.publishedAt ? new Date(post.publishedAt).toISOString() : undefined,
+      authors: [post.author],
+    },
+    twitter: { card: 'summary_large_image', title: post.title, description: post.excerpt, images: post.featuredImage ? [post.featuredImage] : [] },
+  };
 }
 
 export default async function BlogPostPage({ params }: Props) {

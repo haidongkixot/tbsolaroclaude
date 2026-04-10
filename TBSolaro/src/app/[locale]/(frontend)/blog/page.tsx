@@ -2,15 +2,16 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRight, Calendar, User } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
+import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { getPublishedPosts } from '@/lib/db/blog';
 import { getSiteSettings } from '@/lib/db/settings';
 
-export const metadata: Metadata = {
-  title: 'Tin tức & Truyền thông',
-  description: 'Cập nhật mới nhất về năng lượng mặt trời và hoạt động của TBSolaro.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('blog', locale);
+}
 
 export default async function BlogPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
