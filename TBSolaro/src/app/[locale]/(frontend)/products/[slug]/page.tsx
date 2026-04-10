@@ -11,7 +11,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const product = await getProductBySlug(slug, locale);
   if (!product) return {};
-  return { title: product.title, description: product.excerpt };
+  const url = `https://tbsolaro.com${locale === 'vi' ? '' : `/${locale}`}/products/${slug}`;
+  return {
+    title: product.title,
+    description: product.excerpt,
+    alternates: {
+      canonical: url,
+      languages: { vi: `https://tbsolaro.com/products/${slug}`, en: `https://tbsolaro.com/en/products/${slug}`, es: `https://tbsolaro.com/es/products/${slug}` },
+    },
+    openGraph: {
+      title: product.title, description: product.excerpt, url, type: 'website',
+      images: product.featuredImage ? [{ url: product.featuredImage, width: 1200, height: 630 }] : [],
+    },
+    twitter: { card: 'summary_large_image', title: product.title, description: product.excerpt, images: product.featuredImage ? [product.featuredImage] : [] },
+  };
 }
 
 export default async function ProductDetailPage({ params }: Props) {

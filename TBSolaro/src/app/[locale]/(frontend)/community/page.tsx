@@ -2,16 +2,17 @@ import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { ArrowRight, Play } from 'lucide-react';
 import { Link } from '@/i18n/navigation';
+import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
 import SustainabilityBanner from '@/components/sections/SustainabilityBanner';
 import { getCSRProjects } from '@/lib/db/projects';
 import { getSiteSettings } from '@/lib/db/settings';
 
-export const metadata: Metadata = {
-  title: 'Cộng Đồng & CSR',
-  description: 'TBSolaro lan tỏa ánh sáng, nuôi dưỡng tương lai – Các dự án CSR mang năng lượng sạch đến cộng đồng.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('community', locale);
+}
 
 export default async function CommunityPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

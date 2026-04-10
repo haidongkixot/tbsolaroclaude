@@ -16,7 +16,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   const project = await getProjectBySlug(slug, locale);
   if (!project) return {};
-  return { title: project.title, description: project.excerpt };
+  const url = `https://tbsolaro.com${locale === 'vi' ? '' : `/${locale}`}/projects/${slug}`;
+  return {
+    title: project.title,
+    description: project.excerpt,
+    alternates: {
+      canonical: url,
+      languages: { vi: `https://tbsolaro.com/projects/${slug}`, en: `https://tbsolaro.com/en/projects/${slug}`, es: `https://tbsolaro.com/es/projects/${slug}` },
+    },
+    openGraph: {
+      title: project.title, description: project.excerpt, url, type: 'website',
+      images: project.featuredImage ? [{ url: project.featuredImage, width: 1200, height: 630 }] : [],
+    },
+    twitter: { card: 'summary_large_image', title: project.title, description: project.excerpt, images: project.featuredImage ? [project.featuredImage] : [] },
+  };
 }
 
 export default async function ProjectDetailPage({ params }: Props) {

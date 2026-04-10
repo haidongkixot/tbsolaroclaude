@@ -1,15 +1,16 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
 import { Download, FileText } from 'lucide-react';
+import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ContactFormSection from '@/components/sections/ContactFormSection';
 import { prisma } from '@/lib/prisma';
 import { getSiteSettings } from '@/lib/db/settings';
 
-export const metadata: Metadata = {
-  title: 'Liên Hệ & Tải Tài Liệu',
-  description: 'Kết nối cùng TBSolaro – Đối tác năng lượng xanh của bạn. Tải tài liệu kỹ thuật và liên hệ tư vấn.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('contact', locale);
+}
 
 export default async function ContactPage() {
   const [t, settings, documents] = await Promise.all([

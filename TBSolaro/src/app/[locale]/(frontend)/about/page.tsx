@@ -8,11 +8,12 @@ import { getSiteSettings, st } from '@/lib/db/settings';
 import type { TimelineItem, WhyUsItem, ProcessStep } from '@/lib/db/settings';
 import { Link } from '@/i18n/navigation';
 import { ArrowRight } from 'lucide-react';
+import { buildMetadata } from '@/lib/seo';
 
-export const metadata: Metadata = {
-  title: 'Về Chúng Tôi',
-  description: 'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình. Tìm hiểu lịch sử và sứ mệnh của chúng tôi.',
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return buildMetadata('about', locale);
+}
 
 const DEFAULT_TIMELINE: TimelineItem[] = [
   { year: '1992', titleVi: 'Thành lập Tập đoàn Thái Bình', titleEn: 'Thai Binh Group Founded', titleEs: 'Fundación del Grupo Thai Binh', descVi: 'Tập đoàn Thái Bình được thành lập, bắt đầu hành trình xây dựng các giải pháp năng lượng bền vững.', descEn: 'Thai Binh Group was established, beginning the journey of building sustainable energy solutions.', descEs: 'El Grupo Thai Binh fue fundado, comenzando el camino hacia soluciones de energía sostenible.' },
