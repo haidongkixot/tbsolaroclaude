@@ -1,7 +1,7 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
-import { Plus, Edit, Trash2, Download, FileText, Loader2, Image as ImageIcon } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { Plus, Edit, Trash2, Download, FileText, Loader2, Image as ImageIcon, Upload } from 'lucide-react';
 
 interface Doc {
   id: string;
@@ -67,6 +67,26 @@ export default function AdminDownloadsPage() {
     if (!confirm('Xóa tài liệu này?')) return;
     await fetch(`/api/admin/downloads/${id}`, { method: 'DELETE' });
     load();
+  };
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const iconInputRef = useRef<HTMLInputElement>(null);
+  const imageInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingFile, setUploadingFile] = useState(false);
+  const [uploadingIcon, setUploadingIcon] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
+
+  const uploadFile = async (file: File, setUrl: (url: string) => void, setUploading: (v: boolean) => void) => {
+    setUploading(true);
+    try {
+      const fd = new FormData();
+      fd.append('file', file);
+      const res = await fetch('/api/upload', { method: 'POST', body: fd });
+      const data = await res.json();
+      if (data.url) setUrl(data.url);
+    } finally {
+      setUploading(false);
+    }
   };
 
   const f = (key: keyof FormState, val: string | number) => setForm((p) => ({ ...p, [key]: val }));
@@ -162,15 +182,70 @@ export default function AdminDownloadsPage() {
                 <div><label className="block text-sm font-medium text-gray-700 mb-1">Danh mục</label><input className="input-field" value={form.category} onChange={(e) => f('category', e.target.value)} placeholder="Thông số kỹ thuật, Catalog..." /></div>
                 <div><label className="block text-sm font-medium text-gray-700 mb-1">Thứ tự</label><input type="number" className="input-field" value={form.sortOrder} onChange={(e) => f('sortOrder', parseInt(e.target.value) || 0)} /></div>
               </div>
-              <div><label className="block text-sm font-medium text-gray-700 mb-1">URL File</label><input className="input-field" value={form.fileUrl} onChange={(e) => f('fileUrl', e.target.value)} placeholder="/downloads/file.pdf" /></div>
-              <div><label className="block text-sm font-medium text-gray-700 mb-1">Ảnh đại diện (URL)</label><input className="input-field" value={form.featuredImage} onChange={(e) => f('featuredImage', e.target.value)} placeholder="https://..." /></div>
+              {/* File upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">File tài liệu</label>
+                <div className="flex gap-2">
+                  <input className="input-field flex-1" value={form.fileUrl} onChange={(e) => f('fileUrl', e.target.value)} placeholder="URL hoặc upload file..." readOnly={uploadingFile} />
+                  <button
+                    type="button"
+                    disabled={uploadingFile}
+                    onClick={() => fileInputRef.current?.click()}
+                    className="btn-outline text-sm px-3 py-2 shrink-0 flex items-center gap-1.5"
+                  >
+                    {uploadingFile ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                    Upload
+                  </button>
+                </div>
+                <input ref={fileInputRef} type="file" accept=".pdf,.docx,.xlsx,.zip,.doc,.xls" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) uploadFile(file, (url) => f('fileUrl', url), setUploadingFile); e.target.value = ''; }} />
+                {form.fileUrl && (
+                  <div className="mt-1.5 flex items-center gap-2 text-xs text-green-600">
+                    <FileText size={12} /> File đã tải lên
+                  </div>
+                )}
+              </div>
 
-              {/* Icon field */}
+              {/* Featured image upload */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Ảnh đại diện</label>
+                <div className="flex gap-2">
+                  <input className="input-field flex-1" value={form.featuredImage} onChange={(e) => f('featuredImage', e.target.value)} placeholder="URL hoặc upload ảnh..." readOnly={uploadingImage} />
+                  <button
+                    type="button"
+                    disabled={uploadingImage}
+                    onClick={() => imageInputRef.current?.click()}
+                    className="btn-outline text-sm px-3 py-2 shrink-0 flex items-center gap-1.5"
+                  >
+                    {uploadingImage ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                    Upload
+                  </button>
+                </div>
+                <input ref={imageInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) uploadFile(file, (url) => f('featuredImage', url), setUploadingImage); e.target.value = ''; }} />
+                {form.featuredImage && (
+                  <div className="mt-2 rounded-lg overflow-hidden border border-gray-200 h-32">
+                    <img src={form.featuredImage} alt="" className="w-full h-full object-cover" />
+                  </div>
+                )}
+              </div>
+
+              {/* Icon upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  <span className="flex items-center gap-1.5"><ImageIcon size={14} /> Icon / Logo (URL ảnh)</span>
+                  <span className="flex items-center gap-1.5"><ImageIcon size={14} /> Icon / Logo</span>
                 </label>
-                <input className="input-field" value={form.icon} onChange={(e) => f('icon', e.target.value)} placeholder="https://... (icon chứng chỉ, logo nhà sản xuất...)" />
+                <div className="flex gap-2">
+                  <input className="input-field flex-1" value={form.icon} onChange={(e) => f('icon', e.target.value)} placeholder="URL hoặc upload icon..." readOnly={uploadingIcon} />
+                  <button
+                    type="button"
+                    disabled={uploadingIcon}
+                    onClick={() => iconInputRef.current?.click()}
+                    className="btn-outline text-sm px-3 py-2 shrink-0 flex items-center gap-1.5"
+                  >
+                    {uploadingIcon ? <Loader2 size={14} className="animate-spin" /> : <Upload size={14} />}
+                    Upload
+                  </button>
+                </div>
+                <input ref={iconInputRef} type="file" accept="image/*" className="hidden" onChange={(e) => { const file = e.target.files?.[0]; if (file) uploadFile(file, (url) => f('icon', url), setUploadingIcon); e.target.value = ''; }} />
                 {form.icon && (
                   <div className="mt-2 flex items-center gap-3">
                     <div className="w-12 h-12 rounded-lg border border-gray-200 flex items-center justify-center overflow-hidden bg-gray-50">
