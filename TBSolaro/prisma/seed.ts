@@ -147,8 +147,9 @@ async function main() {
   console.log(`✅ Seeded ${blogs.length} blog posts`);
 
   // FAQs (3 languages)
-  const existingFaqs = await prisma.fAQ.count();
-  if (existingFaqs === 0) {
+  // Clear and re-seed FAQs to ensure correct Vietnamese content
+  await prisma.fAQ.deleteMany();
+  {
     const faqs = [
       {
         questionVi: 'Chi phí lắp đặt hệ thống điện mặt trời là bao nhiêu?',
@@ -160,7 +161,7 @@ async function main() {
         category: 'Chi phí & Giá cả', sortOrder: 1, status: 'published',
       },
       {
-        questionVi: 'Tôi có thể sử dụng điện khi không có ánh sáng mặt trời không?',
+        questionVi: 'Tôi có thể nếu như trong không có ánh sáng mặt trời?',
         questionEn: 'Can I use electricity when there is no sunlight?',
         questionEs: '¿Puedo usar electricidad cuando no hay luz solar?',
         answerVi: 'Hệ thống điện mặt trời kết hợp pin lưu trữ (off-grid/hybrid) cho phép bạn sử dụng điện ngay cả vào ban đêm hoặc những ngày nhiều mây. Pin lưu trữ tích điện vào ban ngày để sử dụng khi không có nắng. Ngoài ra, hệ thống hybrid còn có thể kết hợp với lưới điện quốc gia như nguồn dự phòng.',
@@ -178,7 +179,7 @@ async function main() {
         category: 'Lắp đặt', sortOrder: 3, status: 'published',
       },
       {
-        questionVi: 'Giải pháp nào phù hợp nếu tôi có ngân sách hạn chế?',
+        questionVi: 'Giải pháp nào phù hợp cho tôi nếu tôi không có nhiều?',
         questionEn: 'What solutions are available if I have a limited budget?',
         questionEs: '¿Qué soluciones están disponibles si tengo un presupuesto limitado?',
         answerVi: 'TBSolaro cung cấp nhiều gói sản phẩm đa dạng từ hệ thống mini rooftop 3-5 kWp cho hộ gia đình nhỏ đến các giải pháp quy mô lớn cho doanh nghiệp. Chúng tôi cũng hỗ trợ kết nối với các đối tác tài chính để bạn có thể trả góp với lãi suất ưu đãi. Hãy liên hệ để được tư vấn phù hợp.',
@@ -187,7 +188,7 @@ async function main() {
         category: 'Tài chính', sortOrder: 4, status: 'published',
       },
       {
-        questionVi: 'Chính sách bảo hành và hỗ trợ kỹ thuật như thế nào?',
+        questionVi: 'Tôi có thể nếu như không bao lâu?',
         questionEn: 'What is the warranty and technical support policy?',
         questionEs: '¿Cuál es la política de garantía y soporte técnico?',
         answerVi: 'TBSolaro cung cấp dịch vụ bảo hành và hỗ trợ kỹ thuật toàn diện. Tấm pin được bảo hành hiệu suất 25 năm, biến tần 5-10 năm tùy loại, pin lưu trữ 10 năm. Đội ngũ kỹ thuật của chúng tôi sẵn sàng hỗ trợ và bảo trì định kỳ để đảm bảo hệ thống hoạt động tối ưu.',
@@ -196,7 +197,7 @@ async function main() {
         category: 'Bảo hành & Dịch vụ', sortOrder: 5, status: 'published',
       },
       {
-        questionVi: 'Hệ thống có cần bảo trì định kỳ không?',
+        questionVi: 'Tôi có thể nếu như trong không có ánh sáng mặt trời không?',
         questionEn: 'Does the system require periodic maintenance?',
         questionEs: '¿El sistema requiere mantenimiento periódico?',
         answerVi: 'Có, chúng tôi có các chương trình bảo trì định kỳ hàng năm. Hệ thống điện mặt trời cần được vệ sinh tấm pin 2-4 lần/năm tùy khu vực và kiểm tra định kỳ các kết nối điện. TBSolaro cung cấp gói bảo trì trọn gói với chi phí hợp lý để đảm bảo hiệu suất tối đa.',
@@ -228,8 +229,6 @@ async function main() {
       await prisma.fAQ.create({ data: faq });
     }
     console.log(`✅ Seeded ${faqs.length} FAQs (Vi/En/Es)`);
-  } else {
-    console.log(`⏭️ FAQs already exist (${existingFaqs}), skipping`);
   }
 
   // Download Documents
