@@ -30,12 +30,12 @@
     "contactUs": "Contact Us"
   },
   "footer": {
-    "tagline": "Member of Thai Binh Group – Pioneering Solar Energy",
-    "company": "THAI BINH GREEN POWER INVESTMENT CORPORATION",
+    "tagline": "Pioneering Solar Energy",
+    "company": "TBSOLARO",
     "contactTitle": "Contact",
     "navTitle": "Quick Links",
     "policyTitle": "Support & Policies",
-    "copyright": "© 2025 TBSolaro – A member of Thai Binh corporation | All Rights Reserved",
+    "copyright": "© 2025 TBSolaro | All Rights Reserved",
     "poweredBy": "Powered by",
     "cms": "TBSolaro CMS",
     "quickLink1": "About TBSolaro",
@@ -51,9 +51,9 @@
     "policyLink6": "FAQ – Frequently Asked Questions"
   },
   "home": {
-    "heroBadge": "Member of Thai Binh Group",
+    "heroBadge": "Sustainable Solar Energy",
     "heroTitle": "Creating sustainable energy, nurturing a green future",
-    "heroSubtitle": "TBSolaro – The leading solar energy brand of Thai Binh Group, bringing clean energy solutions to communities.",
+    "heroSubtitle": "TBSolaro – A leading solar energy brand, bringing clean energy solutions to communities.",
     "heroBtn1": "View projects",
     "heroBtn2": "Explore products",
     "certTitle": "Certifications & Partners",
@@ -80,9 +80,9 @@
   "about": {
     "pageTitle": "About Us",
     "heroTitle": "About TBSolaro",
-    "heroSubtitle": "Member of Thai Binh Group – Pioneering Solar Energy",
+    "heroSubtitle": "Pioneering Solar Energy",
     "historyTitle": "Our History",
-    "historySubtitle": "The development journey of TBSolaro and Thai Binh Group",
+    "historySubtitle": "The development journey of TBSolaro",
     "whyTitle": "Why choose TBSolaro",
     "whySubtitle": "Three core values guiding all TBSolaro activities",
     "processTitle": "Production Process",

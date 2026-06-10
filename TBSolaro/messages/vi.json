@@ -30,12 +30,12 @@
     "contactUs": "Liên hệ với chúng tôi"
   },
   "footer": {
-    "tagline": "Thành viên của Tập đoàn Thái Bình – Pioneering Solar Energy",
-    "company": "THAI BINH GREEN POWER INVESTMENT CORPORATION",
+    "tagline": "Tiên phong năng lượng mặt trời",
+    "company": "TBSOLARO",
     "contactTitle": "Liên hệ",
     "navTitle": "Điều hướng nhanh",
     "policyTitle": "Hỗ trợ & Chính sách",
-    "copyright": "© 2025 TBSolaro – A member of Thai Binh corporation | All Rights Reserved",
+    "copyright": "© 2025 TBSolaro | All Rights Reserved",
     "poweredBy": "Powered by",
     "cms": "TBSolaro CMS",
     "quickLink1": "Giới thiệu về TBSolaro",
@@ -51,9 +51,9 @@
     "policyLink6": "FAQ – Câu hỏi thường gặp"
   },
   "home": {
-    "heroBadge": "Thành viên của tập đoàn Thái Bình",
+    "heroBadge": "Năng lượng mặt trời bền vững",
     "heroTitle": "Kiến tạo năng lượng bền vững, nuôi dưỡng tương lai xanh",
-    "heroSubtitle": "TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình, mang giải pháp năng lượng sạch cho cộng đồng.",
+    "heroSubtitle": "TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu, mang giải pháp năng lượng sạch cho cộng đồng.",
     "heroBtn1": "Xem dự án",
     "heroBtn2": "Tìm hiểu sản phẩm",
     "certTitle": "Chứng nhận & Đối tác",
@@ -80,9 +80,9 @@
   "about": {
     "pageTitle": "Về Chúng Tôi",
     "heroTitle": "Về TBSolaro",
-    "heroSubtitle": "Thành viên của Tập đoàn Thái Bình – Tiên phong năng lượng mặt trời",
+    "heroSubtitle": "Tiên phong năng lượng mặt trời",
     "historyTitle": "Lịch sử hình thành",
-    "historySubtitle": "Chặng đường phát triển của TBSolaro và Tập đoàn Thái Bình",
+    "historySubtitle": "Chặng đường phát triển của TBSolaro",
     "whyTitle": "Tại sao chọn TBSolaro",
     "whySubtitle": "Ba giá trị cốt lõi định hướng mọi hoạt động của TBSolaro",
     "processTitle": "Quy trình sản xuất",

@@ -40,8 +40,7 @@ export default async function LocaleLayout({
     name: 'TBSolaro',
     url: 'https://tbsolaro.com',
     logo: 'https://tbsolaro.com/logo.png',
-    description: 'Leading solar energy brand by Thai Binh Group. Solar panel combos, inverters, and battery storage.',
-    parentOrganization: { '@type': 'Organization', name: 'Thai Binh Group' },
+    description: 'A leading solar energy brand. Solar panel combos, inverters, and battery storage.',
     sameAs: [],
   };
 

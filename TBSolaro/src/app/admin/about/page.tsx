@@ -161,14 +161,14 @@ export default function AdminAboutPage() {
 
         {/* ── Hero Badge ── */}
         <Section icon="🏷️" title="Badge trên Hero Slider trang chủ">
-          <p className="text-xs text-gray-500 mb-4">Dòng chữ nhỏ hiển thị phía trên tiêu đề trong banner trang chủ, ví dụ: &ldquo;Thành viên của Tập đoàn Thái Bình&rdquo;.</p>
+          <p className="text-xs text-gray-500 mb-4">Dòng chữ nhỏ hiển thị phía trên tiêu đề trong banner trang chủ, ví dụ: &ldquo;Năng lượng mặt trời bền vững&rdquo;.</p>
           <LanguageTabs value={lang} onChange={setLang} />
           <Field label={`Nội dung badge (${lang.toUpperCase()})`}>
             <input
               className="input-field"
               value={form[`heroBadge${l}` as keyof Form] as string}
               onChange={(e) => set(`heroBadge${l}` as keyof Form, e.target.value)}
-              placeholder="VD: Thành viên của Tập đoàn Thái Bình"
+              placeholder="VD: Năng lượng mặt trời bền vững"
             />
           </Field>
         </Section>

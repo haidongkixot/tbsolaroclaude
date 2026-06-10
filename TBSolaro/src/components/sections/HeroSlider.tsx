@@ -11,9 +11,9 @@ const FALLBACK_SLIDES: HeroSlide[] = [
     titleVi: 'Kiến tạo năng lượng bền vững',
     titleEn: 'Creating Sustainable Energy',
     titleEs: 'Creando Energía Sostenible',
-    subtitleVi: 'Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình. Giải pháp xanh cho mọi nhu cầu.',
-    subtitleEn: 'Leading solar energy brand of Thai Binh Group. Green solutions for every need.',
-    subtitleEs: 'Marca líder de energía solar del Grupo Thai Binh. Soluciones verdes para cada necesidad.',
+    subtitleVi: 'Thương hiệu điện năng lượng mặt trời hàng đầu. Giải pháp xanh cho mọi nhu cầu.',
+    subtitleEn: 'A leading solar energy brand. Green solutions for every need.',
+    subtitleEs: 'Una marca líder de energía solar. Soluciones verdes para cada necesidad.',
   },
 ];
 

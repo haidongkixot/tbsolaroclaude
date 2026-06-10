@@ -478,8 +478,8 @@ npx prisma studio</code></pre>
    titleVi: "Inverter Solis 5kW"
 
 2 dự án:
-1. slug: kcn-thai-binh-500kw, category: enterprise, status: published
-   titleVi: "KCN Thái Bình 500kW", location: "Thái Bình", power: "500kW", year: "2024"
+1. slug: kcn-bac-ninh-500kw, category: enterprise, status: published
+   titleVi: "KCN Bắc Ninh 500kW", location: "Bắc Ninh", power: "500kW", year: "2024"
 
 2. slug: ho-gia-dinh-ha-noi-10kw, category: household, status: published
    titleVi: "Hộ Gia Đình Hà Nội 10kW", location: "Hà Nội", power: "10kW", year: "2025"

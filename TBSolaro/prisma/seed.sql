@@ -162,7 +162,7 @@ INSERT INTO "BlogPost" (
   '["Năng lượng xanh","CSR","TBSolaro"]',
   '[]', '',
   'Kiến tạo năng lượng bền vững – Nuôi dưỡng tương lai xanh', '', '',
-  'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình.', '', '',
+  'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu.', '', '',
   '<h2>Năng lượng mặt trời – Giải pháp cho tương lai</h2><p>Năng lượng mặt trời đang trở thành giải pháp thiết yếu trong bối cảnh biến đổi khí hậu toàn cầu. TBSolaro tự hào là đơn vị tiên phong trong lĩnh vực này tại Việt Nam.</p><p>Với hơn 500 dự án đã triển khai, chúng tôi cam kết mang đến nguồn năng lượng sạch, bền vững cho mọi gia đình và doanh nghiệp.</p>', '', '',
   '', '', '', '', '', '',
   NOW(), NOW()

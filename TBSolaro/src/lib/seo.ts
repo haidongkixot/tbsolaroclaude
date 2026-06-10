@@ -5,14 +5,14 @@ const OG_IMAGE = 'https://tbsolaro.com/og-default.png';
 
 const META: Record<string, Record<string, { title: string; description: string }>> = {
   home: {
-    vi: { title: 'TBSolaro – Năng Lượng Mặt Trời Bền Vững', description: 'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu của Tập đoàn Thái Bình. Combo pin mặt trời, biến tần, pin lưu trữ cho gia đình và doanh nghiệp.' },
-    en: { title: 'TBSolaro – Sustainable Solar Energy', description: 'TBSolaro – Leading solar energy brand by Thai Binh Group. Solar panel combos, inverters, and battery storage for homes and businesses.' },
-    es: { title: 'TBSolaro – Energía Solar Sostenible', description: 'TBSolaro – Marca líder de energía solar del Grupo Thai Binh. Combos de paneles solares, inversores y almacenamiento de baterías para hogares y empresas.' },
+    vi: { title: 'TBSolaro – Năng Lượng Mặt Trời Bền Vững', description: 'TBSolaro – Thương hiệu điện năng lượng mặt trời hàng đầu. Combo pin mặt trời, biến tần, pin lưu trữ cho gia đình và doanh nghiệp.' },
+    en: { title: 'TBSolaro – Sustainable Solar Energy', description: 'TBSolaro – A leading solar energy brand. Solar panel combos, inverters, and battery storage for homes and businesses.' },
+    es: { title: 'TBSolaro – Energía Solar Sostenible', description: 'TBSolaro – Una marca líder de energía solar. Combos de paneles solares, inversores y almacenamiento de baterías para hogares y empresas.' },
   },
   about: {
-    vi: { title: 'Về Chúng Tôi', description: 'Tìm hiểu lịch sử, sứ mệnh và quy trình sản xuất của TBSolaro – Thương hiệu điện mặt trời hàng đầu từ Tập đoàn Thái Bình.' },
-    en: { title: 'About Us', description: 'Discover the history, mission, and production process of TBSolaro – leading solar energy brand by Thai Binh Group.' },
-    es: { title: 'Sobre Nosotros', description: 'Descubra la historia, misión y proceso de producción de TBSolaro – marca líder de energía solar del Grupo Thai Binh.' },
+    vi: { title: 'Về Chúng Tôi', description: 'Tìm hiểu lịch sử, sứ mệnh và quy trình sản xuất của TBSolaro – Thương hiệu điện mặt trời hàng đầu.' },
+    en: { title: 'About Us', description: 'Discover the history, mission, and production process of TBSolaro – a leading solar energy brand.' },
+    es: { title: 'Sobre Nosotros', description: 'Descubra la historia, misión y proceso de producción de TBSolaro – una marca líder de energía solar.' },
   },
   products: {
     vi: { title: 'Sản Phẩm', description: 'Khám phá combo năng lượng mặt trời TBSolaro: tấm pin, biến tần, pin lưu trữ lithium LFP. Giải pháp phù hợp mọi nhu cầu gia đình và doanh nghiệp.' },
