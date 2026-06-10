@@ -6,7 +6,7 @@ export const projects: Project[] = [
     slug: 'truong-tieu-hoc-jose-marti',
     title: 'Ánh sáng đầu tiên tại Trường Tiểu học José Martí',
     excerpt: 'Dự án CSR lắp đặt hệ thống điện mặt trời cho trường tiểu học vùng nông thôn Cuba, mang điện sạch đến 300+ học sinh.',
-    content: `<p>Trong khuôn khổ chương trình CSR của Tập đoàn Thái Bình tại Cuba, TBSolaro đã triển khai thành công dự án lắp đặt hệ thống năng lượng mặt trời 4.668 kWp tại Trường Tiểu học José Martí, tỉnh Artemisa.</p>
+    content: `<p>Trong khuôn khổ chương trình CSR của mình tại Cuba, TBSolaro đã triển khai thành công dự án lắp đặt hệ thống năng lượng mặt trời 4.668 kWp tại Trường Tiểu học José Martí, tỉnh Artemisa.</p>
 
 <p>Dự án không chỉ mang lại nguồn điện ổn định, sạch và miễn phí cho nhà trường, mà còn trở thành mô hình tiêu biểu về việc ứng dụng năng lượng tái tạo trong giáo dục tại Cuba.</p>
 
@@ -118,7 +118,7 @@ export const projects: Project[] = [
     excerpt: 'Lắp đặt hệ thống năng lượng mặt trời 500kWp hòa lưới cho nhà máy chế biến thực phẩm, tiết kiệm 45% chi phí điện.',
     content: `<p>Nhà máy chế biến thực phẩm với nhu cầu điện lớn là ứng viên lý tưởng cho hệ thống điện mặt trời quy mô công nghiệp. TBSolaro đã thiết kế và lắp đặt hệ thống 500kWp on-grid với ROI dự kiến trong 5-6 năm.</p>`,
     category: 'enterprise',
-    location: 'Thái Bình, Việt Nam',
+    location: 'Bắc Ninh, Việt Nam',
     power: '500 kWp',
     installationDate: '01/11/2023',
     year: 2023,
@@ -137,7 +137,7 @@ export const projects: Project[] = [
     excerpt: 'Hệ thống mini rooftop 5kWp lắp đặt cho hộ gia đình, hoàn vốn trong 4-5 năm, bảo hành 25 năm.',
     content: `<p>Hệ thống năng lượng mặt trời mini rooftop là giải pháp tối ưu cho hộ gia đình muốn tiết kiệm điện và góp phần bảo vệ môi trường. TBSolaro cung cấp gói trọn gói từ khảo sát đến lắp đặt và bảo trì.</p>`,
     category: 'household',
-    location: 'Thái Bình, Việt Nam',
+    location: 'Bắc Ninh, Việt Nam',
     power: '5 kWp',
     installationDate: '15/04/2024',
     year: 2024,

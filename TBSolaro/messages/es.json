@@ -30,12 +30,12 @@
     "contactUs": "Contáctenos"
   },
   "footer": {
-    "tagline": "Miembro del Grupo Thai Binh – Pionero en Energía Solar",
-    "company": "THAI BINH GREEN POWER INVESTMENT CORPORATION",
+    "tagline": "Pionero en Energía Solar",
+    "company": "TBSOLARO",
     "contactTitle": "Contacto",
     "navTitle": "Enlaces Rápidos",
     "policyTitle": "Soporte y Políticas",
-    "copyright": "© 2025 TBSolaro – A member of Thai Binh corporation | All Rights Reserved",
+    "copyright": "© 2025 TBSolaro | All Rights Reserved",
     "poweredBy": "Impulsado por",
     "cms": "TBSolaro CMS",
     "quickLink1": "Acerca de TBSolaro",
@@ -51,9 +51,9 @@
     "policyLink6": "FAQ – Preguntas Frecuentes"
   },
   "home": {
-    "heroBadge": "Miembro del Grupo Thai Binh",
+    "heroBadge": "Energía Solar Sostenible",
     "heroTitle": "Creando energía sostenible, nutriendo un futuro verde",
-    "heroSubtitle": "TBSolaro – La marca líder de energía solar del Grupo Thai Binh, llevando soluciones de energía limpia a las comunidades.",
+    "heroSubtitle": "TBSolaro – Una marca líder de energía solar, llevando soluciones de energía limpia a las comunidades.",
     "heroBtn1": "Ver proyectos",
     "heroBtn2": "Explorar productos",
     "certTitle": "Certificaciones y Socios",
@@ -80,9 +80,9 @@
   "about": {
     "pageTitle": "Nosotros",
     "heroTitle": "Acerca de TBSolaro",
-    "heroSubtitle": "Miembro del Grupo Thai Binh – Pionero en Energía Solar",
+    "heroSubtitle": "Pionero en Energía Solar",
     "historyTitle": "Nuestra Historia",
-    "historySubtitle": "El camino de desarrollo de TBSolaro y el Grupo Thai Binh",
+    "historySubtitle": "El camino de desarrollo de TBSolaro",
     "whyTitle": "¿Por qué elegir TBSolaro?",
     "whySubtitle": "Tres valores fundamentales que guían todas las actividades de TBSolaro",
     "processTitle": "Proceso de Producción",
