@@ -131,37 +131,41 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </section>
       )}
 
-      {/* Gallery */}
-      <section className="py-10 bg-gray-50">
-        <div className="container-site">
-          <h2 className="section-title text-center mb-8">{t('galleryTitle')}</h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-            {[1, 2, 3, 4].map((i) => (
-              <div key={i} className="aspect-square rounded-2xl overflow-hidden bg-gray-200">
-                <img
-                  src={`https://placehold.co/400x400/1B5E30/FFFFFF?text=Process+${i}`}
-                  alt={`Quy trình sản xuất ${i}`}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-              </div>
-            ))}
+      {/* Process Gallery — part of the Process block, hidden by the same toggle */}
+      {settings.showProcess && (
+        <section className="py-10 bg-gray-50">
+          <div className="container-site">
+            <h2 className="section-title text-center mb-8">{t('galleryTitle')}</h2>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="aspect-square rounded-2xl overflow-hidden bg-gray-200">
+                  <img
+                    src={`https://placehold.co/400x400/1B5E30/FFFFFF?text=Process+${i}`}
+                    alt={`Quy trình sản xuất ${i}`}
+                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
-      {/* Partners */}
-      <section className="py-12 bg-white border-b border-gray-100">
-        <div className="container-site">
-          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'about', 'partnersTitle', locale) || t('partnersTitle')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
-            {partners.map((p) => (
-              <div key={p} className="px-5 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors">
-                {p}
-              </div>
-            ))}
+      {/* Partners & certification bodies — hidden by the certifications toggle */}
+      {settings.showCertifications && (
+        <section className="py-12 bg-white border-b border-gray-100">
+          <div className="container-site">
+            <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'about', 'partnersTitle', locale) || t('partnersTitle')}</p>
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-14">
+              {partners.map((p) => (
+                <div key={p} className="px-5 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors">
+                  {p}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <ContactFormSection source="about_page" />
       <SustainabilityBanner backgroundImage={settings.sustainabilityBgImage || undefined} />

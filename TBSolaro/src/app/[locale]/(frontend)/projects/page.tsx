@@ -1,7 +1,5 @@
 import type { Metadata } from 'next';
 import { getTranslations } from 'next-intl/server';
-import { ArrowRight } from 'lucide-react';
-import { Link } from '@/i18n/navigation';
 import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ProjectCard from '@/components/sections/ProjectCard';
@@ -116,11 +114,6 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
                   {csrProjects.map((p) => (
                     <ProjectCard key={p.id} project={p} variant="horizontal" />
                   ))}
-                </div>
-                <div className="mt-8">
-                  <Link href="/community" className="btn-outline text-sm">
-                    {t('csrBtn')} <ArrowRight size={16} />
-                  </Link>
                 </div>
               </div>
             )}

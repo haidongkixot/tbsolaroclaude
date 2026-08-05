@@ -18,7 +18,6 @@ export const mainNav: NavItem[] = [
   { label: 'About Us', href: '/about' },
   { label: 'Sản phẩm', href: '/products' },
   { label: 'Showroom', href: '/showroom' },
-  { label: 'Cộng đồng', href: '/community' },
   { label: 'Dự án', href: '/projects' },
   { label: 'FAQs', href: '/faq' },
   { label: 'Liên hệ', href: '/contact' },
@@ -28,7 +27,6 @@ export const footerQuickLinks: NavItem[] = [
   { label: 'Giới thiệu về TBSolaro', href: '/about' },
   { label: 'Combo sản phẩm', href: '/products' },
   { label: 'Dự án tiêu biểu', href: '/projects' },
-  { label: 'CSR & Cộng đồng', href: '/community' },
   { label: 'Tin tức & Truyền thông', href: '/blog' },
 ];
 

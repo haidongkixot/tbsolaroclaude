@@ -93,34 +93,6 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </section>
       )}
 
-      {/* CSR Highlight */}
-      <section className="py-16 md:py-20">
-        <div className="container-site">
-          <div className="rounded-3xl overflow-hidden bg-brand grid md:grid-cols-2 gap-0">
-            <div className="relative overflow-hidden">
-              <img
-                src={settings.csrImage || 'https://placehold.co/800x500/1B5E30/FFFFFF?text=Cuba+CSR+Project'}
-                alt="Dự án CSR Cuba"
-                className="w-full h-full object-cover min-h-[300px]"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-transparent to-brand/30" />
-            </div>
-            <div className="p-8 md:p-12 flex flex-col justify-center">
-              <span className="tag-badge !bg-white/20 !text-white !border-white/30 mb-4">{st(settings.sectionTitles, 'home', 'csrBadge', locale) || t('csrBadge')}</span>
-              <h2 className="text-2xl md:text-3xl font-bold text-white mb-4 leading-tight">
-                {st(settings.sectionTitles, 'home', 'csrTitle', locale) || t('csrTitle')}
-              </h2>
-              <p className="text-white/75 mb-8 leading-relaxed">
-                {st(settings.sectionTitles, 'home', 'csrDesc', locale) || t('csrDesc')}
-              </p>
-              <Link href="/community" className="btn-white self-start">
-                {t('csrBtn')} <ArrowRight size={16} />
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Featured Product Combos */}
       <section
         className="py-16 md:py-20 bg-gray-50"

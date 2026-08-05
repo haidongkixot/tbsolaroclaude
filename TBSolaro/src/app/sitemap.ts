@@ -29,7 +29,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticPages = [
     '', '/about', '/products', '/projects', '/blog',
-    '/contact', '/community', '/faq',
+    '/contact', '/faq',
     // /showroom is listed only while the section is switched on in Admin › Cài đặt
     ...(settings.showShowroom ? ['/showroom'] : []),
   ];

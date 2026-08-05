@@ -1,6 +1,68 @@
 # TBSolaro — Changelog
 
-## 2026-08-05 — Section visibility toggles & catalog layout changes
+## 2026-08-05 (b) — Toggle scope extended to About; CSR Community removed
+
+Follow-up to the change below, fixing two things it got wrong.
+
+### 1. Both toggles now cover the whole About page
+
+The first pass only hid the *Production Process* block on About and the *Certifications*
+strip on the homepage. Two related blocks on the About page were left behind.
+
+**`src/app/[locale]/(frontend)/about/page.tsx`**
+
+- The **Process Gallery** section (heading `about.galleryTitle`, the four `Process N`
+  images) is part of the process story, so it is now wrapped in `{settings.showProcess && …}`
+  alongside the process steps. Turning Process off hides both.
+- The **Partners & certification bodies** strip (heading `about.partnersTitle`,
+  "Đối tác & Đơn vị chứng nhận") is now wrapped in `{settings.showCertifications && …}`.
+  Since that toggle defaults to off, this strip is hidden by default — matching the
+  homepage certification strip.
+
+No new settings were added: the two existing toggles simply cover more ground. The
+`aboutPartners` field and the process step editor in Admin › Về chúng tôi are untouched.
+
+### 2. CSR Community removed
+
+The `/community` page ("CSR Community" in the menu) was removed along with every link to it.
+
+**Deleted:** `src/app/[locale]/(frontend)/community/page.tsx`.
+
+**Links removed:**
+
+| Where | Was |
+|---|---|
+| `src/components/layout/Header.tsx` | `community` entry in `navItems` (desktop + mobile) |
+| `src/lib/data/settings.ts` | `footerQuickLinks` "CSR & Cộng đồng" entry, and the unused `mainNav` entry |
+| `src/app/sitemap.ts` | `/community` in `staticPages` |
+| `src/app/[locale]/(frontend)/page.tsx` | the whole **CSR Highlight** block (its only action pointed at /community) |
+| `src/app/[locale]/(frontend)/projects/page.tsx` | the "Explore more CSR projects" button under the CSR category |
+| `src/components/sections/SustainabilityBanner.tsx` | default `ctaHref` changed from `/community` to `/projects` |
+
+**Footer label alignment — important detail.** `Footer.tsx` pairs `footerQuickLinks` with
+translation keys *by array index*. Dropping the 4th link would have shifted every label
+after it, so `quickLinkKeys` was changed from
+`['quickLink1' … 'quickLink5']` to `['quickLink1', 'quickLink2', 'quickLink3', 'quickLink5']`
+— skipping `quickLink4` ("CSR & Community") so `/blog` keeps its correct "News & Media"
+caption. The two lists must stay the same length.
+
+**Unused imports** `ArrowRight` and `Link` were removed from `projects/page.tsx`, which no
+longer links anywhere. The homepage still uses both.
+
+**Admin wiki corrected.** Two lines in the seeded documentation
+(`src/app/api/admin/wiki/route.ts`) still told editors that `csr` projects appear on
+`/community`; they now say all categories render on `/projects`, and `/community` was
+dropped from the site-map table. Note this only affects freshly seeded wiki pages — an
+existing wiki row in the database keeps its old text.
+
+**Left in place on purpose:** the `community` *project category* (still selectable in the
+project editor, still shown as a card badge), the `community` translation namespace, the
+`nav.community` / `footer.quickLink4` keys, and the `community` entry in `src/lib/seo.ts`.
+None of them are reachable now, and removing them would be deleting content for no gain.
+
+---
+
+## 2026-08-05 (a) — Section visibility toggles & catalog layout changes
 
 Five frontend changes, all built so that **no admin content is deleted**. Every section
 that is now hidden keeps its data in the database and its editor in the admin panel;
