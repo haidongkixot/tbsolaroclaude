@@ -6,7 +6,7 @@ export default async function FrontendLayout({ children }: { children: React.Rea
   const settings = await getSiteSettings();
   return (
     <>
-      <Header logoUrl={settings.logoUrl} />
+      <Header logoUrl={settings.logoUrl} showShowroom={settings.showShowroom} />
       <main>{children}</main>
       <Footer settings={settings} />
     </>

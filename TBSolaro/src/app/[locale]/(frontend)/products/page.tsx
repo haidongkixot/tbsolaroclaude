@@ -4,6 +4,7 @@ import { buildMetadata } from '@/lib/seo';
 import PageHero from '@/components/sections/PageHero';
 import ProductCard from '@/components/sections/ProductCard';
 import ContactFormSection from '@/components/sections/ContactFormSection';
+import ProductFilterGrid from './_components/ProductFilterGrid';
 import { getPublishedProducts, getFeaturedCombos } from '@/lib/db/products';
 import { getSiteSettings, st } from '@/lib/db/settings';
 
@@ -11,6 +12,18 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   return buildMetadata('products', locale);
 }
+
+// Category keys must match Product.category in the admin editor (combo | panel | battery | inverter)
+const PRODUCT_CATEGORIES = [
+  { key: 'all', labelKey: 'filterAll' },
+  { key: 'combo', labelKey: 'filterCombo' },
+  { key: 'panel', labelKey: 'filterPanel' },
+  { key: 'battery', labelKey: 'filterBattery' },
+  { key: 'inverter', labelKey: 'filterInverter' },
+] as const;
+
+/** Category pre-selected when the page first loads. */
+const DEFAULT_PRODUCT_CATEGORY = 'panel';
 
 export default async function ProductsPage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -50,25 +63,13 @@ export default async function ProductsPage({ params }: { params: Promise<{ local
       {/* Filter + All Products */}
       <section className="py-8 pb-16 md:pb-20 bg-gray-50">
         <div className="container-site">
-          <div className="flex items-center justify-between mb-8 flex-wrap gap-4">
-            <h2 className="text-2xl font-bold text-gray-900">{st(settings.sectionTitles, 'products', 'allTitle', locale) || t('allTitle')}</h2>
-            <div className="flex flex-wrap gap-2">
-              {[t('filterAll'), t('filterCombo'), t('filterPanel'), t('filterBattery'), t('filterInverter')].map((cat) => (
-                <button
-                  key={cat}
-                  className="px-4 py-1.5 rounded-full text-sm font-medium border border-gray-300 text-gray-600 hover:border-brand hover:text-brand transition-colors"
-                >
-                  {cat}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-            {allProducts.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
+          <ProductFilterGrid
+            title={st(settings.sectionTitles, 'products', 'allTitle', locale) || t('allTitle')}
+            products={allProducts}
+            categories={PRODUCT_CATEGORIES.map(({ key, labelKey }) => ({ key, label: t(labelKey) }))}
+            defaultCategory={DEFAULT_PRODUCT_CATEGORY}
+            emptyMessage={t('noProductsMsg')}
+          />
         </div>
       </section>
 

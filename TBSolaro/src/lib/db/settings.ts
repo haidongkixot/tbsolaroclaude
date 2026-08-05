@@ -129,6 +129,10 @@ export type SiteSettings = {
   footerFacebook: string;
   footerYoutube: string;
   sectionTitles: SectionTitles;
+  // Frontend section visibility toggles
+  showShowroom: boolean;
+  showProcess: boolean;
+  showCertifications: boolean;
 };
 
 const defaults: SiteSettings = {
@@ -168,6 +172,9 @@ const defaults: SiteSettings = {
   footerFacebook: '',
   footerYoutube: '',
   sectionTitles: defaultSectionTitles,
+  showShowroom: true,
+  showProcess: true,
+  showCertifications: false,
 };
 
 function tryParse<T>(v: string, fallback: T): T {
@@ -216,6 +223,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       footerFacebook: row.footerFacebook,
       footerYoutube: row.footerYoutube,
       sectionTitles: tryParse(row.sectionTitles, defaultSectionTitles as unknown as SectionTitles),
+      // ?? keeps the page rendering if the column has not been pushed to this DB branch yet
+      showShowroom: row.showShowroom ?? defaults.showShowroom,
+      showProcess: row.showProcess ?? defaults.showProcess,
+      showCertifications: row.showCertifications ?? defaults.showCertifications,
     };
   } catch {
     return defaults;

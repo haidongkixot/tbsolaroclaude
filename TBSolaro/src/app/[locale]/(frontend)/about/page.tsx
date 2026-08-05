@@ -107,27 +107,29 @@ export default async function AboutPage({ params }: { params: Promise<{ locale: 
         </div>
       </section>
 
-      {/* Production Process */}
-      <section className="py-16 md:py-20">
-        <div className="container-site">
-          <div className="text-center mb-12">
-            <h2 className="section-title">{st(settings.sectionTitles, 'about', 'processTitle', locale) || t('processTitle')}</h2>
-            <p className="section-subtitle">{st(settings.sectionTitles, 'about', 'processSubtitle', locale) || t('processSubtitle')}</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {process.map((step, i) => (
-              <div key={step.num + i} className="relative bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                <div className="text-5xl font-black text-brand/10 mb-4 leading-none">{step.num}</div>
-                <h3 className="font-bold text-gray-900 mb-2 text-sm">{(step as Record<string, string>)[`title${l}`] || step.titleVi}</h3>
-                <p className="text-gray-500 text-xs leading-relaxed">{(step as Record<string, string>)[`desc${l}`] || step.descVi}</p>
-                <div className="absolute top-5 right-5 w-8 h-8 rounded-full border-2 border-brand flex items-center justify-center">
-                  <CheckCircle size={14} className="text-brand" />
+      {/* Production Process — toggled by Admin › Cài đặt › Hiển thị các khối nội dung */}
+      {settings.showProcess && (
+        <section className="py-16 md:py-20">
+          <div className="container-site">
+            <div className="text-center mb-12">
+              <h2 className="section-title">{st(settings.sectionTitles, 'about', 'processTitle', locale) || t('processTitle')}</h2>
+              <p className="section-subtitle">{st(settings.sectionTitles, 'about', 'processSubtitle', locale) || t('processSubtitle')}</p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {process.map((step, i) => (
+                <div key={step.num + i} className="relative bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
+                  <div className="text-5xl font-black text-brand/10 mb-4 leading-none">{step.num}</div>
+                  <h3 className="font-bold text-gray-900 mb-2 text-sm">{(step as Record<string, string>)[`title${l}`] || step.titleVi}</h3>
+                  <p className="text-gray-500 text-xs leading-relaxed">{(step as Record<string, string>)[`desc${l}`] || step.descVi}</p>
+                  <div className="absolute top-5 right-5 w-8 h-8 rounded-full border-2 border-brand flex items-center justify-center">
+                    <CheckCircle size={14} className="text-brand" />
+                  </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Gallery */}
       <section className="py-10 bg-gray-50">
