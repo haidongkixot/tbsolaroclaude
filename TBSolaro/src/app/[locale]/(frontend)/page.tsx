@@ -14,33 +14,10 @@ import ContactFormSection from '@/components/sections/ContactFormSection';
 import ProductCard from '@/components/sections/ProductCard';
 import { getFeaturedCombos } from '@/lib/db/products';
 import { getPublishedPosts } from '@/lib/db/blog';
+import { getPublishedTestimonials } from '@/lib/db/testimonials';
 import { getSiteSettings, st } from '@/lib/db/settings';
 
 const certifications = ['IRES', 'GBC', 'IEC', 'Fronius', 'Huawei', 'Dropbox'];
-
-const testimonials = [
-  {
-    name: 'Nguyễn Văn A',
-    role: 'Chủ hộ gia đình',
-    content: 'Hệ thống TBSolaro đã giúp tôi tiết kiệm 70% chi phí điện hàng tháng. Đội ngũ lắp đặt chuyên nghiệp, bảo hành chu đáo.',
-    rating: 5,
-    avatar: 'https://placehold.co/60x60/1B5E30/FFFFFF?text=NVA',
-  },
-  {
-    name: 'Trần Thị B',
-    role: 'Giám đốc sản xuất',
-    content: 'Đầu tư hệ thống 200kWp cho nhà máy, ROI đạt được chỉ sau 5 năm. TBSolaro tư vấn rất tận tình và chuyên nghiệp.',
-    rating: 5,
-    avatar: 'https://placehold.co/60x60/236B3A/FFFFFF?text=TTB',
-  },
-  {
-    name: 'Lê Văn C',
-    role: 'Chủ trang trại',
-    content: 'Sử dụng combo INV-BAT10 cho trang trại, điện luôn ổn định dù mùa mưa. Rất hài lòng với chất lượng sản phẩm.',
-    rating: 5,
-    avatar: 'https://placehold.co/60x60/3D9B5C/FFFFFF?text=LVC',
-  },
-];
 
 const statIcons = [Sun, Zap, Users, Shield];
 
@@ -49,9 +26,10 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const t = await getTranslations('home');
   const tc = await getTranslations('common');
 
-  const [featuredCombos, allPosts, settings] = await Promise.all([
+  const [featuredCombos, allPosts, testimonials, settings] = await Promise.all([
     getFeaturedCombos(locale),
     getPublishedPosts(locale),
+    getPublishedTestimonials(locale),
     getSiteSettings(),
   ]);
   const latestPosts = allPosts.slice(0, 3);
@@ -142,37 +120,45 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         </div>
       </section>
 
-      {/* Testimonials */}
-      <section
-        className="py-16 md:py-20"
-        style={settings.testimonialsSectionBg ? { backgroundImage: `linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.94)), url('${settings.testimonialsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
-      >
-        <div className="container-site">
-          <div className="text-center mb-12">
-            <h2 className="section-title">{st(settings.sectionTitles, 'home', 'testimonialTitle', locale) || t('testimonialTitle')}</h2>
-            <p className="section-subtitle">{st(settings.sectionTitles, 'home', 'testimonialSubtitle', locale) || t('testimonialSubtitle')}</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-6">
-            {testimonials.map((testimony) => (
-              <div key={testimony.name} className="card p-6">
-                <div className="flex items-center gap-1 mb-4">
-                  {Array.from({ length: testimony.rating }).map((_, i) => (
-                    <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
-                  ))}
-                </div>
-                <p className="text-gray-700 text-sm leading-relaxed mb-5 italic">&ldquo;{testimony.content}&rdquo;</p>
-                <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
-                  <img src={testimony.avatar} alt={testimony.name} className="w-10 h-10 rounded-full object-cover" />
-                  <div>
-                    <div className="font-semibold text-gray-900 text-sm">{testimony.name}</div>
-                    <div className="text-xs text-gray-500">{testimony.role}</div>
+      {/* Testimonials — nội dung quản lý tại Admin › Đánh giá KH */}
+      {testimonials.length > 0 && (
+        <section
+          className="py-16 md:py-20"
+          style={settings.testimonialsSectionBg ? { backgroundImage: `linear-gradient(rgba(255,255,255,0.94), rgba(255,255,255,0.94)), url('${settings.testimonialsSectionBg}')`, backgroundSize: 'cover', backgroundPosition: 'center' } : undefined}
+        >
+          <div className="container-site">
+            <div className="text-center mb-12">
+              <h2 className="section-title">{st(settings.sectionTitles, 'home', 'testimonialTitle', locale) || t('testimonialTitle')}</h2>
+              <p className="section-subtitle">{st(settings.sectionTitles, 'home', 'testimonialSubtitle', locale) || t('testimonialSubtitle')}</p>
+            </div>
+            <div className="grid md:grid-cols-3 gap-6">
+              {testimonials.map((testimony) => (
+                <div key={testimony.id} className="card p-6">
+                  <div className="flex items-center gap-1 mb-4">
+                    {Array.from({ length: testimony.rating }).map((_, i) => (
+                      <Star key={i} size={16} className="fill-amber-400 text-amber-400" />
+                    ))}
+                  </div>
+                  <p className="text-gray-700 text-sm leading-relaxed mb-5 italic">&ldquo;{testimony.content}&rdquo;</p>
+                  <div className="flex items-center gap-3 pt-4 border-t border-gray-100">
+                    {testimony.avatar ? (
+                      <img src={testimony.avatar} alt={testimony.name} className="w-10 h-10 rounded-full object-cover" />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-brand flex items-center justify-center text-white text-sm font-bold shrink-0">
+                        {testimony.name.charAt(0)}
+                      </div>
+                    )}
+                    <div>
+                      <div className="font-semibold text-gray-900 text-sm">{testimony.name}</div>
+                      <div className="text-xs text-gray-500">{testimony.role}</div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Latest Blog */}
       {latestPosts.length > 0 && (

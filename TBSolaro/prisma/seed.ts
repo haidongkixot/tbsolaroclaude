@@ -341,6 +341,47 @@ async function main() {
     console.log(`⏭️ Downloads already exist (${existingDocs}), skipping`);
   }
 
+  // Testimonials — seeded once only, so edits made in the admin survive later builds
+  const existingTestimonials = await prisma.testimonial.count();
+  if (existingTestimonials === 0) {
+    const testimonials = [
+      {
+        name: 'Nguyễn Văn A',
+        roleVi: 'Chủ hộ gia đình', roleEn: 'Homeowner', roleEs: 'Propietario',
+        contentVi: 'Hệ thống TBSolaro đã giúp tôi tiết kiệm 70% chi phí điện hàng tháng. Đội ngũ lắp đặt chuyên nghiệp, bảo hành chu đáo.',
+        contentEn: 'The TBSolaro system cut my monthly electricity bill by 70%. The installation team was professional and the warranty support has been excellent.',
+        contentEs: 'El sistema TBSolaro redujo mi factura eléctrica mensual en un 70%. El equipo de instalación fue profesional y el soporte de garantía excelente.',
+        avatar: 'https://placehold.co/60x60/1B5E30/FFFFFF?text=NVA',
+        rating: 5, sortOrder: 1, status: 'published',
+      },
+      {
+        name: 'Trần Thị B',
+        roleVi: 'Giám đốc sản xuất', roleEn: 'Production Director', roleEs: 'Directora de Producción',
+        contentVi: 'Đầu tư hệ thống 200kWp cho nhà máy, ROI đạt được chỉ sau 5 năm. TBSolaro tư vấn rất tận tình và chuyên nghiệp.',
+        contentEn: 'We invested in a 200kWp system for our factory and reached ROI in just 5 years. TBSolaro advised us thoroughly and professionally.',
+        contentEs: 'Invertimos en un sistema de 200kWp para nuestra fábrica y alcanzamos el ROI en solo 5 años. TBSolaro nos asesoró de forma profesional.',
+        avatar: 'https://placehold.co/60x60/236B3A/FFFFFF?text=TTB',
+        rating: 5, sortOrder: 2, status: 'published',
+      },
+      {
+        name: 'Lê Văn C',
+        roleVi: 'Chủ trang trại', roleEn: 'Farm Owner', roleEs: 'Propietario de Finca',
+        contentVi: 'Sử dụng combo INV-BAT10 cho trang trại, điện luôn ổn định dù mùa mưa. Rất hài lòng với chất lượng sản phẩm.',
+        contentEn: 'We use the INV-BAT10 combo on our farm and the power stays stable even through the rainy season. Very happy with the product quality.',
+        contentEs: 'Usamos el combo INV-BAT10 en nuestra finca y la energía se mantiene estable incluso en la temporada de lluvias. Muy satisfechos con la calidad.',
+        avatar: 'https://placehold.co/60x60/3D9B5C/FFFFFF?text=LVC',
+        rating: 5, sortOrder: 3, status: 'published',
+      },
+    ];
+
+    for (const t of testimonials) {
+      await prisma.testimonial.create({ data: t });
+    }
+    console.log(`✅ Seeded ${testimonials.length} testimonials (Vi/En/Es)`);
+  } else {
+    console.log(`⏭️ Testimonials already exist (${existingTestimonials}), skipping`);
+  }
+
   console.log('🎉 Seeding complete!');
 }
 

@@ -1,5 +1,87 @@
 # TBSolaro — Changelog
 
+## 2026-08-05 (c) — Testimonials editable from the admin panel
+
+The homepage testimonials were hardcoded in `page.tsx` — three Vietnamese-only entries that
+could not be changed without a code deploy. They are now a proper CMS collection with an
+admin screen, full vi/en/es translation, avatar upload, star rating, ordering and
+draft/published status.
+
+Modelled on the existing FAQ module (a collection of translated records), not on the
+About-page JSON blocks, because testimonials grow over time and need image upload and a
+publish state.
+
+### New Prisma model — `prisma/schema.prisma`
+
+```prisma
+model Testimonial {
+  id        String   @id @default(cuid())
+  status    String   @default("draft")
+  sortOrder Int      @default(0)
+  avatar    String   @default("")   // Vercel Blob URL
+  rating    Int      @default(5)    // 1–5
+  name      String                  // not translated — it is a person's name
+  roleVi    String
+  roleEn    String   @default("")
+  roleEs    String   @default("")
+  contentVi String
+  contentEn String   @default("")
+  contentEs String   @default("")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+```
+
+`name` is deliberately single-value: a customer's name should read the same in all three
+languages. `role` and `content` are translated.
+
+### New files
+
+| File | Purpose |
+|---|---|
+| `src/lib/db/testimonials.ts` | `getPublishedTestimonials(locale)` — localises rows the same way `db/products.ts` does |
+| `src/app/api/admin/testimonials/route.ts` | admin list + create, guarded by `requireAdmin()` |
+| `src/app/api/admin/testimonials/[id]/route.ts` | admin get / update / delete |
+| `src/app/admin/testimonials/page.tsx` | admin screen — card list + modal editor |
+
+### Changed
+
+- **`src/app/admin/layout.tsx`** — new sidebar entry **"Đánh giá KH"** (Star icon), placed
+  after *Về chúng tôi*.
+- **`src/app/[locale]/(frontend)/page.tsx`** — the hardcoded `testimonials` array was
+  deleted; the page now awaits `getPublishedTestimonials(locale)` alongside its other
+  queries. The section is wrapped in `{testimonials.length > 0 && …}` so it disappears
+  cleanly when everything is unpublished, and `key` moved from `name` to `id`.
+- **`prisma/seed.ts`** — seeds the three original testimonials, now with real EN and ES
+  translations.
+
+### Two robustness details
+
+- **Seeding is once-only.** The block is guarded by `count() === 0`, following the Downloads
+  pattern rather than the FAQ one. This matters: `npm run build` re-runs the seed on *every*
+  production deploy, and the FAQ block calls `deleteMany()` first — so FAQ edits made in the
+  admin are wiped on each deploy. Testimonials deliberately avoid that trap; once a row
+  exists, the seeder skips the whole block and admin edits survive.
+- **`getPublishedTestimonials` catches query errors** and returns `[]`, so if the code
+  reaches an environment where the table has not been pushed yet, the homepage renders
+  without the section instead of returning a 500. `rating` is also clamped to 0–5 so a bad
+  value cannot break the star loop.
+
+### Admin usage
+
+Admin › **Đánh giá KH** › *Thêm đánh giá*. Name and Vietnamese content are required
+(the save button stays disabled without them); EN/ES fall back to the Vietnamese text when
+left blank. Leaving the avatar empty renders the person's first initial on a brand-green
+circle instead of a broken image. Set *Trạng thái* to *Nháp* to hide one entry without
+deleting it, and use *Thứ tự* to order the cards.
+
+> Not updated: the seeded admin wiki guide has no section for this screen yet. Wiki pages
+> are only seeded when missing, so an existing wiki row would not pick up new text anyway.
+
+Verified with `tsc --noEmit` and `next lint`, both clean. Not run against a database.
+
+---
+
 ## 2026-08-05 (b) — Toggle scope extended to About; CSR Community removed
 
 Follow-up to the change below, fixing two things it got wrong.
