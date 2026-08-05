@@ -15,7 +15,7 @@ const DEFAULT_BG = 'https://placehold.co/1600x500/1B5E30/FFFFFF?text=Wind+Turbin
 export default function SustainabilityBanner({
   title,
   ctaLabel,
-  ctaHref = '/community',
+  ctaHref = '/projects',
   backgroundImage,
 }: SustainabilityBannerProps) {
   const bgImage = backgroundImage || DEFAULT_BG;

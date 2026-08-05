@@ -974,7 +974,7 @@ const ADMIN_GUIDE_CONTENT = `<h1>Hướng Dẫn Sử Dụng Admin CMS — TBSola
 <tr><td>Năm</td><td>Năm thực hiện — hiển thị trên thẻ dự án</td><td>2024</td></tr>
 <tr><td>Video URL</td><td>Link YouTube/Vimeo nhúng vào trang chi tiết (tính năng tương lai)</td><td>—</td></tr>
 </table>
-<p><strong>Lưu ý:</strong> Dự án phân loại <code>csr</code> hiển thị trên trang <strong>Cộng Đồng CSR</strong> (<code>/community</code>), các loại còn lại hiển thị trên trang <strong>Dự Án</strong> (<code>/projects</code>).</p>
+<p><strong>Lưu ý:</strong> Tất cả dự án — kể cả phân loại <code>csr</code> — đều hiển thị trên trang <strong>Dự Án</strong> (<code>/projects</code>), mỗi phân loại là một mục riêng.</p>
 
 <hr/>
 
@@ -1038,7 +1038,6 @@ const ADMIN_GUIDE_CONTENT = `<h1>Hướng Dẫn Sử Dụng Admin CMS — TBSola
 <tr><td>Dự án (Projects)</td><td>/projects</td></tr>
 <tr><td>Giới thiệu (About)</td><td>/about</td></tr>
 <tr><td>Liên hệ (Contact)</td><td>/contact</td></tr>
-<tr><td>Cộng đồng (Community)</td><td>/community</td></tr>
 <tr><td>FAQ</td><td>/faq</td></tr>
 <tr><td>Showroom</td><td>/showroom</td></tr>
 </table>

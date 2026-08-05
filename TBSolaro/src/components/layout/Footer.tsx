@@ -13,7 +13,9 @@ export default async function Footer({ settings }: { settings?: SiteSettings }) 
   const youtube = settings?.footerYoutube || 'https://youtube.com/tbsolaro';
   const logo = settings?.logoUrl || '/logo.png';
 
-  const quickLinkKeys = ['quickLink1', 'quickLink2', 'quickLink3', 'quickLink4', 'quickLink5'] as const;
+  // quickLink4 ("CSR & Community") is skipped — that link was removed with the /community page.
+  // Keys are matched to footerQuickLinks by index, so this list must stay the same length as it.
+  const quickLinkKeys = ['quickLink1', 'quickLink2', 'quickLink3', 'quickLink5'] as const;
   const policyLinkKeys = ['policyLink1', 'policyLink2', 'policyLink3', 'policyLink4', 'policyLink5', 'policyLink6'] as const;
 
   return (
