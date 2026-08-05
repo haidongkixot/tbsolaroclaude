@@ -141,6 +141,11 @@ model SiteSetting {
 
   // Section titles (JSON: {home:{productsTitle:{vi,en,es},...}, products:{...}, projects:{...}, about:{...}})
   sectionTitles String @default("{}")
+
+  // Frontend section visibility toggles (content is always kept in the DB — these only control display)
+  showShowroom       Boolean @default(true)   // Showroom nav item + /showroom page
+  showProcess        Boolean @default(true)   // About page "Quy trình sản xuất" section
+  showCertifications Boolean @default(false)  // Homepage "Chứng nhận & Đối tác" strip
 }
 
 model ApiKey {

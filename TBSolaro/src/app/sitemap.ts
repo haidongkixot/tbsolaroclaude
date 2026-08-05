@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { prisma } from '@/lib/prisma';
+import { getSiteSettings } from '@/lib/db/settings';
 
 const BASE = 'https://tbsolaro.com';
 const LOCALES = ['vi', 'en', 'es'] as const;
@@ -19,15 +20,18 @@ function localeUrl(path: string) {
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
-  const [products, projects, blogs] = await Promise.all([
+  const [products, projects, blogs, settings] = await Promise.all([
     prisma.product.findMany({ where: { status: 'published' }, select: { slug: true, updatedAt: true } }),
     prisma.project.findMany({ where: { status: 'published' }, select: { slug: true, updatedAt: true } }),
     prisma.blogPost.findMany({ where: { status: 'published' }, select: { slug: true, slugEn: true, slugEs: true, updatedAt: true } }),
+    getSiteSettings(),
   ]);
 
   const staticPages = [
     '', '/about', '/products', '/projects', '/blog',
-    '/contact', '/community', '/faq', '/showroom',
+    '/contact', '/community', '/faq',
+    // /showroom is listed only while the section is switched on in Admin › Cài đặt
+    ...(settings.showShowroom ? ['/showroom'] : []),
   ];
 
   const staticEntries = staticPages.flatMap((path) => localeUrl(path));

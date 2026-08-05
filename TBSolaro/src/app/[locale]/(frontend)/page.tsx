@@ -77,19 +77,21 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         btn2={t('heroBtn2')}
       />
 
-      {/* Certifications */}
-      <section className="py-10 bg-white border-b border-gray-100">
-        <div className="container-site">
-          <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'home', 'certTitle', locale) || t('certTitle')}</p>
-          <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
-            {certifications.map((cert) => (
-              <div key={cert} className="px-4 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors cursor-pointer">
-                {cert}
-              </div>
-            ))}
+      {/* Certifications — toggled by Admin › Cài đặt › Hiển thị các khối nội dung */}
+      {settings.showCertifications && (
+        <section className="py-10 bg-white border-b border-gray-100">
+          <div className="container-site">
+            <p className="text-center text-xs uppercase tracking-widest text-gray-400 font-semibold mb-6">{st(settings.sectionTitles, 'home', 'certTitle', locale) || t('certTitle')}</p>
+            <div className="flex flex-wrap items-center justify-center gap-8 md:gap-12">
+              {certifications.map((cert) => (
+                <div key={cert} className="px-4 py-2 bg-gray-50 rounded-lg text-gray-500 font-semibold text-sm hover:bg-brand-surface hover:text-brand transition-colors cursor-pointer">
+                  {cert}
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* CSR Highlight */}
       <section className="py-16 md:py-20">

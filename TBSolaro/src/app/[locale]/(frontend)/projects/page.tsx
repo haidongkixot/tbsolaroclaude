@@ -105,26 +105,25 @@ export default async function ProjectsPage({ params }: { params: Promise<{ local
                 </div>
               </div>
             )}
-          </div>
-        </div>
-      </section>
-
-      {/* CSR Projects */}
-      <section className="py-16 md:py-20 bg-brand-surface">
-        <div className="container-site">
-          <div className="text-center mb-12">
-            <h2 className="section-title">{t('csrTitle')}</h2>
-            <p className="section-subtitle">{t('csrSubtitle')}</p>
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {csrProjects.map((project) => (
-              <ProjectCard key={project.id} project={project} variant="csr" />
-            ))}
-          </div>
-          <div className="text-center">
-            <Link href="/community" className="btn-primary">
-              {t('csrBtn')} <ArrowRight size={16} />
-            </Link>
+            {/* CSR — merged in as a normal category (was a separate section below) */}
+            {csrProjects.length > 0 && (
+              <div>
+                <h3 className="text-xl font-bold text-gray-900 mb-5 flex items-center gap-2">
+                  <span className="text-2xl">🤝</span> {t('csrTitle')}
+                </h3>
+                <p className="text-gray-500 text-sm -mt-3 mb-5">{t('csrSubtitle')}</p>
+                <div className="grid md:grid-cols-2 gap-6">
+                  {csrProjects.map((p) => (
+                    <ProjectCard key={p.id} project={p} variant="horizontal" />
+                  ))}
+                </div>
+                <div className="mt-8">
+                  <Link href="/community" className="btn-outline text-sm">
+                    {t('csrBtn')} <ArrowRight size={16} />
+                  </Link>
+                </div>
+              </div>
+            )}
           </div>
         </div>
       </section>

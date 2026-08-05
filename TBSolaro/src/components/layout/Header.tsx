@@ -23,7 +23,8 @@ const localeOptions = [
   { code: 'es', label: 'ES – Español' },
 ];
 
-export default function Header({ logoUrl }: { logoUrl?: string }) {
+export default function Header({ logoUrl, showShowroom = true }: { logoUrl?: string; showShowroom?: boolean }) {
+  const visibleNavItems = showShowroom ? navItems : navItems.filter((i) => i.key !== 'showroom');
   const pathname = usePathname();
   const locale = useLocale();
   const router = useRouter();
@@ -61,7 +62,7 @@ export default function Header({ logoUrl }: { logoUrl?: string }) {
 
           {/* Desktop Nav */}
           <nav className="hidden lg:flex items-center gap-6 xl:gap-8">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
@@ -159,7 +160,7 @@ export default function Header({ logoUrl }: { logoUrl?: string }) {
       {mobileOpen && (
         <div className="lg:hidden bg-white border-t border-gray-100 shadow-lg animate-fade-in">
           <nav className="container-site py-4 flex flex-col gap-1">
-            {navItems.map((item) => (
+            {visibleNavItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

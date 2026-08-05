@@ -103,6 +103,7 @@
     "filterPanel": "Paneles",
     "filterBattery": "Batería",
     "filterInverter": "Inversor",
+    "noProductsMsg": "Aún no hay productos en esta categoría.",
     "contactTitle": "Contáctenos",
     "contactSubtitle": "Estamos listos para asesorarle y proporcionarle presupuesto gratuito",
     "breadcrumb": "Productos",

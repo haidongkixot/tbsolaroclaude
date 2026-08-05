@@ -32,6 +32,10 @@ type Form = {
   footerFacebook: string;
   footerYoutube: string;
   sectionTitles: SectionTitles;
+  // Frontend section visibility toggles
+  showShowroom: boolean;
+  showProcess: boolean;
+  showCertifications: boolean;
 };
 
 const emptySlide = (): HeroSlide => ({
@@ -69,6 +73,7 @@ const empty: Form = {
   footerPhone: '', footerEmail: '', footerAddress: '',
   footerFacebook: '', footerYoutube: '',
   sectionTitles: emptySectionTitles(),
+  showShowroom: true, showProcess: true, showCertifications: false,
 };
 
 const PAGE_HEROES: { key: keyof Form; label: string }[] = [
@@ -113,12 +118,20 @@ export default function AdminSettingsPage() {
             ? data.heroSlides
             : (() => { try { return JSON.parse(data.heroSlides || '[]'); } catch { return []; } })(),
           sectionTitles: merged,
+          // Fall back to the defaults when the row predates these columns
+          showShowroom: data.showShowroom ?? empty.showShowroom,
+          showProcess: data.showProcess ?? empty.showProcess,
+          showCertifications: data.showCertifications ?? empty.showCertifications,
         }));
       })
       .catch(() => {});
   }, []);
 
   const set = useCallback((key: keyof Form, val: string) => {
+    setForm((prev) => ({ ...prev, [key]: val }));
+  }, []);
+
+  const setBool = useCallback((key: keyof Form, val: boolean) => {
     setForm((prev) => ({ ...prev, [key]: val }));
   }, []);
 
@@ -205,6 +218,32 @@ export default function AdminSettingsPage() {
             <ImageUpload value={form.logoUrl} onChange={(u) => set('logoUrl', u)} />
             <p className="text-xs text-gray-400 mt-1">Hiển thị ở Header và Footer. Để trống dùng logo mặc định (/logo.png).</p>
           </Field>
+        </Section>
+
+        {/* ── Section visibility ── */}
+        <Section icon="👁" title="Hiển thị các khối nội dung (Section Visibility)">
+          <p className="text-xs text-gray-500 -mt-1">
+            Bật/tắt hiển thị các khối trên website. Tắt chỉ ẩn khỏi giao diện người dùng —
+            <strong> toàn bộ nội dung vẫn được giữ nguyên trong trang quản trị</strong> và hiện lại ngay khi bật.
+          </p>
+          <Toggle
+            checked={form.showShowroom}
+            onChange={(v) => setBool('showShowroom', v)}
+            label="Showroom"
+            hint="Hiện mục “Showroom” trên menu và trang /showroom. Khi tắt, menu bị ẩn và trang trả về 404. Quản lý showroom trong Admin › Showroom vẫn hoạt động bình thường."
+          />
+          <Toggle
+            checked={form.showProcess}
+            onChange={(v) => setBool('showProcess', v)}
+            label="Quy trình sản xuất (trang Giới thiệu)"
+            hint="Khối “Quy trình sản xuất” trên trang Về chúng tôi. Nội dung các bước vẫn sửa được trong Admin › Về chúng tôi."
+          />
+          <Toggle
+            checked={form.showCertifications}
+            onChange={(v) => setBool('showCertifications', v)}
+            label="Chứng nhận & Đối tác (trang chủ)"
+            hint="Dải logo chứng nhận ngay dưới banner trang chủ. Mặc định đang TẮT."
+          />
         </Section>
 
         {/* ── Hero Slider ── */}
@@ -401,6 +440,30 @@ function Section({ icon, title, children }: { icon: React.ReactNode; title: stri
       </div>
       <div className="p-6 space-y-5">{children}</div>
     </div>
+  );
+}
+
+function Toggle({
+  checked, onChange, label, hint,
+}: { checked: boolean; onChange: (v: boolean) => void; label: string; hint: string }) {
+  return (
+    <label className="flex items-start gap-3 cursor-pointer group">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 w-4 h-4 shrink-0 rounded border-gray-300 text-brand focus:ring-brand/50 cursor-pointer"
+      />
+      <span className="min-w-0">
+        <span className="block text-sm font-medium text-gray-700 group-hover:text-brand transition-colors">
+          {label}
+          <span className={`ml-2 text-xs px-2 py-0.5 rounded-full ${checked ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-500'}`}>
+            {checked ? 'Đang hiện' : 'Đang ẩn'}
+          </span>
+        </span>
+        <span className="block text-xs text-gray-400 mt-0.5 leading-relaxed">{hint}</span>
+      </span>
+    </label>
   );
 }
 
