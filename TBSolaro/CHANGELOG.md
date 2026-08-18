@@ -1,5 +1,35 @@
 # TBSolaro — Changelog
 
+## 2026-08-18 (f) — Product tabs (Details / Packaging / Shipping) editable & trilingual
+
+The three tabs on the product detail page were only partly real: *Product Details* showed
+the (editable, trilingual) specs table, but **Packaging and Shipping were hardcoded
+Vietnamese strings** in `ProductDetailClient.tsx` — the same text on every product, in every
+language, with no way to change them from the admin.
+
+All three tabs are now backed by per-language rich-text fields on the product.
+
+- **`prisma/schema.prisma`** — 9 new columns on `Product`: `detailsVi/En/Es`,
+  `packagingVi/En/Es`, `shippingVi/En/Es` (HTML, `@default("")`). Created on deploy by
+  `prisma db push`; additive and safe for existing rows.
+- **`src/lib/db/products.ts`** — `localize()` now returns `details`, `packaging`,
+  `shipping` via `pickHtml()`, so an untranslated EN/ES field falls back to Vietnamese
+  (and TipTap's empty `<p></p>` counts as untranslated).
+- **`ProductDetailClient.tsx`** — *Details* tab renders the rich text above the specs
+  table; *Packaging*/*Shipping* render their fields. When a field is empty in every
+  language the old text still appears, but now localized via new message keys
+  `products.packagingFallback` / `products.shippingFallback` (vi/en/es) instead of
+  hardcoded Vietnamese.
+- **`ProductEditor.tsx`** — new "Nội dung các tab" card with three rich-text editors,
+  following the language tabs. All three language instances stay mounted (TipTap does not
+  re-sync `value` on tab switch) and are shown/hidden per the selected tab.
+
+No API changes needed — admin and v1 routes spread the request body. Existing products are
+unaffected until content is entered: the tabs look exactly as before thanks to the
+localized fallbacks.
+
+---
+
 ## 2026-08-18 (e) — Production product-data cleanup (data-only, no code)
 
 A row-by-row audit of the 21 production products confirmed **no deploy ever deleted or

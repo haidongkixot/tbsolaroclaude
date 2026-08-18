@@ -104,6 +104,8 @@
     "filterBattery": "Pin lưu trữ",
     "filterInverter": "Biến tần",
     "noProductsMsg": "Chưa có sản phẩm nào trong danh mục này.",
+    "packagingFallback": "Thông tin đóng gói sẽ được cập nhật.",
+    "shippingFallback": "Dịch vụ vận chuyển và giao hàng toàn quốc.",
     "contactTitle": "Liên hệ với chúng tôi",
     "contactSubtitle": "Chúng tôi sẵn sàng tư vấn và báo giá miễn phí cho bạn",
     "breadcrumb": "Sản phẩm",

@@ -1,5 +1,5 @@
 import { prisma } from '@/lib/prisma';
-import { pickJson } from '@/lib/db/lang';
+import { pickHtml, pickJson } from '@/lib/db/lang';
 import type { ProductTier } from '@/types';
 
 type Lang = 'Vi' | 'En' | 'Es';
@@ -34,6 +34,9 @@ function localize(row: Record<string, any>, l: Lang) {
     features: tryParse(pickJson(row, 'features', l), [] as string[]),
     specs: tryParse(pickJson(row, 'specs', l), {} as Record<string, string>),
     tiers: tryParse(pickJson(row, 'tiers', l), [] as ProductTier[]),
+    details: pickHtml(row, 'details', l) || '',
+    packaging: pickHtml(row, 'packaging', l) || '',
+    shipping: pickHtml(row, 'shipping', l) || '',
     seoTitle: row[`seoTitle${l}`] || row.seoTitleVi || '',
     seoDesc: row[`seoDesc${l}`] || row.seoDescVi || '',
     createdAt: row.createdAt,

@@ -104,6 +104,8 @@
     "filterBattery": "Batería",
     "filterInverter": "Inversor",
     "noProductsMsg": "Aún no hay productos en esta categoría.",
+    "packagingFallback": "La información de embalaje se actualizará próximamente.",
+    "shippingFallback": "Servicio de envío y entrega a todo el país.",
     "contactTitle": "Contáctenos",
     "contactSubtitle": "Estamos listos para asesorarle y proporcionarle presupuesto gratuito",
     "breadcrumb": "Productos",
