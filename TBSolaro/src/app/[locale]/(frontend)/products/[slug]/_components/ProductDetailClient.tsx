@@ -13,6 +13,7 @@ interface Tier { name: string; label: string; isDefault?: boolean; items?: strin
 interface Product {
   id: string; slug: string; title: string; subtitle?: string; excerpt: string;
   features: string[]; specs?: Record<string, string>; tiers: Tier[];
+  details?: string; packaging?: string; shipping?: string;
   gallery: string[]; featuredImage: string; downloadUrl?: string;
   category: string; tags: string[]; relatedSlugs?: string[];
   status?: 'draft' | 'published'; sortOrder?: number; seo?: Record<string, unknown>;
@@ -132,20 +133,35 @@ export default function ProductDetailClient({ product, related }: Props) {
             ))}
           </div>
           <div className="py-8">
-            {activeTab === 0 && product.specs && Object.keys(product.specs).length > 0 && (
-              <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
-                <tbody>
-                  {Object.entries(product.specs).map(([key, val], i) => (
-                    <tr key={key} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
-                      <td className="px-5 py-3 font-medium text-gray-700 w-1/2 border-b border-gray-100">{key}</td>
-                      <td className="px-5 py-3 text-gray-600 border-b border-gray-100">{val}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            {activeTab === 0 && (
+              <div className="space-y-6">
+                {product.details && (
+                  <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: product.details }} />
+                )}
+                {product.specs && Object.keys(product.specs).length > 0 && (
+                  <table className="w-full text-sm border border-gray-200 rounded-xl overflow-hidden">
+                    <tbody>
+                      {Object.entries(product.specs).map(([key, val], i) => (
+                        <tr key={key} className={i % 2 === 0 ? 'bg-gray-50' : 'bg-white'}>
+                          <td className="px-5 py-3 font-medium text-gray-700 w-1/2 border-b border-gray-100">{key}</td>
+                          <td className="px-5 py-3 text-gray-600 border-b border-gray-100">{val}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
+              </div>
             )}
-            {activeTab === 1 && <p className="text-sm text-gray-700">Thông tin đóng gói sẽ được cập nhật.</p>}
-            {activeTab === 2 && <p className="text-sm text-gray-700">Dịch vụ vận chuyển và giao hàng toàn quốc.</p>}
+            {activeTab === 1 && (
+              product.packaging
+                ? <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: product.packaging }} />
+                : <p className="text-sm text-gray-700">{t('packagingFallback')}</p>
+            )}
+            {activeTab === 2 && (
+              product.shipping
+                ? <div className="prose prose-sm max-w-none text-gray-700" dangerouslySetInnerHTML={{ __html: product.shipping }} />
+                : <p className="text-sm text-gray-700">{t('shippingFallback')}</p>
+            )}
           </div>
         </div>
       </section>

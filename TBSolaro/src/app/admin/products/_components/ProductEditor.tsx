@@ -17,6 +17,9 @@ type Form = {
   featuresVi: string[]; featuresEn: string[]; featuresEs: string[];
   specsVi: Record<string, string>; specsEn: Record<string, string>; specsEs: Record<string, string>;
   tiersVi: string; tiersEn: string; tiersEs: string;
+  detailsVi: string; detailsEn: string; detailsEs: string;
+  packagingVi: string; packagingEn: string; packagingEs: string;
+  shippingVi: string; shippingEn: string; shippingEs: string;
   seoTitleVi: string; seoTitleEn: string; seoTitleEs: string;
   seoDescVi: string; seoDescEn: string; seoDescEs: string;
 };
@@ -30,6 +33,9 @@ function emptyForm(): Form {
     featuresVi: [], featuresEn: [], featuresEs: [],
     specsVi: {}, specsEn: {}, specsEs: {},
     tiersVi: '[]', tiersEn: '[]', tiersEs: '[]',
+    detailsVi: '', detailsEn: '', detailsEs: '',
+    packagingVi: '', packagingEn: '', packagingEs: '',
+    shippingVi: '', shippingEn: '', shippingEs: '',
     seoTitleVi: '', seoTitleEn: '', seoTitleEs: '', seoDescVi: '', seoDescEn: '', seoDescEs: '',
   };
 }
@@ -58,6 +64,9 @@ function parseInitial(data: Record<string, unknown>): Form {
     tiersVi: (data.tiersVi as string) ?? '[]',
     tiersEn: (data.tiersEn as string) ?? '[]',
     tiersEs: (data.tiersEs as string) ?? '[]',
+    detailsVi: (data.detailsVi as string) ?? '', detailsEn: (data.detailsEn as string) ?? '', detailsEs: (data.detailsEs as string) ?? '',
+    packagingVi: (data.packagingVi as string) ?? '', packagingEn: (data.packagingEn as string) ?? '', packagingEs: (data.packagingEs as string) ?? '',
+    shippingVi: (data.shippingVi as string) ?? '', shippingEn: (data.shippingEn as string) ?? '', shippingEs: (data.shippingEs as string) ?? '',
     seoTitleVi: (data.seoTitleVi as string) ?? '', seoTitleEn: (data.seoTitleEn as string) ?? '', seoTitleEs: (data.seoTitleEs as string) ?? '',
     seoDescVi: (data.seoDescVi as string) ?? '', seoDescEn: (data.seoDescEn as string) ?? '', seoDescEs: (data.seoDescEs as string) ?? '',
   };
@@ -194,6 +203,44 @@ export default function ProductEditor({ initial, onSave }: Props) {
               const arr = [...((form as unknown as Record<string, string[]>)[`features${l}`] ?? []), ''];
               setForm((f) => ({ ...f, [`features${l}`]: arr }));
             }} className="text-sm text-brand hover:underline mt-1">+ Thêm tính năng</button>
+          </div>
+
+          {/* Tab content: Product Details / Packaging / Shipping */}
+          <div className="bg-white rounded-2xl border border-gray-200 p-6">
+            <h3 className="font-semibold text-gray-900 mb-1">Nội dung các tab ({lang.toUpperCase()})</h3>
+            <p className="text-xs text-gray-500 mb-4">
+              Hiển thị trong 3 tab trên trang chi tiết sản phẩm. Để trống EN/ES sẽ tự dùng nội dung tiếng Việt.
+            </p>
+            {/* Cả 3 ngôn ngữ luôn được mount (TipTap không đồng bộ value khi đổi tab); chỉ hiện ngôn ngữ đang chọn */}
+            {(['Vi', 'En', 'Es'] as const).map((code) => (
+              <div key={code} style={{ display: code === l ? 'block' : 'none' }} className="space-y-5">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Chi tiết sản phẩm (tab Product Details)</label>
+                  <p className="text-xs text-gray-400 mb-2">Hiển thị phía trên bảng thông số kỹ thuật.</p>
+                  <RichEditor
+                    value={(form as unknown as Record<string, string>)[`details${code}`] ?? ''}
+                    onChange={(html) => setLang2(`details${code}`, html)}
+                    placeholder={code === 'Vi' ? 'Mô tả chi tiết sản phẩm...' : code === 'En' ? 'Detailed product description...' : 'Descripción detallada del producto...'}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Đóng gói (tab Packaging)</label>
+                  <RichEditor
+                    value={(form as unknown as Record<string, string>)[`packaging${code}`] ?? ''}
+                    onChange={(html) => setLang2(`packaging${code}`, html)}
+                    placeholder={code === 'Vi' ? 'Quy cách đóng gói, kích thước, trọng lượng...' : code === 'En' ? 'Packaging details, dimensions, weight...' : 'Detalles de embalaje, dimensiones, peso...'}
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-1">Vận chuyển (tab Shipping)</label>
+                  <RichEditor
+                    value={(form as unknown as Record<string, string>)[`shipping${code}`] ?? ''}
+                    onChange={(html) => setLang2(`shipping${code}`, html)}
+                    placeholder={code === 'Vi' ? 'Chính sách vận chuyển, thời gian giao hàng...' : code === 'En' ? 'Shipping policy, delivery time...' : 'Política de envío, tiempo de entrega...'}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* SEO */}

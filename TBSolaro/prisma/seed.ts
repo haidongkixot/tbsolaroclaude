@@ -49,14 +49,15 @@ async function main() {
     },
   ];
 
-  for (const p of products) {
-    await prisma.product.upsert({
-      where: { slug: p.slug },
-      update: {},
-      create: p,
-    });
+  // Bootstrap only. The seed runs on every deploy, so it must never touch a
+  // database that already holds content — see the note above the FAQ block.
+  const existingProducts = await prisma.product.count();
+  if (existingProducts > 0) {
+    console.log(`⏭️ Products already exist (${existingProducts}), skipping`);
+  } else {
+    for (const p of products) await prisma.product.create({ data: p });
+    console.log(`✅ Seeded ${products.length} products`);
   }
-  console.log(`✅ Seeded ${products.length} products`);
 
   // Projects
   const projects = [
@@ -110,17 +111,17 @@ async function main() {
     },
   ];
 
-  for (const p of projects) {
-    // update: {} — create if missing, otherwise leave the row completely alone.
-    // This previously overwrote title/excerpt/content in all 3 languages on every deploy,
-    // silently reverting anything edited in the admin.
-    await prisma.project.upsert({
-      where: { slug: p.slug },
-      update: {},
-      create: p,
-    });
+  // This block used to upsert by slug while creating with a hardcoded id ('proj-1'…).
+  // Once a slug was edited in the admin, the slug lookup missed, the create hit the
+  // still-present id, and the whole seed died with P2002 — before reaching any later
+  // block. That is why Testimonials never seeded. Bootstrap only now.
+  const existingProjects = await prisma.project.count();
+  if (existingProjects > 0) {
+    console.log(`⏭️ Projects already exist (${existingProjects}), skipping`);
+  } else {
+    for (const p of projects) await prisma.project.create({ data: p });
+    console.log(`✅ Seeded ${projects.length} projects`);
   }
-  console.log(`✅ Seeded ${projects.length} projects`);
 
   // Blog Posts
   const blogs = [
@@ -183,16 +184,14 @@ async function main() {
     },
   ];
 
-  for (const b of blogs) {
-    // update: {} — see the note on projects above. This used to reset slugs, titles,
-    // excerpts and content in all 3 languages on every production deploy.
-    await prisma.blogPost.upsert({
-      where: { slug: b.slug },
-      update: {},
-      create: b,
-    });
+  // Bootstrap only — same reasoning as products and projects above.
+  const existingBlogs = await prisma.blogPost.count();
+  if (existingBlogs > 0) {
+    console.log(`⏭️ Blog posts already exist (${existingBlogs}), skipping`);
+  } else {
+    for (const b of blogs) await prisma.blogPost.create({ data: b });
+    console.log(`✅ Seeded ${blogs.length} blog posts`);
   }
-  console.log(`✅ Seeded ${blogs.length} blog posts`);
 
   // FAQs (3 languages) — seeded once only.
   // NEVER deleteMany() here: build runs this seed on every production deploy, so a wipe
@@ -314,5 +313,14 @@ async function main() {
 }
 
 main()
-  .catch(console.error)
+  .catch((e) => {
+    // Deliberately non-fatal: a seed problem must not block a deploy. But it is
+    // logged loudly — a quiet `.catch(console.error)` hid a P2002 crash here for
+    // months, which silently prevented every block after Projects from running.
+    console.error('\n' + '='.repeat(70));
+    console.error('❌ SEED FAILED — later blocks did NOT run. Check this build log.');
+    console.error('='.repeat(70));
+    console.error(e);
+    console.error('='.repeat(70) + '\n');
+  })
   .finally(() => prisma.$disconnect());

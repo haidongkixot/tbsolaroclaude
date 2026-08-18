@@ -40,6 +40,17 @@ model Product {
   tiersVi    String   @default("[]")
   tiersEn    String   @default("[]")
   tiersEs    String   @default("[]")
+
+  // Tab content on the product detail page (rich text HTML, per language)
+  detailsVi   String @default("")  // "Product Details" tab — shown above the specs table
+  detailsEn   String @default("")
+  detailsEs   String @default("")
+  packagingVi String @default("")  // "Packaging" tab
+  packagingEn String @default("")
+  packagingEs String @default("")
+  shippingVi  String @default("")  // "Shipping" tab
+  shippingEn  String @default("")
+  shippingEs  String @default("")
   seoTitleVi String   @default("")
   seoTitleEn String   @default("")
   seoTitleEs String   @default("")

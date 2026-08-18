@@ -1,5 +1,59 @@
 # TBSolaro — Changelog
 
+## 2026-08-18 (f) — Product tabs (Details / Packaging / Shipping) editable & trilingual
+
+The three tabs on the product detail page were only partly real: *Product Details* showed
+the (editable, trilingual) specs table, but **Packaging and Shipping were hardcoded
+Vietnamese strings** in `ProductDetailClient.tsx` — the same text on every product, in every
+language, with no way to change them from the admin.
+
+All three tabs are now backed by per-language rich-text fields on the product.
+
+- **`prisma/schema.prisma`** — 9 new columns on `Product`: `detailsVi/En/Es`,
+  `packagingVi/En/Es`, `shippingVi/En/Es` (HTML, `@default("")`). Created on deploy by
+  `prisma db push`; additive and safe for existing rows.
+- **`src/lib/db/products.ts`** — `localize()` now returns `details`, `packaging`,
+  `shipping` via `pickHtml()`, so an untranslated EN/ES field falls back to Vietnamese
+  (and TipTap's empty `<p></p>` counts as untranslated).
+- **`ProductDetailClient.tsx`** — *Details* tab renders the rich text above the specs
+  table; *Packaging*/*Shipping* render their fields. When a field is empty in every
+  language the old text still appears, but now localized via new message keys
+  `products.packagingFallback` / `products.shippingFallback` (vi/en/es) instead of
+  hardcoded Vietnamese.
+- **`ProductEditor.tsx`** — new "Nội dung các tab" card with three rich-text editors,
+  following the language tabs. All three language instances stay mounted (TipTap does not
+  re-sync `value` on tab switch) and are shown/hidden per the selected tab.
+
+No API changes needed — admin and v1 routes spread the request body. Existing products are
+unaffected until content is entered: the tabs look exactly as before thanks to the
+localized fallbacks.
+
+---
+
+## 2026-08-18 (e) — Production product-data cleanup (data-only, no code)
+
+A row-by-row audit of the 21 production products confirmed **no deploy ever deleted or
+overwrote product data** (no `updatedAt` falls on a deploy date; admin-edited titles on the
+seeded slugs survived intact). The following pre-existing data-entry issues were fixed
+directly in the production database via script:
+
+| Fix | Detail |
+|---|---|
+| Broken slug | `split-phase-off-grid-inverter 8~12KW` (space + `~`) → `split-phase-off-grid-inverter-8-12kw` |
+| Crossed slugs | `solax-x3---mega-g2-lv` (content = X1-SMART G2) → `solax-x1-smart-g2`; `solax-x3-forth-lv` (content = X3 MEGA-G2-LV) → `solax-x3-mega-g2-lv`. No `relatedSlugs` referenced the old values. |
+| Brand typo | "SolarX X3-FORTH PLUS" → "SolaX X3-FORTH PLUS" (title only; slug kept to preserve the URL) |
+| Contradictory title | SR Series row whose subtitle says "Three Phase" but title said "Split-Phase" → "Off-Grid Inverter – SR Series (Three Phase)". Also disambiguates it from the Single/Split Phase row, which had an identical title. |
+| VI/EN feature mismatches | `combo-5kw-cao-cap-bat15`: VI said 5 kWh battery, EN + title (BAT15) say 15 kWh → VI corrected. `combo-5kw-cao-cap-bat10`: EN/ES said 8 panels, VI says 10 (consistent with the cao cấp pattern) → EN/ES corrected. |
+| Missing specs/tiers | 6 combos had no specs and no tiers in any language. Generated for vi/en/es, **derived strictly from each combo's own features list** (inverter kW, panel count × wattage, battery count × kWh): a specs table plus a single "Tiêu chuẩn/Standard/Estándar" tier. All 9 combos now complete. |
+| Whitespace | Trimmed stray leading/trailing spaces in titles/subtitles on 8 rows. |
+
+Notes: the three renamed slugs mean their old URLs now 404 — the sitemap regenerates
+automatically. What was **not** touched: the two Split-Phase rows and two SR Series rows are
+genuine variants (distinct subtitles/images/features), not duplicates, and were left as
+separate products.
+
+---
+
 ## 2026-08-05 (d) — Data-loss fixes, blank EN/ES pages, and 20 new FAQs
 
 Investigation of "several data did not show properly" found three separate problems.
