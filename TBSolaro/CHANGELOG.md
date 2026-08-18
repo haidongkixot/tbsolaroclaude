@@ -1,5 +1,77 @@
 # TBSolaro — Changelog
 
+## 2026-08-05 (d) — Data-loss fixes, blank EN/ES pages, and 20 new FAQs
+
+Investigation of "several data did not show properly" found three separate problems.
+
+### 1. The seed was destroying admin content on every deploy
+
+`build` runs `prisma generate && prisma db push --accept-data-loss && tsx prisma/seed.ts && next build`,
+so the seed is **not** a one-time bootstrap — it re-executes against live production data on
+every deploy. Three of its writes were destructive:
+
+| Table | Old behaviour | Effect |
+|---|---|---|
+| `FAQ` | `deleteMany()` then recreate | **Every FAQ wiped**, including ones added or edited in the admin |
+| `Project` | upsert `update:` branch rewrote `titleEn/Es`, `excerptEn/Es`, `contentVi/En/Es` | Admin edits on the 3 seeded slugs reverted |
+| `BlogPost` | same, plus `slugEn`/`slugEs` | Admin edits on seeded posts reverted |
+
+All three now create-if-missing and never touch an existing row (`update: {}`, and a
+`count()` guard for FAQ). Products were already safe (`update: {}`), as were Downloads and
+Testimonials. `SiteSetting` is never touched by the seed.
+
+This was a pre-existing bug, but the three production deploys on 2026-08-05
+(13:14, 14:19, 14:36 +07:00) each triggered it. Recovering the lost FAQ rows and the
+overwritten project/blog translations requires a Neon point-in-time branch from before
+13:10 +07:00 — it cannot be done from the codebase.
+
+### 2. EN/ES pages rendered blank where a translation was never filled in
+
+The language fallback used `row[field + lang] || row[field + 'Vi']`, which only works when an
+untranslated column holds `""`. Two kinds of column never do:
+
+- `Product.featuresEn/Es`, `specsEn/Es` and `tiersEn/Es` default to the literal strings
+  `"[]"` / `"{}"`, and `ProductEditor.handleSave` writes all three languages on every save.
+  An untranslated field therefore holds `"[]"` — truthy — so the fallback never fired and the
+  EN/ES product pages showed an empty feature list, empty spec table and **empty combo
+  tiers**, even though the Vietnamese content was intact all along.
+- TipTap serialises an empty document to `"<p></p>"`, so opening the EN tab of a project or
+  blog editor and saving stored `"<p></p>"` in `contentEn`, blanking that article body.
+
+New `src/lib/db/lang.ts` exports `pickJson()` and `pickHtml()`, which treat `"[]"`, `"{}"`,
+`"null"` and the empty-TipTap variants as absent and fall back to Vietnamese. Applied to
+product features/specs/tiers and to project and blog content. **No data was lost to this** —
+the affected pages populate as soon as it deploys.
+
+### 3. Twenty new trilingual FAQs
+
+The 8 seeded FAQs included 4 with broken Vietnamese questions (two of them near-duplicates)
+and one whose EN/ES answers discussed selling power to EVN and did not match its question.
+
+`prisma/faq-data.ts` is now the single source of truth, exporting `FAQ_SEED` with 20 entries
+in vi/en/es across 8 categories: Sản phẩm & Giải pháp (4), Kỹ thuật (5), Lắp đặt (3),
+Chi phí & Giá cả (2), Bảo hành & Dịch vụ (2), Vận hành & Bảo trì (2), Tài chính (1),
+Chính sách & Pháp lý (1). Answers avoid quoting prices or promising figures that vary by
+site, directing readers to a free consultation instead; the only hard number used is the
+~5-year payback on the 500 kWp Bình Dương factory, already published in the project content.
+
+`prisma/seed.ts` imports the list instead of holding it inline, so fresh databases get the
+good content. Because production already holds FAQs, the count guard means the seed will
+**not** add them there — use the new script:
+
+```bash
+npx tsx scripts/sync-faq.ts --dry-run   # report only
+npx tsx scripts/sync-faq.ts             # apply
+```
+
+It is insert-only, skips any entry whose Vietnamese question already exists, and never
+updates or deletes a row, so it is safe to run repeatedly against production.
+
+> Still outstanding: the 4 broken FAQs remain in the production database. Set them to *Nháp*
+> or delete them in Admin › FAQs — with the seed fixed, they will not come back.
+
+---
+
 ## 2026-08-05 (c) — Testimonials editable from the admin panel
 
 The homepage testimonials were hardcoded in `page.tsx` — three Vietnamese-only entries that
