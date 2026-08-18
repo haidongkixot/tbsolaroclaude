@@ -1,4 +1,5 @@
 import { prisma } from '@/lib/prisma';
+import { pickHtml } from '@/lib/db/lang';
 
 type Lang = 'Vi' | 'En' | 'Es';
 
@@ -31,7 +32,7 @@ function localize(row: Record<string, any>, l: Lang) {
     relatedSlugs: tryParse(row.relatedSlugs, [] as string[]),
     title: row[`title${l}`] || row.titleVi,
     excerpt: row[`excerpt${l}`] || row.excerptVi || '',
-    content: row[`content${l}`] || row.contentVi || '',
+    content: pickHtml(row, 'content', l) || '',
     seoTitle: row[`seoTitle${l}`] || row.seoTitleVi || '',
     seoDesc: row[`seoDesc${l}`] || row.seoDescVi || '',
     createdAt: row.createdAt,
