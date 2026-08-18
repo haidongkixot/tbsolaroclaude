@@ -110,10 +110,12 @@ async function main() {
   ];
 
   for (const p of projects) {
-    const { id: _id, ...data } = p;
+    // update: {} — create if missing, otherwise leave the row completely alone.
+    // This previously overwrote title/excerpt/content in all 3 languages on every deploy,
+    // silently reverting anything edited in the admin.
     await prisma.project.upsert({
       where: { slug: p.slug },
-      update: { titleEn: data.titleEn, titleEs: data.titleEs, excerptEn: data.excerptEn, excerptEs: data.excerptEs, contentEn: data.contentEn, contentEs: data.contentEs, contentVi: data.contentVi },
+      update: {},
       create: p,
     });
   }
@@ -181,23 +183,23 @@ async function main() {
   ];
 
   for (const b of blogs) {
+    // update: {} — see the note on projects above. This used to reset slugs, titles,
+    // excerpts and content in all 3 languages on every production deploy.
     await prisma.blogPost.upsert({
       where: { slug: b.slug },
-      update: {
-        slugEn: b.slugEn, slugEs: b.slugEs,
-        titleEn: b.titleEn, titleEs: b.titleEs,
-        excerptEn: b.excerptEn, excerptEs: b.excerptEs,
-        contentVi: b.contentVi, contentEn: b.contentEn, contentEs: b.contentEs,
-      },
+      update: {},
       create: b,
     });
   }
   console.log(`✅ Seeded ${blogs.length} blog posts`);
 
-  // FAQs (3 languages)
-  // Clear and re-seed FAQs to ensure correct Vietnamese content
-  await prisma.fAQ.deleteMany();
-  {
+  // FAQs (3 languages) — seeded once only.
+  // NEVER deleteMany() here: build runs this seed on every production deploy, so a wipe
+  // destroys every FAQ the admin has added or edited since launch.
+  const existingFaqs = await prisma.fAQ.count();
+  if (existingFaqs > 0) {
+    console.log(`⏭️ FAQs already exist (${existingFaqs}), skipping`);
+  } else {
     const faqs = [
       {
         questionVi: 'Chi phí lắp đặt hệ thống điện mặt trời là bao nhiêu?',
