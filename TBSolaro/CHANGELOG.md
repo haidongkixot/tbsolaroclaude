@@ -1,5 +1,29 @@
 # TBSolaro — Changelog
 
+## 2026-09-25 (i) — Cuba-relevant testimonials (content + seed)
+
+The 3 seeded testimonials were generic Vietnamese customers, out of step with TBSolaro's
+actual market. Replaced with 6 written for the buyer groups in Cuba and their social
+reality — long blackouts (apagones), keeping food and medicine cold, casa particular
+tourism, private MIPYMEs, cooperative farming, schools and family clinics:
+
+| Name | Buyer group |
+|---|---|
+| Marisol García | Household, Havana — blackouts, children studying, fridge/medicine |
+| Yasmany Rodríguez | Casa particular host, Trinidad — guest comfort, bookings |
+| Caridad Díaz | Private cafeteria (MIPYME), Havana — freezer losses, staying open |
+| Osmany Fernández | Cooperative farmer, Artemisa — diesel scarcity, irrigation, milk cooling |
+| Yolanda Pérez | School principal, Havana — uninterrupted classes (echoes the CSR projects) |
+| Reinaldo Morales | Family doctor, Mariel — vaccine cold chain |
+
+- New `prisma/testimonial-data.ts` (vi/en/es), imported by the count-guarded seed block for
+  fresh databases. Avatars left empty → the brand-green initial fallback renders.
+- **Production applied directly** (no deploy needed): 6 new rows published, the 3 old
+  Vietnamese ones set to *Nháp* — still in Admin › Đánh giá KH, recoverable with one click.
+- Names are generic placeholders for the admin to swap for real customers over time.
+
+---
+
 ## 2026-09-25 (h) — Email notifications for new submissions + form anti-spam
 
 ### 1. Admin-managed notification list
