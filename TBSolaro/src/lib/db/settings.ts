@@ -133,6 +133,8 @@ export type SiteSettings = {
   sectionTitles: SectionTitles;
   // Featured video section on the homepage
   homeVideoUrl: string;
+  // Emails notified on new form submissions (one per line or comma-separated)
+  notifyEmails: string;
   // Frontend section visibility toggles
   showShowroom: boolean;
   showProcess: boolean;
@@ -178,6 +180,7 @@ const defaults: SiteSettings = {
   footerYoutube: '',
   sectionTitles: defaultSectionTitles,
   homeVideoUrl: '',
+  notifyEmails: '',
   showShowroom: true,
   showProcess: true,
   showCertifications: false,
@@ -232,6 +235,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       sectionTitles: tryParse(row.sectionTitles, defaultSectionTitles as unknown as SectionTitles),
       // ?? keeps the page rendering if the column has not been pushed to this DB branch yet
       homeVideoUrl: row.homeVideoUrl ?? defaults.homeVideoUrl,
+      notifyEmails: row.notifyEmails ?? defaults.notifyEmails,
       showShowroom: row.showShowroom ?? defaults.showShowroom,
       showProcess: row.showProcess ?? defaults.showProcess,
       showCertifications: row.showCertifications ?? defaults.showCertifications,

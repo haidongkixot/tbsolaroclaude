@@ -25,6 +25,9 @@ export default function ContactFormSection({
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState('');
+  // Chống spam: honeypot (người thật không thấy nên không điền) + mốc thời gian mở form
+  const [hp, setHp] = useState('');
+  const [startedAt] = useState(() => Date.now());
 
   const displayTitle = title ?? t('title');
   const displaySubtitle = subtitle ?? t('subtitle');
@@ -37,7 +40,7 @@ export default function ContactFormSection({
       const res = await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source }),
+        body: JSON.stringify({ ...form, source, _hp: hp, _t: Date.now() - startedAt }),
       });
       if (!res.ok) throw new Error('failed');
       setSubmitted(true);
@@ -89,6 +92,19 @@ export default function ContactFormSection({
           onSubmit={handleSubmit}
           className={compact ? 'space-y-4' : 'max-w-2xl mx-auto space-y-4'}
         >
+          {/* Honeypot chống bot — nằm ngoài màn hình, người thật không thấy */}
+          <div style={{ position: 'absolute', left: '-9999px', top: 'auto' }} aria-hidden="true">
+            <label htmlFor={`website-${source}`}>Website</label>
+            <input
+              id={`website-${source}`}
+              type="text"
+              name="website"
+              tabIndex={-1}
+              autoComplete="off"
+              value={hp}
+              onChange={(e) => setHp(e.target.value)}
+            />
+          </div>
           <div className={compact ? 'grid gap-4' : 'grid sm:grid-cols-2 gap-4'}>
             <div>
               <label htmlFor={`name-${source}`} className="block text-sm font-medium text-gray-700 mb-1">

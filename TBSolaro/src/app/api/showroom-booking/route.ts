@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
+import { sendSubmissionNotification } from '@/lib/notify';
+import { getIpHash, looksLikeBot, isRateLimited } from '@/lib/antispam';
 
 // Chỉ nhận POST — xem ghi chú về việc gỡ GET trong api/contact/route.ts.
 export async function POST(request: NextRequest) {
@@ -14,6 +16,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Email không hợp lệ' }, { status: 400 });
     }
 
+    if (looksLikeBot(body)) {
+      return NextResponse.json({ success: true, id: `sb_${Date.now()}` }, { status: 201 });
+    }
+
+    const ipHash = getIpHash(request);
+    if (await isRateLimited(ipHash)) {
+      return NextResponse.json({ error: 'Quá nhiều yêu cầu, vui lòng thử lại sau ít phút.' }, { status: 429 });
+    }
+
     const booking = await prisma.submission.create({
       data: {
         type: 'booking',
@@ -25,8 +36,11 @@ export async function POST(request: NextRequest) {
         area: String(area ?? '').slice(0, 200),
         showroom: String(showroom ?? '').slice(0, 200),
         preferredTime: String(time ?? '').slice(0, 50),
+        ipHash,
       },
     });
+
+    await sendSubmissionNotification(booking);
 
     return NextResponse.json({ success: true, id: booking.id }, { status: 201 });
   } catch {

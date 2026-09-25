@@ -23,6 +23,9 @@ export default function FAQContent({ heroImage, faqs }: { heroImage?: string; fa
   const [form, setForm] = useState({ name: '', email: '', phone: '', company: '', message: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // Chống spam: honeypot + mốc thời gian mở form
+  const [hp, setHp] = useState('');
+  const [startedAt] = useState(() => Date.now());
 
   const l = locale === 'en' ? 'En' : locale === 'es' ? 'Es' : 'Vi';
 
@@ -36,7 +39,7 @@ export default function FAQContent({ heroImage, faqs }: { heroImage?: string; fa
       await fetch('/api/contact', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...form, source: 'faq_page' }),
+        body: JSON.stringify({ ...form, source: 'faq_page', _hp: hp, _t: Date.now() - startedAt }),
       });
       setSubmitted(true);
       setForm({ name: '', email: '', phone: '', company: '', message: '' });
@@ -109,6 +112,12 @@ export default function FAQContent({ heroImage, faqs }: { heroImage?: string; fa
                   </div>
                 ) : (
                   <form onSubmit={handleSubmit} className="space-y-4">
+                    {/* Honeypot chống bot — nằm ngoài màn hình, người thật không thấy */}
+                    <div style={{ position: 'absolute', left: '-9999px', top: 'auto' }} aria-hidden="true">
+                      <label htmlFor="website-faq">Website</label>
+                      <input id="website-faq" type="text" name="website" tabIndex={-1} autoComplete="off"
+                        value={hp} onChange={(e) => setHp(e.target.value)} />
+                    </div>
                     <div>
                       <label className="block text-xs font-medium text-gray-700 mb-1">{t('formName')} *</label>
                       <input required value={form.name} onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))} placeholder={t('formNamePlaceholder')} className="input-field text-sm py-2.5" />

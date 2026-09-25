@@ -34,6 +34,8 @@ type Form = {
   sectionTitles: SectionTitles;
   // Featured video section on the homepage
   homeVideoUrl: string;
+  // Emails notified on new form submissions
+  notifyEmails: string;
   // Frontend section visibility toggles
   showShowroom: boolean;
   showProcess: boolean;
@@ -78,6 +80,7 @@ const empty: Form = {
   footerFacebook: '', footerYoutube: '',
   sectionTitles: emptySectionTitles(),
   homeVideoUrl: '',
+  notifyEmails: '',
   showShowroom: true, showProcess: true, showCertifications: false, showHomeVideo: true,
 };
 
@@ -125,6 +128,7 @@ export default function AdminSettingsPage() {
           sectionTitles: merged,
           // Fall back to the defaults when the row predates these columns
           homeVideoUrl: data.homeVideoUrl ?? empty.homeVideoUrl,
+          notifyEmails: data.notifyEmails ?? empty.notifyEmails,
           showShowroom: data.showShowroom ?? empty.showShowroom,
           showProcess: data.showProcess ?? empty.showProcess,
           showCertifications: data.showCertifications ?? empty.showCertifications,
@@ -257,6 +261,28 @@ export default function AdminSettingsPage() {
             label="Video nổi bật (trang chủ)"
             hint="Khối video YouTube ngay dưới banner trang chủ. Cần dán URL video ở mục “Trang chủ – Video nổi bật” bên dưới — không có URL thì khối tự ẩn kể cả khi bật."
           />
+        </Section>
+
+        {/* ── Email notifications ── */}
+        <Section icon="📧" title="Email nhận thông báo liên hệ (Notifications)">
+          <Field label="Danh sách email">
+            <textarea
+              rows={3}
+              className="textarea-field"
+              value={form.notifyEmails}
+              onChange={(e) => set('notifyEmails', e.target.value)}
+              placeholder={'sales@tbsolaro.com\nadmin@tbsolaro.com'}
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Mỗi dòng (hoặc dấu phẩy) một email, tối đa 10. Khi có liên hệ / đặt lịch mới từ website,
+              hệ thống gửi một email tóm tắt tới danh sách này kèm nút mở trang quản trị.
+              Bấm Reply trên email là trả lời thẳng cho khách.
+            </p>
+            <p className="text-xs text-amber-600 mt-1">
+              ⚠ Việc gửi email cần biến môi trường <code className="font-mono">RESEND_API_KEY</code> trên Vercel.
+              Chưa có key thì danh sách này chưa có tác dụng (form vẫn hoạt động bình thường).
+            </p>
+          </Field>
         </Section>
 
         {/* ── Featured Video ── */}
