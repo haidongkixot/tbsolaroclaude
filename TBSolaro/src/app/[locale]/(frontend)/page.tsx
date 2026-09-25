@@ -16,6 +16,7 @@ import { getFeaturedCombos } from '@/lib/db/products';
 import { getPublishedPosts } from '@/lib/db/blog';
 import { getPublishedTestimonials } from '@/lib/db/testimonials';
 import { getSiteSettings, st } from '@/lib/db/settings';
+import { getYouTubeId } from '@/lib/utils';
 
 const certifications = ['IRES', 'GBC', 'IEC', 'Fronius', 'Huawei', 'Dropbox'];
 
@@ -33,6 +34,8 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     getSiteSettings(),
   ]);
   const latestPosts = allPosts.slice(0, 3);
+  const videoId = getYouTubeId(settings.homeVideoUrl);
+  const videoTitle = st(settings.sectionTitles, 'home', 'videoTitle', locale) || t('videoTitle');
 
   const stats = [
     { value: '500+', labelKey: 'stat1Label' as const, Icon: Sun },
@@ -54,6 +57,28 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
         btn1={t('heroBtn1')}
         btn2={t('heroBtn2')}
       />
+
+      {/* Featured Video — URL + toggle in Admin › Cài đặt; hidden entirely when the URL is empty or unparseable */}
+      {settings.showHomeVideo && videoId && (
+        <section className="py-16 md:py-20">
+          <div className="container-site">
+            <div className="text-center mb-10">
+              <h2 className="section-title">{videoTitle}</h2>
+              <p className="section-subtitle">{st(settings.sectionTitles, 'home', 'videoSubtitle', locale) || t('videoSubtitle')}</p>
+            </div>
+            <div className="max-w-4xl mx-auto aspect-video rounded-2xl overflow-hidden shadow-lg bg-gray-900">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${videoId}`}
+                title={videoTitle}
+                loading="lazy"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+                className="w-full h-full"
+              />
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Certifications — toggled by Admin › Cài đặt › Hiển thị các khối nội dung */}
       {settings.showCertifications && (

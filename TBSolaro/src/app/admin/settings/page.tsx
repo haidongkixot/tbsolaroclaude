@@ -32,10 +32,13 @@ type Form = {
   footerFacebook: string;
   footerYoutube: string;
   sectionTitles: SectionTitles;
+  // Featured video section on the homepage
+  homeVideoUrl: string;
   // Frontend section visibility toggles
   showShowroom: boolean;
   showProcess: boolean;
   showCertifications: boolean;
+  showHomeVideo: boolean;
 };
 
 const emptySlide = (): HeroSlide => ({
@@ -48,6 +51,7 @@ const emptyLang = (): LangVal => ({ vi: '', en: '', es: '' });
 const emptySectionTitles = (): SectionTitles => ({
   home: {
     certTitle: emptyLang(), csrBadge: emptyLang(), csrTitle: emptyLang(), csrDesc: emptyLang(),
+    videoTitle: emptyLang(), videoSubtitle: emptyLang(),
     productsTitle: emptyLang(), productsSubtitle: emptyLang(),
     statsTitle: emptyLang(), statsSubtitle: emptyLang(),
     testimonialTitle: emptyLang(), testimonialSubtitle: emptyLang(),
@@ -73,7 +77,8 @@ const empty: Form = {
   footerPhone: '', footerEmail: '', footerAddress: '',
   footerFacebook: '', footerYoutube: '',
   sectionTitles: emptySectionTitles(),
-  showShowroom: true, showProcess: true, showCertifications: false,
+  homeVideoUrl: '',
+  showShowroom: true, showProcess: true, showCertifications: false, showHomeVideo: true,
 };
 
 const PAGE_HEROES: { key: keyof Form; label: string }[] = [
@@ -119,9 +124,11 @@ export default function AdminSettingsPage() {
             : (() => { try { return JSON.parse(data.heroSlides || '[]'); } catch { return []; } })(),
           sectionTitles: merged,
           // Fall back to the defaults when the row predates these columns
+          homeVideoUrl: data.homeVideoUrl ?? empty.homeVideoUrl,
           showShowroom: data.showShowroom ?? empty.showShowroom,
           showProcess: data.showProcess ?? empty.showProcess,
           showCertifications: data.showCertifications ?? empty.showCertifications,
+          showHomeVideo: data.showHomeVideo ?? empty.showHomeVideo,
         }));
       })
       .catch(() => {});
@@ -244,6 +251,28 @@ export default function AdminSettingsPage() {
             label="Chứng nhận & Đối tác (trang chủ)"
             hint="Dải logo chứng nhận ngay dưới banner trang chủ. Mặc định đang TẮT."
           />
+          <Toggle
+            checked={form.showHomeVideo}
+            onChange={(v) => setBool('showHomeVideo', v)}
+            label="Video nổi bật (trang chủ)"
+            hint="Khối video YouTube ngay dưới banner trang chủ. Cần dán URL video ở mục “Trang chủ – Video nổi bật” bên dưới — không có URL thì khối tự ẩn kể cả khi bật."
+          />
+        </Section>
+
+        {/* ── Featured Video ── */}
+        <Section icon="🎬" title="Trang chủ – Video nổi bật (Featured Video)">
+          <Field label="URL video YouTube">
+            <input
+              className="input-field"
+              value={form.homeVideoUrl}
+              onChange={(e) => set('homeVideoUrl', e.target.value)}
+              placeholder="https://www.youtube.com/watch?v=..."
+            />
+            <p className="text-xs text-gray-400 mt-1">
+              Dán link YouTube bất kỳ (watch, youtu.be, shorts, embed…). Để trống để ẩn khối video.
+              Tiêu đề/phụ đề của khối chỉnh ở mục “Tiêu đề các Section” bên dưới.
+            </p>
+          </Field>
         </Section>
 
         {/* ── Hero Slider ── */}
@@ -354,6 +383,8 @@ export default function AdminSettingsPage() {
                 <Field label="CSR — badge"><input className="input-field" value={form.sectionTitles.home.csrBadge[lang]} onChange={(e) => setSectionTitle('home', 'csrBadge', lang, e.target.value)} placeholder="VD: Trách nhiệm xã hội" /></Field>
                 <Field label="CSR — tiêu đề"><input className="input-field" value={form.sectionTitles.home.csrTitle[lang]} onChange={(e) => setSectionTitle('home', 'csrTitle', lang, e.target.value)} placeholder="Thực tế từ hành trình CSR..." /></Field>
                 <Field label="CSR — mô tả"><input className="input-field" value={form.sectionTitles.home.csrDesc[lang]} onChange={(e) => setSectionTitle('home', 'csrDesc', lang, e.target.value)} placeholder="Mô tả ngắn về dự án CSR..." /></Field>
+                <Field label="Video — tiêu đề"><input className="input-field" value={form.sectionTitles.home.videoTitle[lang]} onChange={(e) => setSectionTitle('home', 'videoTitle', lang, e.target.value)} placeholder="Video nổi bật" /></Field>
+                <Field label="Video — phụ đề"><input className="input-field" value={form.sectionTitles.home.videoSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'videoSubtitle', lang, e.target.value)} placeholder="Khám phá TBSolaro qua video" /></Field>
                 <Field label="Sản phẩm — tiêu đề"><input className="input-field" value={form.sectionTitles.home.productsTitle[lang]} onChange={(e) => setSectionTitle('home', 'productsTitle', lang, e.target.value)} placeholder="Combo sản phẩm nổi bật" /></Field>
                 <Field label="Sản phẩm — phụ đề"><input className="input-field" value={form.sectionTitles.home.productsSubtitle[lang]} onChange={(e) => setSectionTitle('home', 'productsSubtitle', lang, e.target.value)} placeholder="Giải pháp trọn gói năng lượng..." /></Field>
                 <Field label="Thống kê — tiêu đề"><input className="input-field" value={form.sectionTitles.home.statsTitle[lang]} onChange={(e) => setSectionTitle('home', 'statsTitle', lang, e.target.value)} placeholder="TBSolaro tự hào" /></Field>

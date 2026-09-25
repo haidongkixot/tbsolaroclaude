@@ -1,5 +1,54 @@
 # TBSolaro — Changelog
 
+## 2026-09-25 (g) — Contact form persistence + homepage featured-video section
+
+### 1. Contact form finally stores submissions
+
+The form was "not working" in the worst possible way: visitors saw a green success screen
+while **every submission was discarded** — `/api/contact` and `/api/showroom-booking` pushed
+into module-level in-memory arrays (reset per serverless invocation), and Admin › Liên hệ
+rendered 4 hardcoded mock records. All 9 form entry points on the site were losing leads.
+
+- **New `Submission` model** (`prisma/schema.prisma`): one denormalized table for both form
+  types — `type` (`contact`/`booking`), `status` (`new`/`reviewed`/`closed`), `source`,
+  contact fields, booking fields (`area`, `showroom`, `preferredTime`), admin-only `note`,
+  indexes on `status` and `createdAt`. Not seeded — real customer data.
+- **`/api/contact` and `/api/showroom-booking`** now write to the database. The response
+  contract (`{ success, id }` / 201, same 400 message) is unchanged, so no frontend
+  component was touched. Added length caps and an email shape check. The booking route sets
+  `source: 'showroom_page'` server-side and maps `time` → `preferredTime`.
+- **The unauthenticated `GET` on both routes was removed** — with data now persisted, a
+  public endpoint returning every submission would be a PII leak.
+- **New admin API** `api/admin/submissions` (GET list with status/type/search filters) and
+  `[id]` (PUT for status/note, DELETE), following the faq module's `requireAdmin` pattern.
+- **Admin › Liên hệ rewritten onto real data**: same master–detail layout, plus a type
+  filter (Liên hệ / Đặt lịch), booking details in the panel (showroom, area, preferred
+  time), an internal-note box, and delete with confirm. Status changes now persist.
+
+Still no email notification on new submissions (no mail library in the repo) — leads are
+visible only in Admin › Liên hệ, so it needs checking regularly.
+
+### 2. Featured video section on the homepage
+
+New section directly under the hero banner playing one YouTube video, wired into the
+existing CMS section architecture:
+
+- `SiteSetting.homeVideoUrl` (any YouTube URL form) + `showHomeVideo` toggle in the
+  Admin › Cài đặt visibility panel. The section renders only when the toggle is on **and**
+  the URL parses to a video id — empty/bad URL hides it entirely, no broken embed.
+- Section heading/subtitle overridable per language via `sectionTitles.home.videoTitle` /
+  `videoSubtitle` (new inputs in the Section Titles group), with defaults in new
+  `home.videoTitle` / `home.videoSubtitle` message keys (vi/en/es).
+- New Admin › Cài đặt card **"🎬 Trang chủ – Video nổi bật"** with the URL input.
+- `getYouTubeId()` in `src/lib/utils.ts` accepts `watch?v=`, `youtu.be/`, `embed/`,
+  `shorts/`, `live/` and raw 11-char ids.
+- Player uses `youtube-nocookie.com` + `loading="lazy"`, responsive 16:9, max-w-4xl.
+
+Schema changes (1 table, 2 columns) are created on deploy by `prisma db push`; the settings
+mapping falls back with `??` so a row predating the columns still renders.
+
+---
+
 ## 2026-08-18 (f) — Product tabs (Details / Packaging / Shipping) editable & trilingual
 
 The three tabs on the product detail page were only partly real: *Product Details* showed
