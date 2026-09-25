@@ -1,5 +1,43 @@
 # TBSolaro — Changelog
 
+## 2026-09-25 (h) — Email notifications for new submissions + form anti-spam
+
+### 1. Admin-managed notification list
+
+When a new contact or booking submission arrives, the system now emails a short summary
+(name, contact info, message, source, timestamp, "Mở trang quản trị" button; Reply goes
+straight to the customer) to a recipient list managed in **Admin › Cài đặt › 📧 Email nhận
+thông báo liên hệ** (`SiteSetting.notifyEmails`, one address per line or comma-separated,
+max 10).
+
+- `src/lib/notify.ts` — sends via the **Resend HTTP API** with plain `fetch`, no new
+  dependency. Requires the `RESEND_API_KEY` env var (documented in `.env.example`);
+  without it the feature is silently inert and forms work normally. 5s timeout, never
+  throws — a mail failure can never break a submission that was already saved.
+- User-supplied strings are HTML-escaped before being placed in the email body.
+- Optional `EMAIL_FROM`; the default `onboarding@resend.dev` only delivers to the Resend
+  account owner until the tbsolaro.com domain is verified in Resend.
+
+### 2. Anti-spam / anti-injection, no third-party captcha
+
+Three layers in `src/lib/antispam.ts`, applied to both public routes:
+
+| Layer | Mechanism |
+|---|---|
+| Honeypot (`_hp`) | Off-screen "Website" input in all 3 form components; humans never see it, bots fill it → **fake 201** (nothing stored, bot learns nothing) |
+| Time trap (`_t`) | Forms send ms elapsed since mount; < 3s (or non-numeric) → fake 201. Only enforced when `_t` is present, so direct API calls fall through to… |
+| Rate limit | ≥ 5 submissions per IP per 10 minutes → 429. IP stored only as a sha256 hash (`Submission.ipHash`, new indexed column) |
+
+On injection specifically: SQL injection is already impossible (Prisma parameterizes all
+queries), stored XSS in admin is prevented by React's escaping, and email-body injection
+by the escaping in `notify.ts`. Length caps and the email-shape check from the previous
+change remain.
+
+A real captcha (Cloudflare Turnstile) can be layered on later if spam volume ever
+warrants it — it needs a Cloudflare account and site keys.
+
+---
+
 ## 2026-09-25 (g) — Contact form persistence + homepage featured-video section
 
 ### 1. Contact form finally stores submissions

@@ -156,6 +156,10 @@ model SiteSetting {
   // Featured video section on the homepage (right under the hero banner)
   homeVideoUrl String @default("")  // any YouTube URL form; section hidden when empty/unparseable
 
+  // Emails notified when a new form submission arrives (one per line or comma-separated).
+  // Sending itself requires the RESEND_API_KEY env var — without it the list is inert.
+  notifyEmails String @default("")
+
   // Frontend section visibility toggles (content is always kept in the DB — these only control display)
   showShowroom       Boolean @default(true)   // Showroom nav item + /showroom page
   showProcess        Boolean @default(true)   // About page "Quy trình sản xuất" section
@@ -245,11 +249,13 @@ model Submission {
   showroom      String   @default("")          // booking: tên showroom
   preferredTime String   @default("")          // booking: datetime-local string
   note          String   @default("")          // ghi chú nội bộ của admin
+  ipHash        String   @default("")          // sha256 của IP gửi — chỉ dùng cho rate limit, không lưu IP thô
   createdAt     DateTime @default(now())
   updatedAt     DateTime @updatedAt
 
   @@index([status])
   @@index([createdAt])
+  @@index([ipHash, createdAt])
 }
 
 model Testimonial {

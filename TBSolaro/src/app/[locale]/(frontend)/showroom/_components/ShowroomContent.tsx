@@ -24,6 +24,9 @@ export default function ShowroomContent({ heroImage, showrooms }: { heroImage?: 
   const [bookingForm, setBookingForm] = useState({ name: '', email: '', phone: '', area: '', showroom: showrooms[0]?.name || '', time: '' });
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  // Chống spam: honeypot + mốc thời gian mở form
+  const [hp, setHp] = useState('');
+  const [startedAt] = useState(() => Date.now());
 
   const filtered = showrooms.filter(
     (s) =>
@@ -41,7 +44,7 @@ export default function ShowroomContent({ heroImage, showrooms }: { heroImage?: 
       await fetch('/api/showroom-booking', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(bookingForm),
+        body: JSON.stringify({ ...bookingForm, _hp: hp, _t: Date.now() - startedAt }),
       });
       setSubmitted(true);
     } catch {
@@ -213,6 +216,12 @@ export default function ShowroomContent({ heroImage, showrooms }: { heroImage?: 
                 </div>
               ) : (
                 <form onSubmit={handleBooking} className="space-y-4">
+                  {/* Honeypot chống bot — nằm ngoài màn hình, người thật không thấy */}
+                  <div style={{ position: 'absolute', left: '-9999px', top: 'auto' }} aria-hidden="true">
+                    <label htmlFor="website-booking">Website</label>
+                    <input id="website-booking" type="text" name="website" tabIndex={-1} autoComplete="off"
+                      value={hp} onChange={(e) => setHp(e.target.value)} />
+                  </div>
                   <div className="grid sm:grid-cols-2 gap-4">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">{t('formName')} *</label>
