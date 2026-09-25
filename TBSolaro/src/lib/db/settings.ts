@@ -35,6 +35,7 @@ export type SectionTitles = {
   home: {
     certTitle: LangVal;
     csrBadge: LangVal; csrTitle: LangVal; csrDesc: LangVal;
+    videoTitle: LangVal; videoSubtitle: LangVal;
     productsTitle: LangVal; productsSubtitle: LangVal;
     statsTitle: LangVal; statsSubtitle: LangVal;
     testimonialTitle: LangVal; testimonialSubtitle: LangVal;
@@ -73,6 +74,7 @@ const emptyLang = (): LangVal => ({ vi: '', en: '', es: '' });
 const defaultSectionTitles: SectionTitles = {
   home: {
     certTitle: emptyLang(), csrBadge: emptyLang(), csrTitle: emptyLang(), csrDesc: emptyLang(),
+    videoTitle: emptyLang(), videoSubtitle: emptyLang(),
     productsTitle: emptyLang(), productsSubtitle: emptyLang(),
     statsTitle: emptyLang(), statsSubtitle: emptyLang(),
     testimonialTitle: emptyLang(), testimonialSubtitle: emptyLang(),
@@ -129,10 +131,13 @@ export type SiteSettings = {
   footerFacebook: string;
   footerYoutube: string;
   sectionTitles: SectionTitles;
+  // Featured video section on the homepage
+  homeVideoUrl: string;
   // Frontend section visibility toggles
   showShowroom: boolean;
   showProcess: boolean;
   showCertifications: boolean;
+  showHomeVideo: boolean;
 };
 
 const defaults: SiteSettings = {
@@ -172,9 +177,11 @@ const defaults: SiteSettings = {
   footerFacebook: '',
   footerYoutube: '',
   sectionTitles: defaultSectionTitles,
+  homeVideoUrl: '',
   showShowroom: true,
   showProcess: true,
   showCertifications: false,
+  showHomeVideo: true,
 };
 
 function tryParse<T>(v: string, fallback: T): T {
@@ -224,9 +231,11 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       footerYoutube: row.footerYoutube,
       sectionTitles: tryParse(row.sectionTitles, defaultSectionTitles as unknown as SectionTitles),
       // ?? keeps the page rendering if the column has not been pushed to this DB branch yet
+      homeVideoUrl: row.homeVideoUrl ?? defaults.homeVideoUrl,
       showShowroom: row.showShowroom ?? defaults.showShowroom,
       showProcess: row.showProcess ?? defaults.showProcess,
       showCertifications: row.showCertifications ?? defaults.showCertifications,
+      showHomeVideo: row.showHomeVideo ?? defaults.showHomeVideo,
     };
   } catch {
     return defaults;
